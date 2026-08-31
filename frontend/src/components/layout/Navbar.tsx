@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, ChevronDown, Mic, MicOff, Activity, UserCheck, AlertTriangle } from 'lucide-react';
+import { Shield, ChevronDown, Mic, MicOff, Activity, UserCheck } from 'lucide-react';
 import { UserRole, CaseDetail } from '../../types';
 
 interface NavbarProps {
@@ -24,7 +24,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   setVoiceActive
 }) => {
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
-
   const activeRoleObj = ROLES.find(r => r.id === currentRole) || ROLES[0];
 
   const severityColor =
@@ -32,84 +31,75 @@ export const Navbar: React.FC<NavbarProps> = ({
     activeCase?.severity === 'HIGH' ? '#f59e0b' : '#10b981';
 
   return (
-    <header className="h-14 bg-black/50 backdrop-blur-md border-b border-white/10 px-5 flex items-center justify-between shrink-0 z-40 select-none">
-      {/* ── Left: Brand & Persistent Active Case Context ── */}
+    <header className="h-14 bg-[#121518] border-b border-[#2A2E33] px-5 flex items-center justify-between shrink-0 z-40 select-none">
+      {/* ── Left: Brand & Active Case Context ── */}
       <div className="flex items-center gap-6">
-        {/* Brand Logo */}
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 flex items-center justify-center cut-corners bg-fuchsia-950/30 border border-fuchsia-500/40">
-            <Shield className="w-4 h-4 text-fuchsia-400" />
+          <div className="w-8 h-8 flex items-center justify-center rounded bg-[#181C20] border border-[#2A2E33]">
+            <Shield className="w-4 h-4 text-white" />
           </div>
           <div>
-            <h1 className="text-sm font-bold font-mono tracking-widest text-slate-100 leading-none">
-              TRACE<span className="text-fuchsia-400">-X</span>
+            <h1 className="text-sm font-bold font-mono tracking-widest text-white leading-none">
+              TRACE<span className="text-gray-400">-X</span>
             </h1>
-            <span className="text-[9px] font-mono text-slate-500 block mt-0.5">
-              SENTINEL WORKSTATION
+            <span className="text-[10px] font-mono text-gray-500 block mt-0.5">
+              FORENSIC WORKSTATION
             </span>
           </div>
         </div>
 
-        {/* Active Case Context Status */}
+        {/* Active Case Context */}
         {activeCase ? (
-          <div className="hidden md:flex items-center gap-3 px-3 py-1.5 cut-corners bg-black/40 border border-white/10 font-mono text-xs">
-            <div className="status-led status-led-cyan" />
+          <div className="hidden md:flex items-center gap-3 px-3 py-1.5 rounded bg-[#181C20] border border-[#2A2E33] text-xs font-mono">
+            <div className="w-2 h-2 rounded-full bg-emerald-400" />
             <div className="flex items-center gap-2">
-              <span className="text-slate-400 font-bold">{activeCase.case_id}</span>
-              <span className="text-slate-600">|</span>
+              <span className="text-gray-200 font-bold">{activeCase.case_id}</span>
+              <span className="text-gray-600">|</span>
               <span className="font-bold uppercase text-[11px]" style={{ color: severityColor }}>
                 {activeCase.severity} · {activeCase.threat_score.overall_score}/100
               </span>
             </div>
-            <span className="text-slate-600">|</span>
-            <div className="flex items-center gap-1.5 text-[10px] text-emerald-400 font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              INVESTIGATION ACTIVE
-            </div>
           </div>
         ) : (
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 cut-corners bg-black/40 border border-white/10 font-mono text-xs text-slate-400">
-            <Activity className="w-3.5 h-3.5 text-cyan-400" />
-            <span>NO CASE SELECTED — SELECT OR INGEST EVIDENCE</span>
+          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded bg-[#181C20] border border-[#2A2E33] text-xs text-gray-400 font-mono">
+            <Activity className="w-3.5 h-3.5 text-gray-400" />
+            <span>NO CASE SELECTED — INGEST EVIDENCE TO BEGIN</span>
           </div>
         )}
       </div>
 
-      {/* ── Right: Controls & Role Switcher Dropdown ── */}
+      {/* ── Right: Role Switcher & Copilot Controls ── */}
       <div className="flex items-center gap-3">
-        {/* Voice Copilot Switch */}
         <button
           onClick={() => setVoiceActive(!voiceActive)}
-          className={`flex items-center gap-2 px-3 py-1.5 cut-corners text-xs font-mono font-bold transition-all ${
+          className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs font-mono transition-all ${
             voiceActive
-              ? 'bg-fuchsia-950/40 border border-fuchsia-500/50 text-fuchsia-300 shadow-[0_0_12px_rgba(217,70,239,0.2)]'
-              : 'bg-black/40 border border-white/10 text-slate-400 hover:text-slate-200'
+              ? 'bg-[#22262B] border border-[#40464E] text-white'
+              : 'bg-[#181C20] border border-[#2A2E33] text-gray-400 hover:text-gray-200'
           }`}
         >
           {voiceActive ? (
-            <Mic className="w-3.5 h-3.5 text-fuchsia-400 animate-pulse" />
+            <Mic className="w-3.5 h-3.5 text-white" />
           ) : (
-            <MicOff className="w-3.5 h-3.5 text-slate-500" />
+            <MicOff className="w-3.5 h-3.5 text-gray-500" />
           )}
           <span className="hidden sm:inline">{voiceActive ? 'COPILOT LIVE' : 'VOICE OFF'}</span>
         </button>
 
-        {/* Functional Role Selector Dropdown */}
         <div className="relative">
           <button
             onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
-            className="flex items-center gap-2 px-3 py-1.5 cut-corners bg-black/40 border border-white/10 hover:border-white/20 text-xs font-mono font-bold text-slate-200 transition-all"
+            className="flex items-center gap-2 px-3 py-1.5 rounded bg-[#181C20] border border-[#2A2E33] hover:border-[#40464E] text-xs font-mono text-gray-200 transition-all"
           >
-            <UserCheck className="w-3.5 h-3.5 text-fuchsia-400" />
-            <span className="text-slate-400">VIEW:</span>
-            <span className="text-fuchsia-300">{activeRoleObj.label}</span>
-            <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${roleDropdownOpen ? 'rotate-180' : ''}`} />
+            <UserCheck className="w-3.5 h-3.5 text-gray-400" />
+            <span className="text-gray-400">VIEW:</span>
+            <span className="text-white font-semibold">{activeRoleObj.label}</span>
+            <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform ${roleDropdownOpen ? 'rotate-180' : ''}`} />
           </button>
 
-          {/* Role Dropdown Menu */}
           {roleDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-64 bg-black/85 backdrop-blur-md border border-white/10 cut-corners p-2 shadow-2xl z-50 animate-fade-in font-mono">
-              <div className="text-[9px] font-bold text-slate-500 px-2 py-1 uppercase tracking-wider">
+            <div className="absolute right-0 mt-2 w-64 bg-[#121518] border border-[#2A2E33] rounded p-2 shadow-xl z-50 animate-fade-in font-mono">
+              <div className="text-[9px] font-semibold text-gray-500 px-2 py-1 uppercase tracking-wider">
                 SELECT PERSPECTIVE ROLE
               </div>
               {ROLES.map((r) => (
@@ -119,14 +109,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                     setCurrentRole(r.id);
                     setRoleDropdownOpen(false);
                   }}
-                  className={`w-full text-left p-2 cut-corners-sm transition-all mb-1 last:mb-0 ${
+                  className={`w-full text-left p-2 rounded transition-all mb-1 last:mb-0 ${
                     currentRole === r.id
-                      ? 'bg-fuchsia-950/40 border border-fuchsia-500/40 text-fuchsia-300'
-                      : 'hover:bg-white/5 text-slate-300'
+                      ? 'bg-[#181C20] border-l-2 border-white text-white font-semibold'
+                      : 'hover:bg-[#181C20] text-gray-300'
                   }`}
                 >
-                  <div className="text-xs font-bold">{r.label}</div>
-                  <div className="text-[10px] text-slate-400 font-sans mt-0.5">{r.desc}</div>
+                  <div className="text-xs">{r.label}</div>
+                  <div className="text-[10px] text-gray-400 font-sans mt-0.5">{r.desc}</div>
                 </button>
               ))}
             </div>

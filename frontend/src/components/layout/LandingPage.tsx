@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Shield, Cpu, Blocks, Mail, Route, Lock, ArrowRight,
-  Terminal, Globe, Activity, CheckCircle2, ChevronRight, HelpCircle
+  Terminal, Globe, Activity, CheckCircle2, ChevronRight
 } from 'lucide-react';
 import { RisingLines } from '../ui/RisingLines';
 
@@ -11,33 +11,33 @@ interface LandingPageProps {
 
 export const LandingPage: React.FC<LandingPageProps> = ({ onEnterWorkspace }) => {
   return (
-    <div className="min-h-screen text-slate-100 flex flex-col font-sans antialiased relative overflow-x-hidden"
-         style={{ background: '#000000' }}>
+    <div className="min-h-screen text-[#F2F2F2] flex flex-col font-sans antialiased relative overflow-x-hidden"
+         style={{ background: '#0B0D0F' }}>
       
-      {/* Laser line background effect - Pink/Magenta color matching user reference */}
+      {/* Signature Ascending Lines - Monochrome Data Trajectory */}
       <RisingLines
-        color="#d946ef" // magenta
-        horizonColor="#a855f7" // purple
-        haloColor="#d946ef"
-        riseSpeed={0.7}
-        flowSpeed={0.4}
-        flowDensity={85}
-        horizonHeight={0.98} // horizon at the very bottom edge
-        horizonIntensity={0.8}
-        haloIntensity={0.2}
+        color="#FFFFFF"
+        horizonColor="#4B5563"
+        haloColor="#374151"
+        riseSpeed={0.6}
+        flowSpeed={0.2}
+        flowDensity={40}
+        horizonHeight={0.98}
+        horizonIntensity={0.15}
+        haloIntensity={0.08}
         circleScale={1.0}
       />
 
-      {/* ── Floating Glassmorphic Navbar ── */}
+      {/* ── Navbar ── */}
       <div className="w-full px-4 sm:px-8 pt-5 relative z-50 shrink-0">
-        <header className="h-14 max-w-7xl mx-auto flex items-center justify-between px-6 sm:px-8 rounded-full border border-white/10 bg-black/45 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.05)] transition-all hover:border-white/15">
+        <header className="h-14 max-w-7xl mx-auto flex items-center justify-between px-6 sm:px-8 rounded-md border border-[#2A2E33] bg-[#121518] backdrop-blur-md">
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-3">
-              <div className="w-7 h-7 flex items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500/20 to-purple-500/10 border border-fuchsia-500/40 shadow-[0_0_10px_rgba(217,70,239,0.15)]">
-                <Shield className="w-3.5 h-3.5 text-fuchsia-400" />
+              <div className="w-7 h-7 flex items-center justify-center rounded bg-[#181C20] border border-[#2A2E33]">
+                <Shield className="w-3.5 h-3.5 text-white" />
               </div>
-              <span className="text-sm font-bold tracking-widest font-mono text-slate-100">
-                SENTINEL<span className="text-fuchsia-400">.TRACE-X</span>
+              <span className="text-sm font-bold tracking-widest font-mono text-white">
+                SENTINEL<span className="text-gray-400">.TRACE-X</span>
               </span>
             </div>
             <nav className="hidden lg:flex items-center gap-1">
@@ -50,107 +50,92 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterWorkspace }) =>
                 <button
                   key={item.label}
                   onClick={() => onEnterWorkspace(item.tab)}
-                  className="px-3 py-1.5 text-[11px] font-semibold text-slate-400 hover:text-slate-200 transition-colors font-mono cursor-pointer"
+                  className="px-3 py-1.5 text-xs font-medium text-gray-400 hover:text-white transition-colors cursor-pointer"
                 >
                   {item.label}
                 </button>
               ))}
-              <a
-                href="https://pro.reactbits.dev/docs/components/rising-lines"
-                target="_blank"
-                rel="noreferrer"
-                className="px-3 py-1.5 text-[11px] font-semibold text-slate-400 hover:text-slate-200 transition-colors font-mono cursor-pointer"
-              >
-                Documentation
-              </a>
             </nav>
           </div>
 
           <button
             onClick={() => onEnterWorkspace()}
-            className="px-4 py-1.5 cut-corners-sm text-[10px] font-bold font-mono transition-all border border-fuchsia-500/40 bg-fuchsia-500/10 text-fuchsia-300 hover:bg-fuchsia-500/20 hover:text-fuchsia-200 shadow-[0_0_12px_rgba(217,70,239,0.15)]"
+            className="px-4 py-1.5 rounded text-xs font-semibold bg-white text-black hover:bg-gray-200 transition-all"
           >
-            LAUNCH WORKSPACE
+            Launch Workspace
           </button>
         </header>
       </div>
 
       {/* ── Hero Section ── */}
-      <section className="relative pt-24 pb-20 px-6 sm:px-10 flex flex-col items-center justify-center text-center max-w-4xl mx-auto z-10 flex-1">
-        <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 cut-corners bg-fuchsia-950/20 border border-fuchsia-500/30 text-fuchsia-400 font-mono text-[10px] tracking-wider animate-pulse">
-          <Activity className="w-3.5 h-3.5" />
-          ACTIVE CRYPTOGRAPHIC CHAIN ONLINE
+      <section className="relative pt-20 pb-16 px-6 sm:px-10 flex flex-col items-center justify-center text-center max-w-4xl mx-auto z-10 flex-1">
+        <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded bg-[#181C20] border border-[#2A2E33] text-gray-300 text-xs font-mono">
+          <Activity className="w-3.5 h-3.5 text-gray-400" />
+          Academic Cyber-Forensics Research Platform
         </div>
 
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight text-balance text-slate-100">
-          Sentinel Trace-X <br />
-          <span className="bg-gradient-to-r from-fuchsia-400 via-fuchsia-300 to-purple-500 bg-clip-text text-transparent">
-            Forensic Mail Security Lab
-          </span>
+        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-white leading-tight text-balance">
+          TRACE-X Forensic Platform
         </h1>
 
-        <p className="mt-6 text-sm sm:text-base leading-relaxed text-slate-400 max-w-2xl text-balance">
-          An academic forensic prototype designed to trace headers delivery flows, inspect email message hops, run isolated attachment analysis, and simulate secure chain of custody blocks.
+        <p className="mt-4 text-sm sm:text-base leading-relaxed text-gray-400 max-w-2xl text-balance">
+          An enterprise digital forensics workstation for headers flow analysis, email relay tracing, attachment detonation sandboxing, and tamper-evident Merkle chain of custody.
         </p>
 
         <div className="mt-8 flex items-center justify-center gap-4 flex-wrap">
           <button
             onClick={() => onEnterWorkspace()}
-            className="px-6 py-2.5 cut-corners text-xs font-bold font-mono transition-all border border-fuchsia-500/40 bg-fuchsia-500/10 text-fuchsia-300 hover:bg-fuchsia-500/20 hover:text-fuchsia-200 shadow-[0_0_12px_rgba(217,70,239,0.15)]"
+            className="px-6 py-2.5 rounded text-xs font-semibold bg-white text-black hover:bg-gray-200 transition-all flex items-center gap-2"
           >
-            ENTER FORENSIC LAB
+            Enter Forensic Lab
+            <ArrowRight className="w-4 h-4" />
           </button>
         </div>
       </section>
 
-
-
       {/* ── Core Feature Blocks ── */}
-      <section className="px-6 sm:px-10 pb-24 relative z-10 max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section className="px-6 sm:px-10 pb-20 relative z-10 max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-3 gap-5">
         {[
           {
             title: 'MIME Forensics Lab',
-            desc: 'Analyze mail envelope routing paths, SPF/DKIM/DMARC headers, and display name lookalike homoglyphs.',
+            desc: 'Decompose mail routing paths, analyze SPF/DKIM/DMARC headers, and detect display name homoglyphs.',
             icon: Mail,
-            color: 'cyan',
             tab: 'email_forensics'
           },
           {
             title: 'Detonation Sandbox',
-            desc: 'Isolate attachments in a read-only environment to compute entropy, compile YARA matches, and dissect payloads.',
+            desc: 'Isolate attachments in a read-only environment to compute entropy, compile YARA rules, and dissect payloads.',
             icon: Cpu,
-            color: 'purple',
             tab: 'attachment_sandbox'
           },
           {
             title: 'Merkle Chain of Custody',
-            desc: 'Anchor evidence hashes directly onto a decentralised SHA-256 ledger to preserve tamper-evident digital records.',
+            desc: 'Cryptographically hash evidence events onto a binary Merkle tree with verification path proofs.',
             icon: Blocks,
-            color: 'green',
             tab: 'blockchain_proof'
           }
         ].map((feat, i) => {
           const Icon = feat.icon;
-          const style = 
-            feat.color === 'cyan' ? 'border-cyan-500/20 bg-cyan-950/5' :
-            feat.color === 'purple' ? 'border-purple-500/20 bg-purple-950/5' :
-            'border-emerald-500/20 bg-emerald-950/5';
           
           return (
             <div
               key={i}
-              className={`p-6 cut-corners border flex flex-col justify-between h-56 transition-all hover:translate-y-[-2px] ${style}`}
+              className="p-6 rounded-md border border-[#2A2E33] bg-[#121518] flex flex-col justify-between h-52 transition-all hover:border-[#40464E]"
             >
               <div>
-                <div className="w-8 h-8 flex items-center justify-center cut-corners-sm bg-slate-950/80 border border-slate-900 mb-4">
-                  <Icon className="w-4 h-4" style={{ color: feat.color === 'cyan' ? '#06b6d4' : feat.color === 'purple' ? '#a855f7' : '#10b981' }} />
+                <div className="w-8 h-8 flex items-center justify-center rounded bg-[#181C20] border border-[#2A2E33] mb-4">
+                  <Icon className="w-4 h-4 text-gray-300" />
                 </div>
-                <h3 className="text-sm font-bold text-slate-100 font-mono mb-2">{feat.title}</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">{feat.desc}</p>
+                <h3 className="text-sm font-semibold text-white mb-2">{feat.title}</h3>
+                <p className="text-xs text-gray-400 leading-relaxed">{feat.desc}</p>
               </div>
 
-              <div className="flex items-center gap-1 text-[10px] font-bold font-mono text-slate-500 hover:text-slate-300 cursor-pointer" onClick={() => onEnterWorkspace(feat.tab)}>
-                EXPLORE MODULE <ChevronRight className="w-3 h-3" />
+              <div
+                className="flex items-center gap-1 text-xs font-medium text-gray-400 hover:text-white cursor-pointer"
+                onClick={() => onEnterWorkspace(feat.tab)}
+              >
+                <span>Explore Module</span>
+                <ChevronRight className="w-3.5 h-3.5" />
               </div>
             </div>
           );
@@ -158,80 +143,62 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterWorkspace }) =>
       </section>
 
       {/* ── Footer ── */}
-      <footer className="py-12 border-t border-white/10 bg-[#080c14] relative z-10 font-sans text-slate-400">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 text-xs">
-          {/* Col 1: Brand */}
+      <footer className="py-10 border-t border-[#2A2E33] bg-[#0B0D0F] relative z-10 font-sans text-gray-400 text-xs">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="space-y-3 md:col-span-1">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded bg-cyan-950/40 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-mono font-bold text-xs">
+              <div className="w-6 h-6 rounded bg-[#181C20] border border-[#2A2E33] flex items-center justify-center text-white font-mono font-bold text-xs">
                 TX
               </div>
-              <span className="font-mono font-bold text-sm tracking-widest text-slate-100">
-                TRACE<span className="text-cyan-400">-X</span>
+              <span className="font-mono font-bold text-sm tracking-widest text-white">
+                TRACE<span className="text-gray-400">-X</span>
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 leading-relaxed font-sans">
-              Sentinel Cyber Forensics & Immutable Email Threat Intelligence Platform. Progressive evidence discovery and blockchain chain-of-custody.
+            <p className="text-xs text-gray-400 leading-relaxed">
+              Digital Forensics & Immutable Evidence Chain Platform.
             </p>
           </div>
 
-          {/* Col 2: Modules */}
-          <div className="space-y-2 font-mono text-[11px]">
-            <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">INVESTIGATION MODULES</div>
-            <ul className="space-y-1.5 text-slate-400">
-              <li><button onClick={() => onEnterWorkspace('email_forensics')} className="hover:text-cyan-400 transition-colors">Case Desk Intake</button></li>
-              <li><button onClick={() => onEnterWorkspace('email_forensics')} className="hover:text-cyan-400 transition-colors">Header Flight Recorder</button></li>
-              <li><button onClick={() => onEnterWorkspace('email_forensics')} className="hover:text-cyan-400 transition-colors">Identity Deception Lab</button></li>
-              <li><button onClick={() => onEnterWorkspace('email_forensics')} className="hover:text-cyan-400 transition-colors">Attack Map Reconstruction</button></li>
-              <li><button onClick={() => onEnterWorkspace('blockchain_proof')} className="hover:text-cyan-400 transition-colors">Evidence Vault & Blockchain</button></li>
+          <div className="space-y-2">
+            <div className="text-[10px] font-semibold text-gray-300 uppercase tracking-wider">INVESTIGATION MODULES</div>
+            <ul className="space-y-1 text-gray-400">
+              <li><button onClick={() => onEnterWorkspace('email_forensics')} className="hover:text-white transition-colors">Case Desk Intake</button></li>
+              <li><button onClick={() => onEnterWorkspace('email_forensics')} className="hover:text-white transition-colors">Header Flight Recorder</button></li>
+              <li><button onClick={() => onEnterWorkspace('email_forensics')} className="hover:text-white transition-colors">Identity Deception</button></li>
+              <li><button onClick={() => onEnterWorkspace('blockchain_proof')} className="hover:text-white transition-colors">Chain of Custody</button></li>
             </ul>
           </div>
 
-          {/* Col 3: Architecture */}
-          <div className="space-y-2 font-mono text-[11px]">
-            <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">PLATFORM ARCHITECTURE</div>
-            <ul className="space-y-1.5 text-slate-400">
-              <li>MIME Parsing Engine v2.0</li>
+          <div className="space-y-2">
+            <div className="text-[10px] font-semibold text-gray-300 uppercase tracking-wider">ARCHITECTURE</div>
+            <ul className="space-y-1 text-gray-400">
+              <li>MIME Parsing Engine</li>
               <li>SHA-256 Merkle Proof System</li>
-              <li>Vector RAG Copilot (FAISS / Hybrid)</li>
-              <li>Isolated Payload Sandboxing</li>
-              <li>Polygon / Hyperledger Ledger</li>
+              <li>Qdrant Vector Engine</li>
+              <li>FastAPI 0.110 Async Gateway</li>
             </ul>
           </div>
 
-          {/* Col 4: Live Telemetry */}
-          <div className="space-y-2 font-mono text-[11px]">
-            <div className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">LIVE LAB TELEMETRY</div>
-            <div className="p-3 cut-corners bg-black/50 border border-white/10 space-y-1.5 text-[10px]">
+          <div className="space-y-2">
+            <div className="text-[10px] font-semibold text-gray-300 uppercase tracking-wider">TELEMETRY</div>
+            <div className="p-3 rounded bg-[#121518] border border-[#2A2E33] space-y-1 text-[11px] font-mono">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400">STATUS:</span>
-                <span className="text-emerald-400 font-bold flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-gray-400">STATUS:</span>
+                <span className="text-emerald-400 font-medium flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                   ONLINE
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-slate-400">INTEGRITY:</span>
-                <span className="text-cyan-400">SHA-256 SEALED</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-slate-400">BACKEND:</span>
-                <span className="text-slate-300">FASTAPI 0.110</span>
+                <span className="text-gray-400">INTEGRITY:</span>
+                <span className="text-gray-200">SHA-256 SEALED</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom copyright line */}
-        <div className="max-w-7xl mx-auto px-6 pt-6 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-3 text-[10px] font-mono text-slate-500">
-          <div>© 2026 SENTINEL TRACE-X FORENSICS. ALL RIGHTS RESERVED.</div>
-          <div className="flex items-center gap-4">
-            <span className="hover:text-slate-300 cursor-pointer">PRIVACY POLICY</span>
-            <span>•</span>
-            <span className="hover:text-slate-300 cursor-pointer">TERMS OF SERVICE</span>
-            <span>•</span>
-            <span className="hover:text-slate-300 cursor-pointer">SECURITY DISCLOSURE</span>
-          </div>
+        <div className="max-w-7xl mx-auto px-6 pt-6 border-t border-[#181C20] flex flex-col md:flex-row items-center justify-between gap-3 text-[11px] text-gray-500 font-mono">
+          <div>© 2026 TRACE-X FORENSICS WORKSTATION. ALL RIGHTS RESERVED.</div>
         </div>
       </footer>
     </div>

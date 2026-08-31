@@ -1,155 +1,124 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
 /* ================================================
-   TRACE-X v2.0 DESIGN SYSTEM — Cyber Forensics Workstation
+   TRACE-X DESIGN SYSTEM — Minimalist Forensic Workstation
+   Palette: Black (#0B0D0F), Graphite (#121518, #181C20), Gray (#2A2E33), White (#F2F2F2)
    ================================================ */
 
 :root {
-  --bg-deep: #000000;
-  --bg-surface: rgba(14, 20, 34, 0.45);
-  --bg-elevated: rgba(21, 29, 48, 0.65);
-  --bg-hover: rgba(217, 70, 239, 0.08);
+  --bg-deep: #0B0D0F;
+  --bg-surface: #121518;
+  --bg-elevated: #181C20;
+  --bg-hover: #22262B;
   
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-strong: rgba(217, 70, 239, 0.3);
+  --border-subtle: #2A2E33;
+  --border-strong: #40464E;
   
-  /* Controlled Accent Palette */
-  --accent-cyan: #d946ef;
-  --accent-cyan-dim: rgba(217, 70, 239, 0.12);
-  --accent-amber: #f59e0b;
-  --accent-amber-dim: rgba(245, 158, 11, 0.12);
-  --accent-red: #ef4444;
-  --accent-red-dim: rgba(239, 68, 68, 0.12);
-  --accent-green: #10b981;
-  --accent-green-dim: rgba(16, 185, 129, 0.12);
-  --accent-purple: #a855f7;
-  --accent-purple-dim: rgba(168, 85, 247, 0.12);
+  --text-primary: #F2F2F2;
+  --text-secondary: #9CA3AF;
+  --text-muted: #6B7280;
+
+  /* Semantic State Colors Only */
+  --semantic-green: #10b981;
+  --semantic-amber: #f59e0b;
+  --semantic-red: #ef4444;
 }
 
-/* ── Typography Scoping ── */
+/* ── Base Typography & Background ── */
 * { box-sizing: border-box; }
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background: var(--bg-deep);
-  color: #e2e8f0;
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
 }
 
-/* Strict Monospace scoping for technical values */
+/* Monospace restricted to technical data (IPs, hashes, headers, code) */
 code, pre, .font-mono, .tech-value, .hash-display, .ip-address, .case-id {
   font-family: 'JetBrains Mono', ui-monospace, monospace !important;
 }
 
-/* ── Workstation Background Grid (Subtle) ── */
+/* Background grid */
 .forensic-grid-bg {
   background-color: var(--bg-deep);
   background-image:
-    linear-gradient(to right, rgba(217, 70, 239, 0.015) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(217, 70, 239, 0.015) 1px, transparent 1px);
-  background-size: 32px 32px;
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
-/* ── Workstation Cards (Glassmorphism) ── */
+/* Graphite Workstation Panels */
 .forensic-card {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: 0.5rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0.375rem;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
 .forensic-card:hover {
   border-color: var(--border-strong);
-  background: rgba(14, 20, 34, 0.6);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(217, 70, 239, 0.06);
+  background: var(--bg-elevated);
 }
 
 .forensic-card-active {
-  border-color: rgba(217, 70, 239, 0.5) !important;
-  box-shadow: 0 0 20px rgba(217, 70, 239, 0.12);
+  border-color: #6B7280 !important;
+  background: var(--bg-elevated) !important;
 }
 
-/* ── Clipped Geometric Corners ── */
-.cut-corners {
-  --cut: 8px;
-  clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
-}
-.cut-corners-sm {
-  --cut: 5px;
-  clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+/* Compatibility classes */
+.cut-corners, .cut-corners-sm {
+  border-radius: 0.375rem;
 }
 
-/* ── Buttons ── */
+/* Minimalist Monochrome Buttons */
 .btn-primary {
-  background: rgba(217, 70, 239, 0.12);
-  border: 1px solid rgba(217, 70, 239, 0.35);
-  color: #f472b6;
-  font-family: 'JetBrains Mono', monospace;
+  background: #F2F2F2;
+  border: 1px solid #F2F2F2;
+  color: #0B0D0F;
   font-size: 0.75rem;
-  font-weight: 700;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 600;
+  border-radius: 0.375rem;
+  transition: all 0.15s ease;
 }
 .btn-primary:hover {
-  background: rgba(217, 70, 239, 0.22);
-  border-color: rgba(217, 70, 239, 0.6);
-  color: #fbcfe8;
-  box-shadow: 0 0 14px rgba(217, 70, 239, 0.25);
-  transform: translateY(-1px);
+  background: #E5E5E5;
+  border-color: #E5E5E5;
+  color: #000000;
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #94a3b8;
-  font-family: 'JetBrains Mono', monospace;
+  background: #181C20;
+  border: 1px solid #2A2E33;
+  color: #D1D5DB;
   font-size: 0.75rem;
-  font-weight: 600;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+  border-radius: 0.375rem;
+  transition: all 0.15s ease;
 }
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.15);
-  color: #e2e8f0;
+  background: #22262B;
+  border-color: #40464E;
+  color: #FFFFFF;
 }
 
-/* ── Status Indicators & Badges ── */
+/* Status Dots (Semantic Only) */
 .status-led {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   flex-shrink: 0;
 }
-.status-led-cyan {
-  background: #d946ef;
-  box-shadow: 0 0 8px rgba(217, 70, 239, 0.8);
-}
-.status-led-green {
-  background: #10b981;
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
-}
-.status-led-red {
-  background: #ef4444;
-  box-shadow: 0 0 8px rgba(239, 68, 68, 0.8);
-  animation: led-pulse 1.5s ease-in-out infinite;
-}
-.status-led-amber {
-  background: #f59e0b;
-  box-shadow: 0 0 6px rgba(245, 158, 11, 0.7);
-}
+.status-led-cyan { background: #9CA3AF; }
+.status-led-green { background: #10b981; }
+.status-led-red { background: #ef4444; }
+.status-led-amber { background: #f59e0b; }
 
-@keyframes led-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-/* ── Sidebar Navigation Items ── */
+/* Sidebar Navigation Items */
 .nav-item {
   display: flex;
   align-items: center;
@@ -158,43 +127,25 @@ code, pre, .font-mono, .tech-value, .hash-display, .ip-address, .case-id {
   border-radius: 0.375rem;
   font-size: 0.75rem;
   font-weight: 500;
-  color: #94a3b8;
+  color: #9CA3AF;
   cursor: pointer;
   width: 100%;
   text-align: left;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s ease;
 }
 .nav-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #f1f5f9;
-  padding-left: 0.9rem;
+  background: #181C20;
+  color: #F2F2F2;
 }
 .nav-item.active {
-  background: rgba(217, 70, 239, 0.12);
-  color: #d946ef;
-  border-left: 2px solid #d946ef;
+  background: #181C20;
+  color: #FFFFFF;
+  border-left: 2px solid #F2F2F2;
   font-weight: 600;
 }
 
-/* ── Transitions & Animations ── */
-.animate-fade-in {
-  animation: fadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.slide-over-enter {
-  animation: slideOver 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-@keyframes slideOver {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
-}
-
-/* Custom Scrollbars with glassmorphism hover effect */
-::-webkit-scrollbar { width: 6px; height: 6px; }
+/* Scrollbars */
+::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(217, 70, 239, 0.2); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(217, 70, 239, 0.45); }
+::-webkit-scrollbar-thumb { background: #2A2E33; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #40464E; }
