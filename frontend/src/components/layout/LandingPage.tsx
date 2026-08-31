@@ -111,22 +111,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterWorkspace }) =>
         </div>
       </section>
 
-      {/* ── Stats Display (Vercel Template Style) ── */}
-      <section className="px-6 sm:px-10 pb-20 relative z-10 max-w-5xl mx-auto w-full">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-5 cut-corners bg-slate-950/60 border border-slate-900 backdrop-blur-md">
-          {[
-            { label: 'THREATS BLOCKED', value: '12,847', color: '#ef4444' },
-            { label: 'ACTIVE ENDPOINTS', value: '3,204', color: '#06b6d4' },
-            { label: 'COMPLIANCE RATE', value: '98.6%', color: '#10b981' },
-            { label: 'RESPONSE SPEED', value: '1.2s', color: '#a855f7' },
-          ].map(({ label, value, color }) => (
-            <div key={label} className="text-center p-3 border-r last:border-0 border-slate-900">
-              <span className="text-[9px] font-bold font-mono text-slate-500 block mb-1">{label}</span>
-              <span className="text-xl font-extrabold font-mono" style={{ color }}>{value}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+
 
       {/* ── Core Feature Blocks ── */}
       <section className="px-6 sm:px-10 pb-24 relative z-10 max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-3 gap-6">
