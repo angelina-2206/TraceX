@@ -1,0 +1,10 @@
+.env
+.env.local
+.env.production
+.env.development
+.env.*.local
+__pycache__/
+*.pyc
+.pytest_cache/
+storage/uploads/*
+storage/evidence/*

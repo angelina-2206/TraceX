@@ -1,0 +1,54 @@
+# Environments and Secrets
+.env
+.env.local
+.env.production
+.env.development
+.env.*.local
+backend/.env
+backend/.env.local
+backend/.env.*
+
+# Python Cache & Virtual Environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+backend/__pycache__/
+backend/*.pyc
+backend/.pytest_cache/
+.venv/
+venv/
+ENV/
+backend/venv/
+backend/.venv/
+
+# Node & Package Managers
+node_modules/
+frontend/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.eslintcache
+
+# Production Builds & Temp Directories
+dist/
+frontend/dist/
+dist-ssr/
+frontend/dist-ssr/
+backend/storage/uploads/*
+backend/storage/evidence/*
+!backend/storage/uploads/.gitkeep
+!backend/storage/evidence/.gitkeep
+
+# System & Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.log
