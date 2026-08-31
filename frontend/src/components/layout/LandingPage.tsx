@@ -100,14 +100,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterWorkspace }) =>
           >
             ENTER FORENSIC LAB
           </button>
-          <a
-            href="https://pro.reactbits.dev/docs/components/rising-lines"
-            target="_blank"
-            rel="noreferrer"
-            className="px-6 py-2.5 cut-corners text-xs font-bold font-mono transition-all bg-slate-950/60 border border-slate-900 text-slate-350 hover:text-slate-100 hover:bg-slate-900"
-          >
-            DOCUMENTATION
-          </a>
         </div>
       </section>
 
