@@ -75,6 +75,22 @@ A completely private, offline retrieval-augmented generation layer:
 
 ---
 
+## User Role Personas
+
+TRACE-X implements three distinct workspaces tailored to the operational requirements of different cybersecurity stakeholders:
+
+1.  **SOC Analyst (`SOC_ANALYST`)**:
+    *   **Focus**: Rapid intake triage, initial evidence parsing, and threat assessment.
+    *   **Capabilities**: Performs EML uploads and raw text ingestion, reviews resolved SMTP relay flight records, checks DKIM/SPF alignment states, and analyzes key indicator reputation lists.
+2.  **Forensic Investigator (`INVESTIGATOR`)**:
+    *   **Focus**: In-depth incident correlation, trace analysis, and threat containment.
+    *   **Capabilities**: Interacts with the complete visual Attack Graph, runs secure sandbox detonations on attachments, correlates indicators against threat campaigns, and queries the local Forensic RAG Copilot for MITRE ATT&CK techniques mapping.
+3.  **CISO / Executive (`EXECUTIVE`)**:
+    *   **Focus**: Strategic risk evaluation, financial impact containment, and remediation governance.
+    *   **Capabilities**: Accesses the CISO dashboard outlining potential financial exposure, reviews and updates containment/mitigation checklists, and exports standardized STIX 2.1 IOC threat bundle reports.
+
+---
+
 ## Project Structure
 
 ```text
