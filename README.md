@@ -1,5 +1,13 @@
 # TRACE-X: Advanced Cyber-Forensic Workstation & Threat Intelligence Aggregator
 
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=FastAPI&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Qdrant](https://img.shields.io/badge/Qdrant-e52230?style=for-the-badge&logo=qdrant&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+
 TRACE-X is a specialized cyber-forensic investigation workstation designed for SOC analysts and incident response teams. The system automates email artifact ingestion, parses metadata and header routing paths, queries external reputation intelligence providers, and maps findings to an immutable chain of custody and a local security knowledge base.
 
 ---
