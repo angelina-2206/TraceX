@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown, Shield, Mic, MicOff, Activity, X } from 'lucide-react';
+import { ChevronDown, Shield, Mic, MicOff, Activity, X, Sun, Moon, Laptop } from 'lucide-react';
 import { UserRole, CaseDetail } from '../../types';
 import { TracexLogo } from '../common/TracexLogo';
+import { useTheme, ThemeMode } from '../../context/ThemeContext';
 
 interface TopNavProps {
   currentRole: UserRole;
@@ -20,7 +21,7 @@ const ROLES: { id: UserRole; label: string; desc: string }[] = [
 ];
 
 const roleColor = (id: UserRole) =>
-  id === 'SOC_ANALYST' ? '#34d399' : id === 'INVESTIGATOR' ? '#38bdf8' : '#fbbf24';
+  id === 'SOC_ANALYST' ? '#10B981' : id === 'INVESTIGATOR' ? '#0284C7' : '#D97706';
 
 interface MegaMenuDef {
   label: string;
@@ -153,6 +154,8 @@ export const TopNav: React.FC<TopNavProps> = ({
 }) => {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [personaOpen, setPersonaOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+
   const navRef = useRef<HTMLDivElement>(null);
   const activeRole = ROLES.find(r => r.id === currentRole) || ROLES[0];
   const menus = getMenusForRole(currentRole);
@@ -174,9 +177,9 @@ export const TopNav: React.FC<TopNavProps> = ({
     setPersonaOpen(false);
   };
 
-  const severityColor =
-    activeCase?.severity === 'CRITICAL' ? '#ef4444' :
-    activeCase?.severity === 'HIGH'     ? '#f59e0b' : '#10b981';
+  const severityBadgeClass =
+    activeCase?.severity === 'CRITICAL' ? 'badge-critical' :
+    activeCase?.severity === 'HIGH'     ? 'badge-high' : 'badge-safe';
 
   return (
     <div ref={navRef} className="relative z-50 select-none">
@@ -189,11 +192,11 @@ export const TopNav: React.FC<TopNavProps> = ({
           <div className="relative mr-6">
             <button
               onClick={() => { setPersonaOpen(v => !v); setOpenMenu(null); }}
-              className="tracex-persona-btn flex items-center gap-2"
+              className="px-3 py-1.5 rounded-md border border-white/20 bg-white/10 hover:bg-white/20 text-white text-xs font-medium flex items-center gap-2 transition-all cursor-pointer"
             >
-              <span className="tracex-persona-dot" style={{ background: roleColor(currentRole) }} />
+              <span className="w-2 h-2 rounded-full shrink-0" style={{ background: roleColor(currentRole) }} />
               <span>{activeRole.label}</span>
-              <ChevronDown className={`w-3.5 h-3.5 tracex-chevron ${personaOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-3.5 h-3.5 opacity-70 transition-transform ${personaOpen ? 'rotate-180' : ''}`} />
             </button>
 
             <div className={`tracex-dropdown tracex-persona-dropdown ${personaOpen ? 'tracex-dropdown-open' : ''}`}>
@@ -205,7 +208,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                   className={`tracex-persona-item ${currentRole === r.id ? 'tracex-persona-item-active' : ''}`}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="tracex-persona-dot" style={{ background: roleColor(r.id) }} />
+                    <span className="w-2 h-2 rounded-full shrink-0" style={{ background: roleColor(r.id) }} />
                     <span className="tracex-persona-label">{r.label}</span>
                     {currentRole === r.id && <span className="tracex-active-badge">Active</span>}
                   </div>
@@ -216,7 +219,7 @@ export const TopNav: React.FC<TopNavProps> = ({
           </div>
 
           {/* Logo / Brand */}
-          <div className="flex items-center pr-8 border-r tracex-divider">
+          <div className="flex items-center pr-8 border-r border-white/20">
             <TracexLogo size="md" showSubtitle={false} />
           </div>
         </div>
@@ -230,7 +233,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                 className={`tracex-nav-link ${openMenu === menu.label ? 'tracex-nav-link-active' : ''}`}
               >
                 {menu.label}
-                <ChevronDown className={`w-3.5 h-3.5 tracex-chevron ${openMenu === menu.label ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-3.5 h-3.5 opacity-70 transition-transform ${openMenu === menu.label ? 'rotate-180' : ''}`} />
               </button>
             </div>
           ))}
@@ -242,31 +245,62 @@ export const TopNav: React.FC<TopNavProps> = ({
           </button>
         </nav>
 
-        {/* RIGHT: Status + Controls */}
+        {/* RIGHT: Status + Theme Toggle + Controls */}
         <div className="flex items-center gap-3">
-          {/* Active case pill */}
+          {/* Active case badge */}
           {activeCase ? (
-            <div className="hidden xl:flex items-center gap-2 tracex-case-badge">
-              <span className="tracex-status-dot" style={{ background: severityColor }} />
-              <span className="font-mono font-semibold text-xs text-white">{activeCase.case_id}</span>
-              <span className="text-gray-500">|</span>
-              <span className="font-mono text-xs font-semibold uppercase" style={{ color: severityColor }}>
-                {activeCase.severity} {activeCase.threat_score?.overall_score ?? '—'}/100
+            <div className="hidden xl:flex items-center gap-2 px-3 py-1 rounded-md bg-white/10 border border-white/20 text-xs">
+              <span className="font-semibold text-white">{activeCase.case_id}</span>
+              <span className="opacity-40">|</span>
+              <span className={`px-2 py-0.5 rounded text-[10px] uppercase ${severityBadgeClass}`}>
+                {activeCase.severity} · {activeCase.threat_score?.overall_score ?? '—'}/100
               </span>
             </div>
           ) : (
-            <div className="hidden xl:flex items-center gap-1.5 tracex-no-case">
+            <div className="hidden xl:flex items-center gap-1.5 text-xs text-white/70">
               <Activity className="w-3.5 h-3.5" />
               <span>No active case</span>
             </div>
           )}
 
+          {/* Theme Toggle Button (Light / System / Dark) */}
+          <div className="flex items-center bg-white/10 border border-white/20 rounded-md p-0.5">
+            <button
+              onClick={() => setTheme('light')}
+              title="Light Mode"
+              className={`p-1.5 rounded text-xs flex items-center gap-1 transition-colors ${theme === 'light' ? 'bg-white text-slate-900 font-semibold' : 'text-white/80 hover:text-white'}`}
+            >
+              <Sun className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline text-[11px]">Light</span>
+            </button>
+            <button
+              onClick={() => setTheme('system')}
+              title="System Theme"
+              className={`p-1.5 rounded text-xs flex items-center gap-1 transition-colors ${theme === 'system' ? 'bg-white text-slate-900 font-semibold' : 'text-white/80 hover:text-white'}`}
+            >
+              <Laptop className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline text-[11px]">Auto</span>
+            </button>
+            <button
+              onClick={() => setTheme('dark')}
+              title="Dark Mode"
+              className={`p-1.5 rounded text-xs flex items-center gap-1 transition-colors ${theme === 'dark' ? 'bg-white text-slate-900 font-semibold' : 'text-white/80 hover:text-white'}`}
+            >
+              <Moon className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline text-[11px]">Dark</span>
+            </button>
+          </div>
+
           <button
             onClick={() => setVoiceActive(!voiceActive)}
-            className={`tracex-control-btn ${voiceActive ? 'tracex-control-btn-active' : ''}`}
+            className={`px-3 py-1.5 rounded-md border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+              voiceActive
+                ? 'bg-teal-500 text-slate-950 border-teal-300'
+                : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
+            }`}
             title={voiceActive ? 'Disable copilot' : 'Enable copilot'}
           >
-            {voiceActive ? <Mic className="w-4 h-4" /> : <MicOff className="w-4 h-4" />}
+            {voiceActive ? <Mic className="w-3.5 h-3.5" /> : <MicOff className="w-3.5 h-3.5" />}
             <span className="hidden sm:inline">{voiceActive ? 'Copilot On' : 'Copilot'}</span>
           </button>
         </div>

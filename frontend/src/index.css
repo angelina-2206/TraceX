@@ -3,64 +3,120 @@
 @import "leaflet/dist/leaflet.css";
 
 /* ================================================
-   TRACE-X  —  Institutional Forensic Workstation
-   Simple, Clean, Professional Academic Font System
+   TRACE-X  —  Institutional Cyber-Forensics Platform
+   CERT-In / NIST / Academic / Enterprise Theme Engine
    ================================================ */
 
-:root {
-  --nav-bg:      #050B17;
-  --nav-border:  rgba(255,255,255,0.08);
-  --nav-text:    #CBD5E1;
-  --nav-hover:   #FFFFFF;
+:root, html.light {
+  color-scheme: light;
 
-  --canvas-bg:   #07101D;
-  --surface:     #0A1628;
-  --surface-2:   #0F1E35;
-  --surface-light: #16243D;
-  --border:      rgba(255,255,255,0.08);
-  --border-hi:   rgba(255,255,255,0.18);
+  /* Backgrounds & Surfaces */
+  --canvas-bg:       #F5F7FA;
+  --surface:         #FFFFFF;
+  --surface-2:       #F8FAFC;
+  --surface-light:   #F1F5F9;
+  --surface-muted:   #E2E8F0;
 
-  --teal:        #0E7063;
-  --teal-light:  #14B8A6;
-  --teal-muted:  rgba(14,112,99,0.15);
+  /* Borders */
+  --border:          #D9E0E8;
+  --border-hi:       #CBD5E1;
 
-  --text-primary:   #F8FAFC;
-  --text-secondary: #CBD5E1;
-  --text-muted:     #64748B;
+  /* Typography */
+  --text-primary:    #172033;
+  --text-secondary:  #526174;
+  --text-muted:      #7A8798;
 
-  --red:   #ef4444;
-  --amber: #f59e0b;
-  --green: #10b981;
+  /* Institutional Accents */
+  --blue-primary:    #164E78;
+  --blue-secondary:  #2563EB;
+  --teal-primary:    #087F8C;
+  --teal-light:      #0E7063;
+
+  /* Severity Status Palette */
+  --status-success:  #16794A;
+  --status-warning:  #A16207;
+  --status-danger:   #B42318;
+  --status-critical: #991B1B;
+
+  /* Top Nav System */
+  --nav-bg:          #164E78;
+  --nav-border:      rgba(255, 255, 255, 0.15);
+  --nav-text:        #E2E8F0;
+  --nav-hover:       #FFFFFF;
+  --nav-active-bg:   rgba(255, 255, 255, 0.12);
+
+  /* Card Shadow */
+  --card-shadow:     0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
-/* ── Reset & Clean Simple Base Font ── */
+html.dark {
+  color-scheme: dark;
+
+  /* Backgrounds & Surfaces */
+  --canvas-bg:       #0B1220;
+  --surface:         #111827;
+  --surface-2:       #172033;
+  --surface-light:   #1E293B;
+  --surface-muted:   #334155;
+
+  /* Borders */
+  --border:          #273449;
+  --border-hi:       #3A4B66;
+
+  /* Typography */
+  --text-primary:    #E8EEF6;
+  --text-secondary:  #A9B7C8;
+  --text-muted:      #738197;
+
+  /* Institutional Accents */
+  --blue-primary:    #4D9DE0;
+  --blue-secondary:  #3B82F6;
+  --teal-primary:    #20B8B0;
+  --teal-light:      #20B8B0;
+
+  /* Severity Status Palette */
+  --status-success:  #4CAF72;
+  --status-warning:  #D7A63A;
+  --status-danger:   #D95C5C;
+  --status-critical: #EF4444;
+
+  /* Top Nav System */
+  --nav-bg:          #090E17;
+  --nav-border:      #1E293B;
+  --nav-text:        #94A3B8;
+  --nav-hover:       #FFFFFF;
+  --nav-active-bg:   #172033;
+
+  /* Card Shadow */
+  --card-shadow:     0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+/* ── Reset & Clean Academic Base Typography ── */
 *, *::before, *::after { box-sizing: border-box; }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
   background: var(--canvas-bg);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 14px;
   line-height: 1.5;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Code & raw hashes only */
-code, pre {
+/* Monospace restricted to raw hashes, IPs, PIDs, and code blocks */
+code, pre, .code-mono {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
 }
 
-/* Clean up font-mono to fallback to clean sans-serif for UI readability */
+/* Overriding font-mono fallback to clean UI sans-serif */
 .font-mono {
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
-.code-mono {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
-}
 
 /* ================================================
-   TOP NAV SYSTEM
+   TOP NAV SYSTEM — INSTITUTIONAL HEADER
    ================================================ */
 
 .tracex-topnav {
@@ -68,60 +124,35 @@ code, pre {
   border-bottom: 1px solid var(--nav-border);
   position: relative;
   z-index: 50;
+  color: #FFFFFF;
 }
 
-/* Brand */
 .tracex-logo-mark {
   width: 28px; height: 28px;
   border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
   display: flex; align-items: center; justify-content: center;
-  color: var(--teal-light);
+  color: #FFFFFF;
 }
+
 .tracex-brand {
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   color: #FFFFFF;
 }
-.tracex-brand-x { color: var(--teal-light); }
-.tracex-divider  { border-color: var(--nav-border); }
-
-/* Persona Button */
-.tracex-persona-btn {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--nav-text);
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.10);
-  background: rgba(255,255,255,0.04);
-  transition: all 0.15s ease;
-  cursor: pointer;
-}
-.tracex-persona-btn:hover {
-  background: rgba(255,255,255,0.08);
-  color: #FFFFFF;
-  border-color: rgba(20,184,166,0.3);
-}
-.tracex-persona-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  display: inline-block;
-}
-.tracex-chevron {
-  color: rgba(255,255,255,0.4);
-  transition: transform 0.2s ease;
+.tracex-brand-sub {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 400;
 }
 
-/* Nav links */
 .tracex-nav-link {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   height: 100%;
   padding: 0 16px;
   font-size: 13px;
@@ -133,285 +164,143 @@ code, pre {
   white-space: nowrap;
 }
 .tracex-nav-link:hover {
-  color: #FFFFFF;
-  border-bottom-color: rgba(20,184,166,0.4);
+  color: var(--nav-hover);
+  background: var(--nav-active-bg);
 }
 .tracex-nav-link-active {
+  color: #FFFFFF !important;
+  border-bottom-color: #38BDF8 !important;
+  background: var(--nav-active-bg);
+}
+
+/* ================================================
+   INSTITUTIONAL CARDS & CONTAINERS
+   ================================================ */
+
+.tracex-card, .forensic-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+.tracex-card:hover, .forensic-card:hover {
+  border-color: var(--border-hi);
+}
+.tracex-card-active, .forensic-card-active {
+  border-color: var(--blue-primary) !important;
+  background: var(--surface-2) !important;
+}
+
+/* ================================================
+   BUTTON SYSTEM — INSTITUTIONAL & RESTRAINED
+   ================================================ */
+
+.btn-primary {
+  background: var(--blue-primary);
+  border: 1px solid transparent;
   color: #FFFFFF;
-  border-bottom-color: var(--teal-light);
-}
-
-/* Case badge */
-.tracex-case-badge {
-  padding: 5px 10px;
-  border-radius: 6px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
-}
-.tracex-status-dot {
-  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
-}
-.tracex-no-case {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-/* Control buttons */
-.tracex-control-btn {
-  display: flex; align-items: center; gap: 6px;
-  padding: 7px 14px;
-  border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: transparent;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--nav-text);
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-.tracex-control-btn:hover {
-  background: rgba(255,255,255,0.06);
-  color: #FFFFFF;
-}
-.tracex-control-btn-active {
-  background: rgba(14,112,99,0.25);
-  border-color: rgba(20,184,166,0.5);
-  color: #5eead4;
-}
-
-/* Dropdowns */
-.tracex-dropdown {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  background: #0A1628;
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 10px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-  z-index: 60;
-  overflow: hidden;
-  opacity: 0;
-  transform: translateY(-6px) scale(0.97);
-  pointer-events: none;
-  transition: opacity 0.18s ease, transform 0.18s ease;
-  transform-origin: top left;
-}
-.tracex-dropdown-open {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
-}
-
-.tracex-persona-dropdown { width: 310px; }
-.tracex-dropdown-header {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  padding: 12px 14px 8px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-.tracex-persona-item {
-  width: 100%;
-  text-align: left;
-  padding: 11px 14px;
-  border-left: 3px solid transparent;
-  transition: all 0.12s ease;
-  cursor: pointer;
-}
-.tracex-persona-item:hover {
-  background: rgba(255,255,255,0.04);
-  border-left-color: rgba(20,184,166,0.4);
-}
-.tracex-persona-item-active {
-  background: rgba(14,112,99,0.15);
-  border-left-color: var(--teal-light);
-}
-.tracex-persona-label {
   font-size: 13px;
   font-weight: 600;
-  color: #F1F5F9;
-}
-.tracex-active-badge {
-  margin-left: auto;
-  font-size: 10px;
-  text-transform: uppercase;
-  color: var(--teal-light);
-}
-.tracex-persona-desc {
-  font-size: 11px;
-  color: var(--text-secondary);
-  margin-top: 2px;
-  padding-left: 17px;
-  line-height: 1.4;
-}
-
-/* Mega-Menu */
-.tracex-megamenu {
-  position: absolute;
-  left: 0; right: 0;
-  top: 100%;
-  background: #0A1628;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 24px 60px rgba(0,0,0,0.7);
-  z-index: 55;
-  animation: fadeInDown 0.18s ease both;
-}
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.tracex-megamenu-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 28px 32px;
-}
-.tracex-megamenu-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: #FFFFFF;
-}
-.tracex-megamenu-close {
-  color: var(--text-muted);
+  border-radius: 6px;
+  padding: 8px 16px;
   cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-  transition: color 0.12s ease;
-}
-.tracex-megamenu-close:hover { color: #FFFFFF; }
-.tracex-megamenu-group-heading {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 12px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-.tracex-megamenu-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
   gap: 6px;
 }
-.tracex-megamenu-item {
-  text-align: left;
-  padding: 12px 14px;
-  border-radius: 8px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: all 0.14s ease;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-.tracex-megamenu-item:hover {
-  background: rgba(255,255,255,0.04);
-  border-color: rgba(255,255,255,0.12);
-}
-.tracex-megamenu-item-active {
-  background: rgba(14,112,99,0.15);
-  border-color: rgba(20,184,166,0.3);
-}
-.tracex-megamenu-item-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #E2E8F0;
-}
-.tracex-megamenu-item:hover .tracex-megamenu-item-label,
-.tracex-megamenu-item-active .tracex-megamenu-item-label {
-  color: #FFFFFF;
-}
-.tracex-megamenu-item-desc {
-  font-size: 11px;
-  color: var(--text-muted);
-  line-height: 1.4;
-}
-
-/* Cards */
-.tracex-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
-}
-.tracex-card:hover {
-  border-color: var(--border-hi);
-  background: var(--surface-2);
-}
-.tracex-card-active {
-  border-color: rgba(20, 184, 166, 0.4) !important;
-  background: var(--surface-2) !important;
-}
-
-.forensic-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  transition: border-color 0.15s ease, background 0.15s ease;
-}
-.forensic-card:hover {
-  border-color: var(--border-hi);
-  background: var(--surface-2);
-}
-.forensic-card-active {
-  border-color: rgba(20,184,166,0.3) !important;
-  background: var(--surface-2) !important;
-}
-
-/* Buttons */
-.btn-primary {
-  background: linear-gradient(135deg, #0E7063 0%, #0B5C51 100%);
-  border: 1px solid rgba(20,184,166,0.3);
-  color: #FFFFFF;
-  font-size: 13px;
-  font-weight: 600;
-  border-radius: 8px;
-  padding: 8px 18px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
 .btn-primary:hover {
-  background: linear-gradient(135deg, #14B8A6 0%, #0E7063 100%);
-  border-color: rgba(20,184,166,0.6);
+  background: #1B5E8E;
 }
 
 .btn-secondary {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border-hi);
-  color: var(--text-secondary);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
   font-size: 13px;
   font-weight: 500;
-  border-radius: 8px;
-  padding: 8px 18px;
+  border-radius: 6px;
+  padding: 8px 16px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 .btn-secondary:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(20,184,166,0.4);
-  color: #FFFFFF;
+  background: var(--surface-2);
+  border-color: var(--border-hi);
 }
 
-/* Status LEDs */
-.status-led { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.status-led-green { background: var(--green); }
-.status-led-red   { background: var(--red); }
-.status-led-amber { background: var(--amber); }
-.status-led-cyan  { background: var(--teal-light); }
+/* ================================================
+   TABLES — CLEAN RESEARCH DATA GRIDS
+   ================================================ */
 
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+.tracex-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
 }
-.animate-fade-in { animation: fadeIn 0.2s ease-out both; }
-.fade-enter      { animation: fadeIn 0.25s ease-out both; }
+.tracex-table th {
+  background: var(--surface-2);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+.tracex-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+}
+.tracex-table tbody tr:hover {
+  background: var(--surface-2);
+}
+
+/* ================================================
+   SEVERITY BADGES & STATUS INDICATORS
+   ================================================ */
+
+.badge-critical {
+  background: rgba(153, 27, 27, 0.12);
+  color: var(--status-critical);
+  border: 1px solid rgba(153, 27, 27, 0.3);
+  font-weight: 600;
+}
+.badge-high {
+  background: rgba(180, 35, 24, 0.12);
+  color: var(--status-danger);
+  border: 1px solid rgba(180, 35, 24, 0.3);
+  font-weight: 600;
+}
+.badge-medium {
+  background: rgba(161, 98, 7, 0.12);
+  color: var(--status-warning);
+  border: 1px solid rgba(161, 98, 7, 0.3);
+  font-weight: 600;
+}
+.badge-low, .badge-safe {
+  background: rgba(22, 121, 74, 0.12);
+  color: var(--status-success);
+  border: 1px solid rgba(22, 121, 74, 0.3);
+  font-weight: 600;
+}
 
 /* Scrollbars */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(20,184,166,0.4); }
+::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fadeIn 0.15s ease-out both; }

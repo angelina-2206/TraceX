@@ -1,6 +1,7 @@
 import React from 'react';
 import { ShieldAlert, AlertTriangle, CheckCircle2, User, Globe, Mail } from 'lucide-react';
 import { IdentityAnalysis, CaseDetail } from '../../types';
+import { PageHeader } from '../common/PageHeader';
 
 interface IdentityDeceptionViewProps {
   caseDetail: CaseDetail;
@@ -8,30 +9,38 @@ interface IdentityDeceptionViewProps {
 
 export const IdentityDeceptionView: React.FC<IdentityDeceptionViewProps> = ({ caseDetail }) => {
   const identity: IdentityAnalysis = caseDetail.identity_analysis;
+  const isHighRisk = identity.deception_score > 60;
+  const isMediumRisk = identity.deception_score > 30 && !isHighRisk;
 
   return (
     <div className="space-y-6 animate-fade-in font-sans">
-      {/* Title */}
-      <div className="tracex-card p-5 border-l-4 border-l-teal-500">
-        <h2 className="text-base font-bold font-mono text-slate-100 flex items-center space-x-2">
-          <ShieldAlert className="w-5 h-5 text-teal-400" />
-          <span>IDENTITY DECEPTION ENGINE — ANALYSIS & IMPERSONATION</span>
-        </h2>
-        <p className="text-xs text-slate-400 font-mono mt-0.5">
-          Detects display-name brand spoofing, homoglyph character substitutions, typosquatting, and envelope Reply-To misalignments.
-        </p>
-      </div>
+      {/* ── Page Header ── */}
+      <PageHeader
+        breadcrumbs={['TRACE-X', caseDetail.case_id, 'Forensic Analysis', 'Identity Deception Engine']}
+        title="Identity Deception & Impersonation Engine"
+        description="Detect display-name brand spoofing, homoglyph character substitutions, typosquatting, and envelope Reply-To misalignments across email headers."
+        metadata={
+          <>
+            <span className="px-2.5 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] font-medium text-[var(--text-secondary)]">
+              Case {caseDetail.case_id}
+            </span>
+            <span className={`px-2.5 py-0.5 rounded-full ${isHighRisk ? 'badge-critical' : isMediumRisk ? 'badge-medium' : 'badge-safe'}`}>
+              Deception Score: {identity.deception_score.toFixed(0)} / 100
+            </span>
+          </>
+        }
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Deception Score Gauge Card */}
+        {/* Deception Score Card */}
         <div className="tracex-card p-6 flex flex-col items-center justify-center text-center space-y-4">
-          <div className="text-slate-400 font-mono text-xs uppercase tracking-wider">
-            IDENTITY DECEPTION SCORE
+          <div className="text-[var(--text-muted)] text-xs font-semibold uppercase tracking-wider">
+            Identity Deception Score
           </div>
 
           <div className="relative w-36 h-36 flex items-center justify-center">
             <svg className="w-full h-full transform -rotate-90">
-              <circle cx="72" cy="72" r="60" stroke="currentColor" strokeWidth="10" className="text-slate-800" fill="transparent" />
+              <circle cx="72" cy="72" r="60" stroke="currentColor" strokeWidth="10" className="text-[var(--border)]" fill="transparent" />
               <circle
                 cx="72"
                 cy="72"
@@ -40,66 +49,60 @@ export const IdentityDeceptionView: React.FC<IdentityDeceptionViewProps> = ({ ca
                 strokeWidth="10"
                 strokeDasharray={376}
                 strokeDashoffset={376 - (376 * identity.deception_score) / 100}
-                className={identity.deception_score > 60 ? 'text-red-500' : identity.deception_score > 30 ? 'text-amber-500' : 'text-teal-400'}
+                className={isHighRisk ? 'text-rose-600 dark:text-rose-400' : isMediumRisk ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'}
                 strokeLinecap="round"
                 fill="transparent"
               />
             </svg>
             <div className="absolute flex flex-col items-center">
-              <span className="text-3xl font-bold font-mono text-slate-100">{identity.deception_score.toFixed(0)}</span>
-              <span className="text-[10px] text-slate-400 font-mono">/ 100</span>
+              <span className="text-3xl font-bold font-mono text-[var(--text-primary)]">{identity.deception_score.toFixed(0)}</span>
+              <span className="text-xs text-[var(--text-muted)]">/ 100</span>
             </div>
           </div>
 
-          <span className={`px-3 py-1 rounded-md font-mono text-xs font-bold uppercase ${
-            identity.deception_score > 60 ? 'bg-red-950/60 text-red-300 border border-red-800' :
-            identity.deception_score > 30 ? 'bg-amber-950/60 text-amber-300 border border-amber-800' :
-            'bg-teal-500/10 text-teal-300 border border-teal-500/30'
+          <span className={`px-3 py-1 rounded text-xs font-bold uppercase ${
+            isHighRisk ? 'badge-critical' : isMediumRisk ? 'badge-medium' : 'badge-safe'
           }`}>
-            {identity.deception_score > 60 ? 'HIGH DECEPTION RISK' : identity.deception_score > 30 ? 'MODERATE RISK' : 'AUTHENTIC ALIGNED'}
+            {isHighRisk ? 'High Deception Risk' : isMediumRisk ? 'Moderate Risk' : 'Authentic Aligned'}
           </span>
         </div>
 
-        {/* Detailed Impersonation Breakdown (Right 2 columns) */}
-        <div className="lg:col-span-2 tracex-card p-6 space-y-4 font-mono text-xs">
-          <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-wider border-b border-white/5 pb-2">
-            EXTRACTED SENDER ENTITIES & MISMATCHES
+        {/* Detailed Impersonation Breakdown */}
+        <div className="lg:col-span-2 tracex-card p-6 space-y-4">
+          <h3 className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider border-b border-[var(--border)] pb-2 flex items-center justify-between">
+            <span>Identity Alignment Audit</span>
+            <span className="text-[var(--blue-primary)] font-semibold">HEADER VERDICT</span>
           </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-3.5 rounded-lg bg-slate-950 border border-slate-800">
-              <div className="text-slate-500 text-[11px]">VISIBLE DISPLAY NAME</div>
-              <div className="font-semibold text-slate-100 text-sm mt-1">{identity.display_name}</div>
-            </div>
-
-            <div className="p-3.5 rounded-lg bg-slate-950 border border-slate-800">
-              <div className="text-slate-500 text-[11px]">CLAIMED BRAND / ROLE</div>
-              <div className="font-semibold text-teal-300 text-sm mt-1">{identity.claimed_brand || 'None Detected'}</div>
-            </div>
-
-            <div className="p-3.5 rounded-lg bg-slate-950 border border-slate-800">
-              <div className="text-slate-500 text-[11px]">SENDER EMAIL DOMAIN</div>
-              <div className="font-semibold text-slate-200 mt-1">{identity.sender_email}</div>
-            </div>
-
-            <div className="p-3.5 rounded-lg bg-slate-950 border border-slate-800">
-              <div className="text-slate-500 text-[11px]">REPLY-TO DESTINATION</div>
-              <div className={`font-semibold mt-1 ${identity.reply_to_mismatch ? 'text-red-400' : 'text-slate-200'}`}>
-                {identity.reply_to || 'Aligned with From header'}
+          <div className="space-y-3 text-xs">
+            <div className="p-3.5 rounded-lg bg-[var(--surface-2)] border border-[var(--border)]">
+              <div className="flex items-center justify-between">
+                <span className="text-[var(--text-muted)] font-medium uppercase text-[10px]">CLAIMED DISPLAY NAME:</span>
+                <span className="font-semibold text-[var(--text-primary)]">{identity.display_name}</span>
               </div>
             </div>
-          </div>
 
-          {/* Detected Deception Factors List */}
-          <div className="mt-4">
-            <div className="text-slate-400 text-[11px] mb-2 uppercase">DETECTED DECEPTION FACTORS ({identity.deception_factors.length})</div>
-            <div className="space-y-2">
-              {identity.deception_factors.map((factor, idx) => (
-                <div key={idx} className="p-3 rounded-lg bg-red-950/20 border border-red-900/50 text-red-200 flex items-start space-x-2">
-                  <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                  <span>{factor}</span>
-                </div>
-              ))}
+            <div className="p-3.5 rounded-lg bg-[var(--surface-2)] border border-[var(--border)]">
+              <div className="flex items-center justify-between">
+                <span className="text-[var(--text-muted)] font-medium uppercase text-[10px]">FROM HEADER ADDRESS:</span>
+                <span className="font-semibold text-[var(--text-primary)] code-mono">{identity.sender_email}</span>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-lg bg-[var(--surface-2)] border border-[var(--border)]">
+              <div className="flex items-center justify-between">
+                <span className="text-[var(--text-muted)] font-medium uppercase text-[10px]">REPLY-TO ADDRESS:</span>
+                <span className="font-semibold text-[var(--text-primary)] code-mono">{identity.reply_to || 'N/A'}</span>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-lg bg-[var(--surface-2)] border border-[var(--border)]">
+              <div className="flex items-center justify-between">
+                <span className="text-[var(--text-muted)] font-medium uppercase text-[10px]">HOMOGLYPH CHECK:</span>
+                <span className={`px-2 py-0.5 rounded text-[10px] font-semibold ${identity.homoglyph_detected ? 'badge-critical' : 'badge-safe'}`}>
+                  {identity.homoglyph_detected ? 'HOMOGLYPH CHARACTERS DETECTED' : 'CLEAN CHARACTER SET'}
+                </span>
+              </div>
             </div>
           </div>
         </div>

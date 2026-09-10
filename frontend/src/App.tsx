@@ -17,12 +17,11 @@ import { BlockchainProofView } from './components/blockchain/BlockchainProofView
 import { AttachmentSandboxView } from './components/sandbox/AttachmentSandboxView';
 import { InvestigationDrawer, EntityDetail } from './components/layout/InvestigationDrawer';
 import { CaseTimelineBar } from './components/layout/CaseTimelineBar';
-import { RisingLines } from './components/ui/RisingLines';
 import { LandingPage } from './components/layout/LandingPage';
 import { CaseDetail, UserRole } from './types';
+import { ThemeProvider } from './context/ThemeContext';
 
-
-export const App: React.FC = () => {
+const MainApp: React.FC = () => {
   const [showLanding, setShowLanding] = useState<boolean>(true);
   const [cases, setCases] = useState<CaseDetail[]>([]);
   const [activeCase, setActiveCase] = useState<CaseDetail | null>(null);
@@ -58,26 +57,33 @@ export const App: React.FC = () => {
           } else {
             // Fetch case directly in case it was just captured by extension
             try {
-              const specificRes = await fetch(`http://127.0.0.1:8000/api/v1/cases/${deepLinkCaseId}`);
-              if (specificRes.ok) {
-                const specificDetail = await specificRes.json();
-                setCases(prev => [specificDetail, ...prev.filter(c => c.case_id !== specificDetail.case_id)]);
-                setActiveCase(specificDetail);
+              const singleRes = await fetch(`http://127.0.0.1:8000/api/v1/cases/${deepLinkCaseId.toUpperCase()}`);
+              if (singleRes.ok) {
+                const singleDetail = await singleRes.json();
+                setActiveCase(singleDetail);
+                setCases(prev => [singleDetail, ...prev.filter(c => c.case_id !== singleDetail.case_id)]);
                 setShowLanding(false);
                 if (deepLinkTab) setActiveTab(deepLinkTab);
                 else setActiveTab('email_forensics');
                 return;
               }
             } catch (err) {
-              console.warn("Could not fetch deep linked case directly:", err);
+              console.error("Deep link fetch error:", err);
             }
           }
         }
+        
+        if (deepLinkTab) {
+          setShowLanding(false);
+          setActiveTab(deepLinkTab);
+        }
 
-        setActiveCase(allDetails[0]);
+        if (!activeCase) {
+          setActiveCase(allDetails[0]);
+        }
       }
     } catch (e) {
-      console.error("Error fetching cases from backend:", e);
+      console.error("Error fetching cases:", e);
     }
   };
 
@@ -87,99 +93,74 @@ export const App: React.FC = () => {
 
   const handleSelectCase = (c: CaseDetail) => {
     setActiveCase(c);
+    setActiveTab('email_forensics');
   };
 
   const handleIngestNewEmail = async (file: File | null, rawText: string) => {
     setLoading(true);
     try {
-      const formData = new FormData();
-      if (file) formData.append('file', file);
-      if (rawText) formData.append('raw_text', rawText);
-
-      const res = await fetch('http://127.0.0.1:8000/api/v1/cases/ingest', {
+      const textContent = file ? await file.text() : rawText;
+      const res = await fetch('http://127.0.0.1:8000/api/v1/ingest', {
         method: 'POST',
-        body: formData
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ eml_content: textContent }),
       });
-      const newCase = await res.json();
-      setCases(prev => [newCase, ...prev]);
-      setActiveCase(newCase);
-      setActiveTab('email_forensics');
+      const result = await res.json();
+      await fetchCases();
+      if (result.case_id) {
+        const newDetailRes = await fetch(`http://127.0.0.1:8000/api/v1/cases/${result.case_id}`);
+        const newDetail = await newDetailRes.json();
+        setActiveCase(newDetail);
+        setActiveTab('email_forensics');
+      }
     } catch (e) {
-      console.error("Ingestion failed:", e);
+      console.error("Ingest failed:", e);
     } finally {
       setLoading(false);
     }
   };
 
-  if (showLanding) {
-    return <LandingPage onEnterWorkspace={(initialTab) => {
-      if (initialTab) {
-        setActiveTab(initialTab);
-      }
-      setShowLanding(false);
-    }} />;
-  }
-
-  const handleRoleChange = (role: UserRole) => {
-    setCurrentRole(role);
-    if (role === 'EXECUTIVE' && activeTab !== 'executive_risk' && activeTab !== 'geo_financial' && activeTab !== 'blockchain_proof' && activeTab !== 'evidence_vault' && activeTab !== 'ai_copilot') {
-      setActiveTab('executive_risk');
-    } else if (role === 'INVESTIGATOR' && activeTab === 'executive_risk') {
-      setActiveTab('attack_graph');
-    } else if (role === 'SOC_ANALYST' && (activeTab === 'executive_risk' || activeTab === 'attack_graph' || activeTab === 'campaign_intel' || activeTab === 'attachment_sandbox')) {
-      setActiveTab('case_desk');
+  const handleEnterWorkspace = (initialTab?: string) => {
+    setShowLanding(false);
+    if (initialTab) {
+      setActiveTab(initialTab);
     }
   };
 
-  return (
-    <div className="min-h-screen flex flex-col font-sans antialiased relative overflow-hidden" style={{ background: 'var(--canvas-bg)', color: 'var(--text-primary)' }}>
+  if (showLanding) {
+    return <LandingPage onEnterWorkspace={handleEnterWorkspace} />;
+  }
 
-      {/* Subtle Rising Lines */}
-      <RisingLines
-        color="#FFFFFF"
-        horizonColor="#1E3A5F"
-        haloColor="#0F2040"
-        riseSpeed={0.5}
-        flowSpeed={0.2}
-        flowDensity={48}
-        horizonHeight={0.98}
-        horizonIntensity={0.12}
-        haloIntensity={0.07}
-        circleScale={1.0}
+  return (
+    <div className="min-h-screen flex flex-col font-sans antialiased bg-[var(--canvas-bg)] text-[var(--text-primary)] relative overflow-x-hidden">
+      <TopNav
+        currentRole={currentRole}
+        setCurrentRole={setCurrentRole}
+        activeCase={activeCase}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        voiceActive={voiceActive}
+        setVoiceActive={setVoiceActive}
       />
 
-
-      <div className="flex flex-col h-screen overflow-hidden fade-enter relative z-10">
-        {/* Top Navigation (replaces Navbar + Sidebar) */}
-        <TopNav
-          currentRole={currentRole}
-          setCurrentRole={handleRoleChange}
-          activeCase={activeCase}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          voiceActive={voiceActive}
-          setVoiceActive={setVoiceActive}
-        />
-
-        {/* Primary Workstation Main Canvas - full width, no sidebar */}
-        <div className="flex flex-1 overflow-hidden relative">
-          <div className="flex-1 flex flex-col overflow-hidden" style={{ background: 'var(--canvas-bg)' }}>
-            {/* Case context bar */}
-            {activeCase && activeTab !== 'case_desk' && (
-              <div style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)' }} className="px-6 py-2.5 flex items-center justify-between font-mono text-xs z-20 shrink-0 select-none">
+      <div className="flex-1 flex flex-col min-h-0 relative z-10">
+        <div className="flex-1 flex flex-col min-h-0">
+          <div className="flex-1 flex flex-col min-h-0">
+            {/* Active Case Header Strip */}
+            {activeCase && (
+              <div className="bg-[var(--surface-2)] border-b border-[var(--border)] px-6 py-2 flex items-center justify-between text-xs">
                 <div className="flex items-center gap-3">
-                  <span className="text-white font-bold">{activeCase.case_id}</span>
-                  <span style={{ color: 'var(--text-muted)' }}>|</span>
-                  <span style={{ color: 'var(--text-secondary)' }} className="font-semibold">{activeCase.title}</span>
+                  <span className="font-semibold text-[var(--text-primary)]">{activeCase.case_id}</span>
+                  <span className="text-[var(--text-muted)]">•</span>
+                  <span className="text-[var(--text-secondary)] font-medium truncate max-w-xl">
+                    {activeCase.email_subject || activeCase.case_id}
+                  </span>
                 </div>
                 <button
                   onClick={() => setActiveTab('case_desk')}
-                  className="text-xs font-medium transition-colors"
-                  style={{ color: 'var(--text-muted)' }}
-                  onMouseOver={e => (e.currentTarget.style.color = '#FFFFFF')}
-                  onMouseOut={e => (e.currentTarget.style.color = 'var(--text-muted)')}
+                  className="text-xs text-[var(--blue-primary)] hover:underline font-semibold"
                 >
-                  Change Case
+                  Switch Active Case
                 </button>
               </div>
             )}
@@ -242,5 +223,11 @@ export const App: React.FC = () => {
     </div>
   );
 };
+
+export const App: React.FC = () => (
+  <ThemeProvider>
+    <MainApp />
+  </ThemeProvider>
+);
 
 export default App;

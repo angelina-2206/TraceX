@@ -4,24 +4,14 @@ import {
   Key, Copy, Check, Link2, ChevronDown, ChevronUp, Cpu, Server, FileText, ArrowRight, Activity
 } from 'lucide-react';
 import { CaseDetail, ChainOfCustodyEvent } from '../../types';
+import { PageHeader } from '../common/PageHeader';
 
 interface BlockchainProofViewProps {
   caseDetail: CaseDetail;
 }
 
-const HashBox: React.FC<{ label: string; value: string; color?: 'teal' | 'green' | 'purple' | 'muted' }> = ({
-  label, value, color = 'teal'
-}) => {
+const HashBox: React.FC<{ label: string; value: string }> = ({ label, value }) => {
   const [copied, setCopied] = useState(false);
-
-  const colorMap = {
-    teal:   { text: '#14B8A6', border: 'rgba(20,184,166,0.3)', bg: 'rgba(20,184,166,0.06)' },
-    green:  { text: '#34d399', border: 'rgba(16,185,129,0.3)', bg: 'rgba(16,185,129,0.06)' },
-    purple: { text: '#c084fc', border: 'rgba(168,85,247,0.3)', bg: 'rgba(168,85,247,0.06)' },
-    muted:  { text: '#94A3B8', border: 'rgba(255,255,255,0.1)',   bg: 'rgba(15,23,42,0.8)' },
-  };
-
-  const c = colorMap[color];
 
   const copy = () => {
     navigator.clipboard.writeText(value);
@@ -31,23 +21,19 @@ const HashBox: React.FC<{ label: string; value: string; color?: 'teal' | 'green'
 
   return (
     <div>
-      <span className="text-[10px] font-sans font-semibold mb-1 block text-slate-400 uppercase tracking-wider">
+      <span className="text-[10px] font-sans font-semibold mb-1 block text-[var(--text-muted)] uppercase tracking-wider">
         {label}
       </span>
       <div
-        className="flex items-center gap-2 p-2 rounded-md group cursor-pointer transition-all hover:border-teal-400/50"
-        style={{ background: c.bg, border: `1px solid ${c.border}` }}
+        className="flex items-center gap-2 p-2 rounded bg-[var(--surface-2)] border border-[var(--border)] group cursor-pointer transition-all hover:border-[var(--border-hi)]"
         onClick={copy}
         title="Click to copy SHA-256 hash"
       >
-        <code
-          className="flex-1 text-[11px] font-mono break-all leading-relaxed"
-          style={{ color: c.text }}
-        >
+        <code className="flex-1 text-[11px] code-mono text-[var(--blue-primary)] break-all leading-relaxed">
           {value}
         </code>
-        <button className="shrink-0 text-slate-400 hover:text-white transition-colors p-0.5">
-          {copied ? <Check className="w-3.5 h-3.5 text-teal-400" /> : <Copy className="w-3.5 h-3.5" />}
+        <button className="shrink-0 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors p-0.5">
+          {copied ? <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
         </button>
       </div>
     </div>
@@ -66,41 +52,41 @@ const MerkleTreeDiagram: React.FC<{ events: ChainOfCustodyEvent[]; selectedIdx: 
 
   return (
     <div className="space-y-3 font-sans">
-      <div className="flex items-center justify-between border-b border-white/10 pb-2">
-        <span className="text-xs font-semibold text-slate-200 flex items-center gap-2">
-          <Blocks className="w-4 h-4 text-teal-400" />
-          Interactive Merkle Proof Tree
+      <div className="flex items-center justify-between border-b border-[var(--border)] pb-2">
+        <span className="text-xs font-semibold text-[var(--text-primary)] flex items-center gap-2">
+          <Blocks className="w-4 h-4 text-[var(--blue-primary)]" />
+          <span>Interactive Merkle Proof Tree Diagram</span>
         </span>
-        <span className="text-[10px] font-mono text-teal-300 bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/30">
+        <span className="text-[10px] font-semibold text-[var(--blue-primary)] bg-[var(--surface-2)] px-2.5 py-0.5 rounded border border-[var(--border)]">
           SHA-256 BINARY TREE
         </span>
       </div>
 
       {/* SVG Canvas with Attached Connectors */}
-      <div className="bg-slate-950 p-6 rounded-xl border border-slate-800 relative overflow-hidden flex flex-col items-center">
+      <div className="bg-[var(--surface-2)] p-6 rounded-lg border border-[var(--border)] relative overflow-hidden flex flex-col items-center">
         {/* SVG Path Layer connecting Root -> Branches -> Leaves */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 600 240" preserveAspectRatio="none">
           {/* Root (300, 45) to Branch Left (150, 115) */}
-          <path d="M 300 45 L 300 80 L 150 80 L 150 115" stroke="#14B8A6" strokeWidth="2" fill="none" opacity="0.8" />
+          <path d="M 300 45 L 300 80 L 150 80 L 150 115" stroke="var(--blue-primary)" strokeWidth="2" fill="none" opacity="0.8" />
           {/* Root (300, 45) to Branch Right (450, 115) */}
-          <path d="M 300 45 L 300 80 L 450 80 L 450 115" stroke="#14B8A6" strokeWidth="2" fill="none" opacity="0.8" />
+          <path d="M 300 45 L 300 80 L 450 80 L 450 115" stroke="var(--blue-primary)" strokeWidth="2" fill="none" opacity="0.8" />
 
           {/* Branch Left (150, 135) to Leaf 0 (80, 195) */}
-          <path d="M 150 135 L 150 165 L 80 165 L 80 195" stroke={selectedIdx <= 1 ? "#14B8A6" : "#334155"} strokeWidth="1.75" fill="none" />
+          <path d="M 150 135 L 150 165 L 80 165 L 80 195" stroke={selectedIdx <= 1 ? "var(--blue-primary)" : "var(--border-hi)"} strokeWidth="1.75" fill="none" />
           {/* Branch Left (150, 135) to Leaf 1 (220, 195) */}
-          <path d="M 150 135 L 150 165 L 220 165 L 220 195" stroke={selectedIdx <= 1 ? "#14B8A6" : "#334155"} strokeWidth="1.75" fill="none" />
+          <path d="M 150 135 L 150 165 L 220 165 L 220 195" stroke={selectedIdx <= 1 ? "var(--blue-primary)" : "var(--border-hi)"} strokeWidth="1.75" fill="none" />
 
           {/* Branch Right (450, 135) to Leaf 2 (380, 195) */}
-          <path d="M 450 135 L 450 165 L 380 165 L 380 195" stroke={selectedIdx >= 2 ? "#14B8A6" : "#334155"} strokeWidth="1.75" fill="none" />
+          <path d="M 450 135 L 450 165 L 380 165 L 380 195" stroke={selectedIdx >= 2 ? "var(--blue-primary)" : "var(--border-hi)"} strokeWidth="1.75" fill="none" />
           {/* Branch Right (450, 135) to Leaf 3 (520, 195) */}
-          <path d="M 450 135 L 450 165 L 520 165 L 520 195" stroke={selectedIdx >= 2 ? "#14B8A6" : "#334155"} strokeWidth="1.75" fill="none" />
+          <path d="M 450 135 L 450 165 L 520 165 L 520 195" stroke={selectedIdx >= 2 ? "var(--blue-primary)" : "var(--border-hi)"} strokeWidth="1.75" fill="none" />
         </svg>
 
         {/* LEVEL 1: MERKLE ROOT NODE */}
         <div className="relative z-10 flex flex-col items-center">
-          <div className="px-4 py-2 rounded-lg bg-teal-500/20 border-2 border-teal-400 text-teal-200 font-bold text-xs shadow-lg shadow-teal-500/20 text-center">
-            <div className="text-[10px] text-teal-300 font-sans uppercase font-bold tracking-wider">MERKLE ROOT</div>
-            <code className="text-[11px] text-slate-100 font-mono block mt-0.5">{rootHash.slice(0, 20)}…</code>
+          <div className="px-4 py-2 rounded-lg bg-[var(--surface)] border-2 border-[var(--blue-primary)] text-[var(--text-primary)] font-bold text-xs shadow-sm text-center">
+            <div className="text-[10px] text-[var(--blue-primary)] font-sans uppercase font-bold tracking-wider">MERKLE ROOT</div>
+            <code className="text-[11px] text-[var(--text-primary)] code-mono block mt-0.5">{rootHash.slice(0, 20)}…</code>
           </div>
         </div>
 
@@ -109,13 +95,13 @@ const MerkleTreeDiagram: React.FC<{ events: ChainOfCustodyEvent[]; selectedIdx: 
 
         {/* LEVEL 2: BRANCH NODES */}
         <div className="w-full flex justify-around items-center z-10">
-          <div className={`px-3 py-1.5 rounded-lg border text-center font-mono ${selectedIdx <= 1 ? 'bg-teal-500/10 border-teal-400 text-teal-200' : 'bg-slate-900 border-slate-800 text-slate-400'}`}>
-            <div className="text-[9px] font-sans font-semibold uppercase text-slate-400">Branch H(0+1)</div>
-            <div className="text-[10px] text-teal-300">{branchLeft.slice(0, 12)}…</div>
+          <div className={`px-3 py-1.5 rounded-lg border text-center font-mono ${selectedIdx <= 1 ? 'bg-[var(--surface)] border-[var(--blue-primary)] text-[var(--text-primary)]' : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-muted)]'}`}>
+            <div className="text-[9px] font-sans font-semibold uppercase text-[var(--text-muted)]">Branch H(0+1)</div>
+            <div className="text-[10px] text-[var(--blue-primary)]">{branchLeft.slice(0, 12)}…</div>
           </div>
-          <div className={`px-3 py-1.5 rounded-lg border text-center font-mono ${selectedIdx >= 2 ? 'bg-teal-500/10 border-teal-400 text-teal-200' : 'bg-slate-900 border-slate-800 text-slate-400'}`}>
-            <div className="text-[9px] font-sans font-semibold uppercase text-slate-400">Branch H(2+3)</div>
-            <div className="text-[10px] text-teal-300">{branchRight.slice(0, 12)}…</div>
+          <div className={`px-3 py-1.5 rounded-lg border text-center font-mono ${selectedIdx >= 2 ? 'bg-[var(--surface)] border-[var(--blue-primary)] text-[var(--text-primary)]' : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-muted)]'}`}>
+            <div className="text-[9px] font-sans font-semibold uppercase text-[var(--text-muted)]">Branch H(2+3)</div>
+            <div className="text-[10px] text-[var(--blue-primary)]">{branchRight.slice(0, 12)}…</div>
           </div>
         </div>
 
@@ -132,13 +118,13 @@ const MerkleTreeDiagram: React.FC<{ events: ChainOfCustodyEvent[]; selectedIdx: 
                 onClick={() => onSelect(idx)}
                 className={`flex-1 p-2.5 rounded-lg border text-center transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-teal-500/20 border-teal-400 text-teal-200 shadow-md ring-2 ring-teal-500/30'
-                    : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200'
+                    ? 'bg-[var(--surface)] border-[var(--blue-primary)] text-[var(--text-primary)] shadow-sm'
+                    : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--border-hi)] hover:text-[var(--text-primary)]'
                 }`}
               >
-                <div className="text-[10px] font-sans font-bold uppercase text-slate-300">Leaf #{idx + 1}</div>
-                <div className="text-[11px] font-medium truncate text-slate-200 mt-0.5">{evt.action.split(' ')[0]}</div>
-                <code className="text-[9px] opacity-80 font-mono truncate block mt-0.5">{evt.current_hash.slice(0, 10)}…</code>
+                <div className="text-[10px] font-sans font-bold uppercase text-[var(--text-muted)]">Leaf #{idx + 1}</div>
+                <div className="text-[11px] font-medium truncate text-[var(--text-primary)] mt-0.5">{evt.action.split(' ')[0]}</div>
+                <code className="text-[9px] opacity-80 code-mono truncate block mt-0.5">{evt.current_hash.slice(0, 10)}…</code>
               </button>
             );
           })}
@@ -184,50 +170,34 @@ export const BlockchainProofView: React.FC<BlockchainProofViewProps> = ({ caseDe
 
   return (
     <div className="space-y-6 animate-fade-in font-sans">
-      {/* ── Header Banner ── */}
-      <div className="tracex-card p-5 border-l-4 border-l-teal-500 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="flex items-center gap-3.5">
-          <div className="w-9 h-9 rounded-lg bg-teal-500/10 border border-teal-500/30 flex items-center justify-center shrink-0">
-            <Blocks className="w-5 h-5 text-teal-400" />
-          </div>
-          <div>
-            <h2 className="text-base font-bold text-slate-100">
-              Immutable Blockchain Proof Ledger & Merkle Tree
-            </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
-              SHA-256 anchored evidence chain · Merkle tree proof structure · Court-admissible timestamping
-            </p>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          {['Polygon POS Mainnet', 'Hyperledger Fabric'].map(net => (
-            <div
-              key={net}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-[11px] text-teal-300 font-semibold"
-            >
-              <div className="status-led status-led-green" />
-              <span>{net}</span>
-            </div>
-          ))}
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-teal-500/10 border border-teal-500/30 text-[11px] text-teal-300 font-semibold">
-            <ShieldCheck className="w-3.5 h-3.5 text-teal-400" />
-            <span>Contract Sealed</span>
-          </div>
-        </div>
-      </div>
+      {/* ── Page Header ── */}
+      <PageHeader
+        breadcrumbs={['TRACE-X', caseDetail.case_id, 'Audit & Integrity', 'Merkle Chain of Custody']}
+        title="Merkle Proof Ledger & Chain of Custody"
+        description="Cryptographically anchor every evidence event into a SHA-256 Merkle tree with inclusion proof verification and Polygon POS mainnet audit records."
+        metadata={
+          <>
+            <span className="px-2.5 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] font-medium text-[var(--text-secondary)]">
+              {events.length} Sealed Blocks
+            </span>
+            <span className="px-2.5 py-0.5 rounded-full badge-safe">
+              Court-Admissible Tamper-Evident Ledger
+            </span>
+          </>
+        }
+      />
 
       {/* ── Stats Summary Cards ── */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
         {[
-          { label: 'Total On-Chain Blocks', value: events.length, color: '#14B8A6' },
-          { label: 'Block Height', value: proof?.block_height?.toLocaleString() ?? '18,492,041', color: '#38bdf8' },
-          { label: 'Gas Consumption', value: proof?.gas_used?.toLocaleString() ?? '21,045 gwei', color: '#10b981' },
-          { label: 'Integrity Audit', value: '100% Verified', color: '#10b981' },
-        ].map(({ label, value, color }) => (
-          <div key={label} className="tracex-card p-3.5">
-            <div className="text-[11px] font-medium text-slate-400">{label}</div>
-            <div className="text-lg font-mono font-bold mt-1" style={{ color }}>{value}</div>
+          { label: 'Total On-Chain Blocks', value: events.length },
+          { label: 'Block Height', value: proof?.block_height?.toLocaleString() ?? '18,492,041' },
+          { label: 'Gas Consumption', value: proof?.gas_used?.toLocaleString() ?? '21,045 gwei' },
+          { label: 'Integrity Audit', value: '100% Verified' },
+        ].map(({ label, value }) => (
+          <div key={label} className="tracex-card p-4">
+            <div className="text-xs font-medium text-[var(--text-muted)]">{label}</div>
+            <div className="text-lg code-mono font-bold mt-1 text-[var(--text-primary)]">{value}</div>
           </div>
         ))}
       </div>
@@ -242,7 +212,7 @@ export const BlockchainProofView: React.FC<BlockchainProofViewProps> = ({ caseDe
         {/* Chain of blocks (left 2 cols) */}
         <div className="lg:col-span-2 space-y-3">
           <div className="flex items-center justify-between mb-1">
-            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            <h3 className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">
               On-Chain Checkpoint Events ({events.length})
             </h3>
           </div>
@@ -256,41 +226,41 @@ export const BlockchainProofView: React.FC<BlockchainProofViewProps> = ({ caseDe
                 <div key={evt.event_id} className="relative">
                   <div
                     className={`tracex-card p-4 transition-all cursor-pointer ${
-                      isSelected ? 'tracex-card-active shadow-md' : 'hover:border-slate-700'
+                      isSelected ? 'tracex-card-active border-[var(--blue-primary)]' : 'hover:border-[var(--border-hi)]'
                     }`}
                     onClick={() => { setSelectedIdx(idx); setExpandedIdx(isExpanded ? null : idx); }}
                   >
                     <div className="flex items-center justify-between text-xs">
                       <div className="flex items-center gap-3">
-                        <div className={`w-7 h-7 rounded-md flex items-center justify-center font-mono font-bold text-xs ${
-                          isSelected ? 'bg-teal-500/20 text-teal-300 border border-teal-400' : 'bg-slate-900 text-slate-400 border border-slate-800'
+                        <div className={`w-7 h-7 rounded-md flex items-center justify-center code-mono font-bold text-xs ${
+                          isSelected ? 'bg-[var(--blue-primary)] text-white' : 'bg-[var(--surface-2)] text-[var(--text-secondary)] border border-[var(--border)]'
                         }`}>
                           #{idx + 1}
                         </div>
                         <div>
-                          <div className="font-semibold text-slate-100">{evt.action}</div>
-                          <div className="text-[11px] text-slate-400 mt-0.5">
-                            <span className="text-slate-300">{evt.actor}</span> · {evt.role}
+                          <div className="font-semibold text-[var(--text-primary)]">{evt.action}</div>
+                          <div className="text-xs text-[var(--text-muted)] mt-0.5">
+                            <span className="text-[var(--text-secondary)]">{evt.actor}</span> · {evt.role}
                           </div>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-teal-500/10 border border-teal-500/30 text-teal-300">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold badge-safe uppercase">
                           VERIFIED BLOCK
                         </span>
-                        {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+                        {isExpanded ? <ChevronUp className="w-4 h-4 text-[var(--text-muted)]" /> : <ChevronDown className="w-4 h-4 text-[var(--text-muted)]" />}
                       </div>
                     </div>
 
                     {isExpanded && (
-                      <div className="mt-4 pt-3 border-t border-white/5 space-y-3 text-xs">
-                        <HashBox label="PREVIOUS BLOCK HASH" value={evt.prev_hash} color="muted" />
-                        <HashBox label="CURRENT SHA-256 HASH" value={evt.current_hash} color="teal" />
-                        <p className="text-xs text-slate-300 leading-relaxed bg-slate-950 p-3 rounded-lg border border-slate-800">
+                      <div className="mt-4 pt-3 border-t border-[var(--border)] space-y-3 text-xs">
+                        <HashBox label="PREVIOUS BLOCK HASH" value={evt.prev_hash} />
+                        <HashBox label="CURRENT SHA-256 HASH" value={evt.current_hash} />
+                        <p className="text-xs text-[var(--text-secondary)] leading-relaxed bg-[var(--surface-2)] p-3 rounded-lg border border-[var(--border)]">
                           {evt.details}
                         </p>
-                        <div className="text-[10px] text-slate-500 font-mono">
+                        <div className="text-[10px] text-[var(--text-muted)] code-mono">
                           Timestamp: {evt.timestamp}
                         </div>
                       </div>
@@ -305,40 +275,39 @@ export const BlockchainProofView: React.FC<BlockchainProofViewProps> = ({ caseDe
         {/* Right: Proof & Audit Inspector */}
         <div className="space-y-4 text-xs">
           <div className="tracex-card p-5 space-y-4">
-            <h3 className="text-xs font-semibold text-teal-400 uppercase tracking-wider flex items-center gap-2 border-b border-white/5 pb-2">
-              <Key className="w-4 h-4 text-teal-400" />
-              Smart Contract Inspector — Block #{selectedIdx + 1}
+            <h3 className="text-xs font-semibold text-[var(--blue-primary)] uppercase tracking-wider flex items-center gap-2 border-b border-[var(--border)] pb-2">
+              <Key className="w-4 h-4 text-[var(--blue-primary)]" />
+              <span>Smart Contract Inspector — Block #{selectedIdx + 1}</span>
             </h3>
 
             {proof ? (
               <div className="space-y-3">
-                <HashBox label="SMART CONTRACT ADDRESS" value={proof.contract_address} color="purple" />
-                <HashBox label="TRANSACTION HASH (TX)" value={proof.tx_hash} color="teal" />
-                <HashBox label="MERKLE TREE ROOT" value={proof.merkle_root} color="green" />
+                <HashBox label="SMART CONTRACT ADDRESS" value={proof.contract_address} />
+                <HashBox label="TRANSACTION HASH (TX)" value={proof.tx_hash} />
+                <HashBox label="MERKLE TREE ROOT" value={proof.merkle_root} />
 
                 <div className="grid grid-cols-2 gap-2">
-                  <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-                    <div className="text-[10px] text-slate-500">BLOCK HEIGHT</div>
-                    <div className="text-xs font-mono font-bold text-teal-300 mt-0.5">
+                  <div className="p-2.5 rounded-lg bg-[var(--surface-2)] border border-[var(--border)]">
+                    <div className="text-[10px] text-[var(--text-muted)] uppercase font-semibold">BLOCK HEIGHT</div>
+                    <div className="text-xs code-mono font-bold text-[var(--text-primary)] mt-0.5">
                       #{proof.block_height?.toLocaleString()}
                     </div>
                   </div>
-                  <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
-                    <div className="text-[10px] text-slate-500">GAS USED</div>
-                    <div className="text-xs font-mono font-bold text-emerald-400 mt-0.5">
+                  <div className="p-2.5 rounded-lg bg-[var(--surface-2)] border border-[var(--border)]">
+                    <div className="text-[10px] text-[var(--text-muted)] uppercase font-semibold">GAS USED</div>
+                    <div className="text-xs code-mono font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">
                       {proof.gas_used?.toLocaleString()} gwei
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-teal-500/10 border border-teal-500/30">
+                <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-[var(--surface-2)] border border-[var(--border)]">
                   <div className="flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-teal-400" />
-                    <span className="text-xs font-semibold text-teal-300">
+                    <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    <span className="text-xs font-semibold text-[var(--text-primary)]">
                       {proof.status || 'POLYGON_ANCHORED'}
                     </span>
                   </div>
-                  <div className="status-led status-led-green" />
                 </div>
 
                 <div className="pt-2">
@@ -353,24 +322,24 @@ export const BlockchainProofView: React.FC<BlockchainProofViewProps> = ({ caseDe
                 </div>
 
                 {verificationResult && (
-                  <div className="p-3.5 rounded-xl space-y-2 bg-teal-500/10 border border-teal-500/30 animate-fade-in">
+                  <div className="p-3.5 rounded-lg space-y-2 bg-[var(--surface-2)] border border-[var(--border)] animate-fade-in">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="font-semibold text-slate-200">On-Chain Audit Result</span>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-teal-500/20 text-teal-300 border border-teal-500/40 flex items-center gap-1">
-                        <CheckCircle2 className="w-3 h-3 text-teal-300" /> VALID (MATCH)
+                      <span className="font-semibold text-[var(--text-primary)]">On-Chain Audit Result</span>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-semibold badge-safe flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" /> VALID (MATCH)
                       </span>
                     </div>
 
-                    <div className="text-[10px] space-y-1 text-slate-300 pt-1">
-                      <div><span className="text-slate-500">SHA-256 Digest:</span> <span className="text-teal-300 font-mono font-bold break-all">{verificationResult.currentHash.substring(0, 24)}...</span></div>
-                      <div><span className="text-slate-500">Polygon Network:</span> <span className="text-teal-300 font-semibold">Polygon POS Mainnet</span></div>
-                      <div><span className="text-slate-500">Audit Status:</span> <span className="text-emerald-400 font-semibold">Court-Admissible Ledger</span></div>
+                    <div className="text-[10px] space-y-1 text-[var(--text-secondary)] pt-1">
+                      <div><span className="text-[var(--text-muted)]">SHA-256 Digest:</span> <span className="text-[var(--blue-primary)] code-mono font-bold break-all">{verificationResult.currentHash.substring(0, 24)}...</span></div>
+                      <div><span className="text-[var(--text-muted)]">Polygon Network:</span> <span className="text-[var(--text-primary)] font-semibold">Polygon POS Mainnet</span></div>
+                      <div><span className="text-[var(--text-muted)]">Audit Status:</span> <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Court-Admissible Ledger</span></div>
                     </div>
                   </div>
                 )}
               </div>
             ) : (
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[var(--text-muted)]">
                 Select a block event to inspect its cryptographic on-chain proof.
               </p>
             )}

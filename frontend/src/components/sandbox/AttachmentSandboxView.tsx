@@ -5,6 +5,7 @@ import {
   Code2, Crosshair, Layers, Radio, RefreshCw, Server, CheckCircle2, XCircle
 } from 'lucide-react';
 import { CaseDetail, AttachmentItem } from '../../types';
+import { PageHeader } from '../common/PageHeader';
 
 interface AttachmentSandboxViewProps {
   caseDetail: CaseDetail;
@@ -499,39 +500,27 @@ const SandboxCard: React.FC<{ att: AttachmentItem; caseId: string; idx: number }
   );
 };
 
-// ─── Main View Component ──────────────────────────────────────────────────────
 export const AttachmentSandboxView: React.FC<AttachmentSandboxViewProps> = ({ caseDetail }) => {
   const attachments = caseDetail.attachments.length > 0 ? caseDetail.attachments : DEMO_ATTACHMENTS;
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Institutional Banner Header */}
-      <div className="tracex-card p-5 border-l-4 border-l-teal-500 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-lg bg-teal-500/10 border border-teal-500/30 flex items-center justify-center shrink-0">
-            <Cpu className="w-5 h-5 text-teal-400" />
-          </div>
-          <div>
-            <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
-              DYNAMIC & STATIC SANDBOX DETONATION ENVIRONMENT
-            </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Isolated QEMU-KVM guest environment analysis · Disassembly · Network socket interception · YARA correlation
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3 shrink-0">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300">
-            <Server className="w-3.5 h-3.5 text-teal-400" />
-            <span>KVM GUEST: WIN10-ENT-22H2</span>
-          </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded bg-teal-500/10 border border-teal-500/30 text-xs font-mono text-teal-300">
-            <Shield className="w-3.5 h-3.5 text-teal-400" />
-            <span>ISOLATED C2 PROXY ACTIVE</span>
-          </div>
-        </div>
-      </div>
+    <div className="space-y-6 animate-fade-in font-sans">
+      {/* ── Page Header ── */}
+      <PageHeader
+        breadcrumbs={['TRACE-X', caseDetail.case_id, 'Forensic Analysis', 'Attachment Sandbox']}
+        title="Detonation Sandbox & Payload Disassembler"
+        description="Isolated QEMU-KVM guest environment static & dynamic analysis, disassembly, network socket interception, and YARA signature correlation."
+        metadata={
+          <>
+            <span className="px-2.5 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] font-medium text-[var(--text-secondary)]">
+              {attachments.length} Payloads Analyzed
+            </span>
+            <span className="px-2.5 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] font-medium text-[var(--text-secondary)]">
+              QEMU-KVM Guest Active
+            </span>
+          </>
+        }
+      />
 
       {/* Summary Metric Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
