@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Flame, ShieldCheck, CheckCircle2, XCircle, HelpCircle, Layers, Database } from 'lucide-react';
 import { CampaignMatch, CaseDetail } from '../../types';
 
@@ -8,6 +8,10 @@ interface CampaignIntelligenceViewProps {
 
 export const CampaignIntelligenceView: React.FC<CampaignIntelligenceViewProps> = ({ caseDetail }) => {
   const [matches, setMatches] = useState<CampaignMatch[]>(caseDetail.campaign_matches);
+
+  useEffect(() => {
+    setMatches(caseDetail.campaign_matches || []);
+  }, [caseDetail]);
 
   const handleDecision = (campId: string, newStatus: string) => {
     setMatches(prev => prev.map(m => m.campaign_id === campId ? { ...m, status: newStatus } : m));

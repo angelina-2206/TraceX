@@ -154,14 +154,14 @@ def test_qdrant_and_semantic_search():
     print("[OK] Qdrant and Semantic Search tests passed!")
 
 
-async def test_investigation_integration():
+def test_investigation_integration():
     print("Running Test: Investigation Pipeline Integration...")
     
     # Normalize IP indicator
     normalized = extract_and_normalize_target("185.220.101.45")
     
     # Run threat aggregator (which now includes RAG)
-    report = await ThreatAggregatorService.aggregate_intelligence(normalized)
+    report = asyncio.run(ThreatAggregatorService.aggregate_intelligence(normalized))
     
     # Verify investigation ID and aggregator values
     assert report["investigation_id"] is not None

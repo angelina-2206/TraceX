@@ -302,6 +302,51 @@ class TestGeminiRagPipeline(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(len(report["ai_analysis"]["facts"]) > 0)
         self.assertTrue(len(report["ai_analysis"]["inferences"]) > 0)
 
+    def test_dynamic_campaign_correlation_on_eml_ingestion(self):
+        """Verify campaigns change dynamically when new EML artifacts are ingested."""
+        from app.services.attack_dna import AttackDnaService
+        from app.schemas.forensics import IdentityAnalysis
+
+        # Test 1: Ingest SSO Login EML
+        ident_sso = IdentityAnalysis(
+            display_name="Security Operations",
+            sender_email="auth@sso-verify-portal.net",
+            reply_to="login@sso-verify-portal.net",
+            return_path="bounces@sso-verify-portal.net",
+            claimed_brand="Microsoft SSO",
+            lookalike_detected=True,
+            homoglyph_detected=False,
+            typosquat_domain=None,
+            reply_to_mismatch=False,
+            deception_score=65.0,
+            deception_factors=["SSO Keyword Match"]
+        )
+        dna_sso = AttackDnaService.compute_attack_dna("CASE-TEST-1", ident_sso, [], [], subject="Urgent: Re-authenticate Corporate SSO Account")
+        camps_sso = AttackDnaService.correlate_campaigns(dna_sso, [], subject="Urgent: Re-authenticate Corporate SSO Account", sender_email=ident_sso.sender_email)
+        
+        self.assertTrue(any("DarkSSO" in c.campaign_name for c in camps_sso))
+
+        # Test 2: Ingest Payment Invoice EML
+        ident_inv = IdentityAnalysis(
+            display_name="CEO Vance",
+            sender_email="ceo@vendor-example.com",
+            reply_to="pay@micr0soft-login-check.net",
+            return_path="bounces@suspicious.net",
+            claimed_brand="Executive CEO",
+            lookalike_detected=True,
+            homoglyph_detected=True,
+            typosquat_domain="micr0soft-login-check.net",
+            reply_to_mismatch=True,
+            deception_score=90.0,
+            deception_factors=["Executive Impersonation", "Reply-To Mismatch"]
+        )
+        dna_inv = AttackDnaService.compute_attack_dna("CASE-TEST-2", ident_inv, [], [], subject="URGENT: Invoice Wire Payment #9910")
+        camps_inv = AttackDnaService.correlate_campaigns(dna_inv, [], subject="URGENT: Invoice Wire Payment #9910", sender_email=ident_inv.sender_email)
+
+        self.assertTrue(any("PhishPhantom" in c.campaign_name for c in camps_inv))
+        self.assertNotEqual(camps_sso[0].campaign_id, camps_inv[0].campaign_id)
+
 
 if __name__ == "__main__":
     unittest.main()
+

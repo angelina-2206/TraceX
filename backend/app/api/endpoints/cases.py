@@ -116,8 +116,21 @@ async def ingest_email(
     )
     
     # 5. Attack DNA & Campaigns
-    attack_dna = AttackDnaService.compute_attack_dna(case_id, identity, urls, hops)
-    campaigns = AttackDnaService.correlate_campaigns(attack_dna, list(cases_db.values()))
+    attack_dna = AttackDnaService.compute_attack_dna(
+        case_id=case_id,
+        identity=identity,
+        urls=urls,
+        hops=hops,
+        subject=parsed.get("subject", ""),
+        body_text=parsed.get("body_text", "")
+    )
+    campaigns = AttackDnaService.correlate_campaigns(
+        current_dna=attack_dna,
+        historical_cases=list(cases_db.values()),
+        subject=parsed.get("subject", ""),
+        sender_email=identity.sender_email,
+        urls=urls
+    )
     
     # 6. Decomposed Threat Score
     threat_score = ThreatScorerService.calculate_decomposed_score(

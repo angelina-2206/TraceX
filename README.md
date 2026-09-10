@@ -5,10 +5,12 @@
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Gemini](https://img.shields.io/badge/Gemini_2.5-8E75B5?style=for-the-badge&logo=googlegemini&logoColor=white)
+![Polygon](https://img.shields.io/badge/Polygon_PoS-8247E5?style=for-the-badge&logo=polygon&logoColor=white)
 ![Qdrant](https://img.shields.io/badge/Qdrant-e52230?style=for-the-badge&logo=qdrant&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
-TRACE-X is a specialized cyber-forensic investigation workstation designed for SOC analysts and incident response teams. The system automates email artifact ingestion, parses metadata and header routing paths, queries external reputation intelligence providers, and maps findings to an immutable chain of custody and a local security knowledge base.
+TRACE-X is a specialized cyber-forensic investigation workstation designed for SOC analysts and incident response teams. The system automates email artifact ingestion, parses metadata and header routing paths, queries external reputation intelligence providers, correlates indicators with dynamic threat campaigns, anchors evidence to the Polygon PoS blockchain, and synthesizes findings using Google Gemini and a local security knowledge base.
 
 ---
 
@@ -22,20 +24,20 @@ TRACE-X divides its core operations into five decoupled layers to ensure isolati
                   ▼
    1. EVIDENCE & MIME PARSING LAYER  ◄── [ SPF/DKIM/DMARC Alignment Checks ]
                   │
-                  ├──► [ Header Flight Path Reconstruction ]
+                  ├──► [ Header Flight Path & Dynamic Attack DNA ]
                   ▼
    2. 4-API REPUTATION AGGREGATOR   ◄── [ Parallel API Lookups & Fail-safes ]
                   │
-                  ├──► [ Geo-Financial Mismatch Engine ]
+                  ├──► [ Geo-Financial Mismatch & Dynamic Campaign Correlation ]
                   ▼
-   3. EXPLAINABLE RISK ENGINE       ◄── [ Deterministic Metric Weighting ]
+   3. EXPLAINABLE RISK ENGINE       ◄── [ Decomposed Metric Scoring & Impact Lab ]
                   │
-                  ├──► [ Binary Merkle Tree Cryptographic Sealing ]
+                  ├──► [ Polygon PoS Cryptographic Evidence Sealing ]
                   ▼
-   4. LOCAL KNOWLEDGE RAG ENGINE    ◄── [ BAAI Embeddings & Qdrant Search ]
+   4. LOCAL KNOWLEDGE RAG & GEMINI  ◄── [ BAAI Embeddings, Qdrant & Gemini 2.5 ]
                   │
                   ▼
-   5. FORENSIC WORKSTATION DESK     ◄── [ Threat Vectors & Graph Rendering ]
+   5. FORENSIC WORKSTATION DESK     ◄── [ Attack Graph, Copilot & Ledger Views ]
 ```
 
 ---
@@ -56,22 +58,21 @@ The aggregator queries four external APIs concurrently via asynchronous HTTP cli
 *   **VirusTotal**: Checks hashes, domains, and IPs against multi-vendor scanner directories.
 *   **Fault Containment**: All lookups run in parallel via `asyncio.gather` with isolated timeout controls (5-8 seconds). If an individual API goes offline or encounters rate limits, the aggregator flags the failure and returns the remaining intelligence uninterrupted.
 
-### 3. Geo-Financial Forensic Mapping
-A unique detection system for financial redirection attacks:
-*   **Metadata Extraction**: Searches the email body for financial coordinates, including Bank Beneficiary Names, Bank Names, Masked Accounts, and Indian Financial System Codes (IFSC).
-*   **Cross-Region Mismatch Engine**: Geolocates the physical branch coordinates of the target bank via its IFSC and compares them with the geolocated IP address of the initial email sender hop. If a significant cross-border anomaly is detected (e.g., mail originating from a server in Bulgaria requesting an urgent payout to a bank branch in Bangalore), it flags a high-priority billing threat.
+### 3. Geo-Financial Forensic Mapping & Dynamic Campaign Engine
+*   **Financial Metadata Extraction**: Searches email body text for financial parameters, including Bank Beneficiary Names, Bank Names, Masked Accounts, and Indian Financial System Codes (IFSC).
+*   **Cross-Region Mismatch Engine**: Geolocates physical bank branch coordinates via IFSC and compares them with the geolocated IP address of the email sender hop.
+*   **Dynamic Campaign Correlation Engine**: Computes structured Attack DNA fingerprint vectors (language markers, identity deception, URL redirect structure, and infrastructure ASNs). Correlates newly ingested `.eml` files dynamically against institutional threat memory clusters (e.g. *PhishPhantom Invoice BEC*, *DarkSSO Credential Harvest*, *ApexImpersonate Ring*).
 
-### 4. Tamper-Evident Forensic Ledger
-To guarantee the legal integrity of digital evidence, the chain of custody is secured cryptographically:
-*   **Immutable Append-Only Log**: Every investigator action, sandbox detonation, and query is saved as an sequential ledger event.
-*   **Binary Merkle Tree Root**: The hash of each event is paired and hashed (`SHA-256`) to construct a binary Merkle Tree. Odd nodes are replicated to maintain tree balance.
-*   **Verification Path Proofs**: The system generates a list of proof siblings (Merkle path proofs) for every single event. This allows independent auditors to mathematically verify that no historical log entry has been altered, deleted, or inserted.
+### 4. Polygon PoS Blockchain Evidence Ledger & Verification
+To guarantee legal admissibility and tamper-proof chain of custody:
+*   **Immutable Append-Only Log**: Every investigator action, ingestion event, and sandbox detonation is recorded with cryptographic timestamps.
+*   **Polygon PoS Anchoring**: Hashes evidence payloads (`SHA-256`) and anchors verification proofs directly to the Polygon PoS blockchain.
+*   **On-Chain Status Verification**: Computes real-time canonical hashes and verifies evidence integrity against on-chain transaction records to confirm evidence has never been modified or forged.
 
-### 5. Local Knowledge RAG Engine
-A completely private, offline retrieval-augmented generation layer:
-*   **Local Embeddings**: Converts queries using the `BAAI/bge-small-en-v1.5` transformer model running locally on the CPU (384-dimensional vector space).
-*   **Qdrant Vector Storage**: Performs sub-second cosine-similarity searches on the `tracex_knowledge` collection.
-*   **Evidence-to-Query Transformation**: The query builder translates raw aggregator findings into targeted semantic search parameters (e.g., translating a domain with negative VT reputation and multiple redirects into the query `"malicious redirect chains credential harvesting"`). This limits retrieval scope to factual, highly relevant MITRE ATT&CK techniques.
+### 5. Local RAG Engine & Google Gemini Synthesis
+*   **Local Embeddings**: Converts queries using `BAAI/bge-small-en-v1.5` transformer models running locally on CPU (384-dimensional vector space).
+*   **Qdrant Vector Storage**: Performs sub-second cosine-similarity searches on indexed MITRE ATT&CK knowledge documents.
+*   **Grounded Gemini 2.5 Flash Synthesis**: Feeds retrieved MITRE knowledge context and case evidence into Google Gemini 2.5 Flash to synthesize structured facts, inferences, uncertainties, and evidence citations (`[EV-ID-XX]`, `[KB-XX]`).
 
 ---
 
@@ -99,16 +100,21 @@ SIH/
 │   ├── app/
 │   │   ├── main.py                    # Application startup and global middlewares
 │   │   ├── api/
-│   │   │   ├── cases.py               # Case uploads, timeline, and STIX generators
+│   │   │   ├── cases.py               # Case uploads, EML ingestion, impact lab & STIX
 │   │   │   ├── investigate.py         # 4-API aggregator endpoints
 │   │   │   └── rag.py                 # RAG search and health check endpoints
 │   │   ├── core/
-│   │   │   ├── config.py              # Configuration manager and startup diagnostics
+│   │   │   ├── config.py              # Configuration manager (Gemini & threat API keys)
 │   │   │   └── security.py            # Token-bucket rate limiter implementation
 │   │   ├── schemas/
+│   │   │   ├── forensics.py           # Attack DNA, Campaign, & Evidence schemas
 │   │   │   ├── threat.py              # Pydantic aggregator schemas
 │   │   │   └── rag.py                 # Pydantic vector matching schemas
 │   │   └── services/
+│   │       ├── gemini_service.py      # Google Gemini 2.5 Flash integration
+│   │       ├── attack_dna.py          # Dynamic Attack DNA & Campaign correlation engine
+│   │       ├── blockchain_service.py  # Polygon PoS transaction anchoring & verification
+│   │       ├── forensic_rag.py        # Grounded RAG copilot reasoning engine
 │   │       ├── risk_engine.py         # Weight-based threat classification
 │   │       ├── threat_aggregator.py   # Concurrency lookup runner
 │   │       ├── embedding_service.py   # Local CPU vector generation
@@ -121,8 +127,11 @@ SIH/
 │   ├── scripts/
 │   │   └── ingest_knowledge.py        # Database indexing pipeline
 │   ├── tests/
-│   │   ├── run_tests.py               # Aggregator unit tests
-│   │   └── test_rag.py                # RAG system integration tests
+│   │   ├── test_blockchain.py         # Polygon anchoring & hash verification tests
+│   │   ├── test_gemini_rag.py         # Gemini RAG & dynamic campaign tests
+│   │   ├── test_security.py           # Rate limiting & authorization tests
+│   │   ├── test_e2e.py                # Full pipeline E2E integration test
+│   │   └── test_rag.py                # RAG subsystem unit tests
 │   └── docker-compose.yml             # Local Qdrant container definition
 └── frontend/                          # React TypeScript Vite workspace
 ```
@@ -139,14 +148,14 @@ docker compose up -d qdrant
 ```
 
 ### 2. Configure Environment Parameters
-Create a `.env` file in the `backend/` directory based on `.env.example`. Add your external threat API keys:
+Create a `.env` file in the `backend/` directory based on `.env.example`. Add your API keys:
 ```ini
+GEMINI_API_KEY=your_gemini_api_key
 VIRUSTOTAL_API_KEY=your_key_here
 ABUSEIPDB_API_KEY=your_key_here
 URLSCAN_API_KEY=your_key_here
 IPGEOLOCATION_API_KEY=your_key_here
 ```
-*(No API keys or cloud credentials are required for local embeddings or Qdrant).*
 
 ### 3. Install Python Dependencies
 ```bash
@@ -179,13 +188,15 @@ Open `http://localhost:5173/` in your browser.
 
 ## Verification & Testing
 
-Verify that all backend modules, embedding layers, and database connectors function correctly:
+Verify that all backend modules, AI layers, database connectors, and blockchain services function correctly:
 
-*   **Run Core Aggregator Tests**:
+*   **Run Complete Pytest Suite**:
     ```bash
-    python tests/run_tests.py
+    cd backend
+    python -m pytest
     ```
-*   **Run RAG Subsystem Tests**:
+*   **Run Specific Test Modules**:
     ```bash
-    python tests/test_rag.py
+    python -m pytest tests/test_gemini_rag.py tests/test_blockchain.py tests/test_security.py
     ```
+
