@@ -30,7 +30,7 @@ export const UrlIntelligenceList: React.FC<UrlIntelligenceListProps> = ({ urls, 
           return (
             <div
               key={idx}
-              className="p-2 rounded bg-[#13161A] border border-[#262C34] flex items-center justify-between text-xs gap-2"
+              className="p-2.5 rounded-lg bg-[#0A1628] border border-white/10 flex items-center justify-between text-xs gap-2"
             >
               <div className="flex items-center gap-2 min-w-0">
                 {isSuspicious ? (

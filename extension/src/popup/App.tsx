@@ -188,16 +188,16 @@ export const App: React.FC = () => {
   const isWebmail = tabDomain.includes('mail.google.com') || tabDomain.includes('outlook') || tabDomain.includes('office');
 
   return (
-    <div className="flex flex-col min-h-[500px] bg-[#0E1013] text-slate-100 font-sans antialiased select-none">
+    <div className="flex flex-col min-h-[500px] bg-[#07101D] text-slate-100 font-sans antialiased select-none">
       <HeaderBar online={state.status !== 'ERROR'} />
 
       <main className="flex-1 p-3.5 space-y-3.5 overflow-y-auto">
         {/* State 1: NO EMAIL DETECTED */}
         {state.status === 'NO_EMAIL_DETECTED' && (
           <div className="py-1 space-y-3 animate-fade-in">
-            <div className="p-3.5 rounded bg-[#13161A] border border-[#262C34] text-center space-y-2.5">
-              <div className="w-8 h-8 rounded bg-[#181B20] border border-[#2D333B] flex items-center justify-center mx-auto text-slate-400">
-                <Mail className="w-4 h-4" />
+            <div className="p-3.5 rounded-lg bg-[#0A1628] border border-white/10 text-center space-y-2.5">
+              <div className="w-8 h-8 rounded bg-[#0F1E35] border border-white/10 flex items-center justify-center mx-auto text-teal-400">
+                <Mail className="w-4 h-4 text-[#14B8A6]" />
               </div>
               <div className="space-y-1">
                 <div className="text-xs font-semibold text-slate-200 uppercase tracking-tight">
@@ -216,9 +216,9 @@ export const App: React.FC = () => {
                 <button
                   onClick={scanForActiveEmail}
                   disabled={isScanningTab}
-                  className="px-3 py-1 rounded bg-[#181B20] border border-[#2D333B] hover:border-slate-400 text-slate-300 hover:text-slate-100 text-[11px] inline-flex items-center gap-1.5 transition-colors"
+                  className="px-3 py-1 rounded bg-[#0F1E35] border border-white/10 hover:border-teal-500/40 text-slate-300 hover:text-slate-100 text-[11px] inline-flex items-center gap-1.5 transition-colors"
                 >
-                  <RefreshCw className={`w-3 h-3 ${isScanningTab ? 'animate-spin' : ''}`} />
+                  <RefreshCw className={`w-3 h-3 ${isScanningTab ? 'animate-spin text-teal-400' : ''}`} />
                   <span>{isScanningTab ? 'Scanning...' : 'Scan Active Tab'}</span>
                 </button>
               </div>
@@ -235,13 +235,13 @@ export const App: React.FC = () => {
                   <button
                     key={key}
                     onClick={() => handleLoadDemoSample(key)}
-                    className="w-full text-left p-2.5 rounded bg-[#13161A] border border-[#262C34] hover:border-slate-500 hover:bg-[#181B20] transition-colors group"
+                    className="w-full text-left p-2.5 rounded-lg bg-[#0A1628] border border-white/10 hover:border-teal-500/30 hover:bg-[#0F1E35] transition-colors group"
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-medium text-slate-200 group-hover:text-white">
                         {item.label}
                       </span>
-                      <span className="text-[9px] font-mono text-slate-400 px-1 py-0.2 rounded bg-[#1C2128]">
+                      <span className="text-[9px] text-teal-300 px-1.5 py-0.5 rounded bg-teal-500/10 border border-teal-500/30 font-medium">
                         {item.tag}
                       </span>
                     </div>
@@ -255,7 +255,7 @@ export const App: React.FC = () => {
 
             <button
               onClick={() => handleOpenDashboard()}
-              className="w-full py-2 rounded bg-[#16191E] border border-[#262C34] text-slate-300 hover:text-white hover:border-slate-400 text-xs font-medium inline-flex items-center justify-center gap-1.5 transition-colors"
+              className="w-full py-2 rounded-lg bg-[#0A1628] border border-white/10 text-slate-300 hover:text-white hover:border-teal-500/40 text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors"
             >
               <span>Launch TRACE-X Workstation</span>
               <ExternalLink className="w-3 h-3" />
@@ -266,31 +266,31 @@ export const App: React.FC = () => {
         {/* State 2: EMAIL DETECTED — READY FOR ANALYSIS */}
         {state.status === 'EMAIL_DETECTED' && (
           <div className="space-y-3 animate-fade-in">
-            <div className="p-3 rounded bg-[#13161A] border border-[#262C34] space-y-2">
-              <div className="flex items-center justify-between text-[10px] text-slate-400 border-b border-[#1E2328] pb-1.5">
-                <span className="uppercase font-medium font-mono">Artifact: {state.email.source}</span>
-                <span className="text-amber-400 font-mono font-medium">Ready</span>
+            <div className="p-3.5 rounded-lg bg-[#0A1628] border border-white/10 space-y-2">
+              <div className="flex items-center justify-between text-[10px] text-slate-400 border-b border-white/10 pb-1.5">
+                <span className="uppercase font-medium">Artifact: {state.email.source}</span>
+                <span className="text-amber-400 font-medium">Ready</span>
               </div>
               <div className="text-xs space-y-1">
                 <div>
-                  <div className="text-slate-500 text-[9px] font-mono">SENDER</div>
+                  <div className="text-slate-500 text-[9px]">SENDER</div>
                   <div className="font-medium text-slate-200 truncate">{state.email.sender}</div>
                 </div>
                 <div>
-                  <div className="text-slate-500 text-[9px] font-mono">SUBJECT</div>
+                  <div className="text-slate-500 text-[9px]">SUBJECT</div>
                   <div className="font-medium text-slate-300 truncate">{state.email.subject}</div>
                 </div>
               </div>
               {state.email.urls && state.email.urls.length > 0 && (
-                <div className="text-[10px] text-slate-500 pt-1 border-t border-[#1E2328]">
-                  Embedded links: <span className="text-slate-300 font-mono">{state.email.urls.length}</span>
+                <div className="text-[10px] text-slate-400 pt-1 border-t border-white/10">
+                  Embedded links: <span className="text-teal-300 font-medium">{state.email.urls.length}</span>
                 </div>
               )}
             </div>
 
             <button
               onClick={() => handleRunAnalysis(state.email)}
-              className="w-full py-2.5 rounded bg-slate-200 text-slate-900 hover:bg-white transition-colors text-xs font-semibold flex items-center justify-center gap-2 shadow-sm"
+              className="w-full py-2.5 rounded-lg bg-gradient-to-r from-[#0E7063] to-[#0B5C51] hover:from-[#14B8A6] hover:to-[#0E7063] text-white transition-all text-xs font-semibold flex items-center justify-center gap-2 border border-[#14B8A6]/30 shadow-sm"
             >
               <Shield className="w-3.5 h-3.5" />
               <span>Evaluate Security Threat</span>

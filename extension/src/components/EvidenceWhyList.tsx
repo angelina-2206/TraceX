@@ -29,14 +29,14 @@ export const EvidenceWhyList: React.FC<EvidenceWhyListProps> = ({ findings, auth
           return (
             <div
               key={idx}
-              className="rounded bg-[#13161A] border border-[#262C34] overflow-hidden text-xs"
+              className="rounded-lg bg-[#0A1628] border border-white/10 overflow-hidden text-xs"
             >
               <button
                 onClick={() => setExpandedIndex(isExpanded ? null : idx)}
-                className="w-full p-2 flex items-center justify-between text-left hover:bg-[#181B20] transition-colors"
+                className="w-full p-2 flex items-center justify-between text-left hover:bg-[#0F1E35] transition-colors"
               >
                 <div className="flex items-center gap-2 pr-2 min-w-0">
-                  <span className="text-slate-500 text-[10px] font-mono">
+                  <span className="text-slate-500 text-[10px] font-sans font-medium">
                     {(idx + 1).toString().padStart(2, '0')}
                   </span>
                   <span className="text-slate-200 font-medium truncate">{f.title}</span>
@@ -44,29 +44,29 @@ export const EvidenceWhyList: React.FC<EvidenceWhyListProps> = ({ findings, auth
 
                 <div className="flex items-center gap-1.5 shrink-0">
                   <span
-                    className={`text-[9px] px-1 py-0.2 rounded font-mono font-medium uppercase ${
+                    className={`text-[9px] px-1.5 py-0.5 rounded font-sans font-semibold uppercase ${
                       f.severity === 'CRITICAL' || f.severity === 'HIGH'
-                        ? 'text-rose-400 bg-rose-950/40 border border-rose-900/50'
-                        : 'text-amber-400 bg-amber-950/40 border border-amber-900/50'
+                        ? 'text-rose-300 bg-rose-950/40 border border-rose-800/60'
+                        : 'text-amber-300 bg-amber-950/40 border border-amber-800/60'
                     }`}
                   >
                     {f.severity}
                   </span>
                   {isExpanded ? (
-                    <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
+                    <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
                   ) : (
-                    <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+                    <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                   )}
                 </div>
               </button>
 
               {isExpanded && (
-                <div className="p-2.5 bg-[#0F1115] border-t border-[#1C2128] space-y-1.5 text-[11px] text-slate-400">
+                <div className="p-2.5 bg-[#0F1E35] border-t border-white/10 space-y-1.5 text-[11px] text-slate-300">
                   <p className="leading-relaxed">{f.description}</p>
                   {f.evidence_id && (
-                    <div className="flex items-center gap-1.5 font-mono text-[9px] text-slate-500 pt-0.5">
+                    <div className="flex items-center gap-1.5 text-[9px] text-slate-400 pt-0.5">
                       <span>Ref:</span>
-                      <code className="text-slate-300">{f.evidence_id}</code>
+                      <code className="text-teal-300">{f.evidence_id}</code>
                     </div>
                   )}
                 </div>
@@ -77,7 +77,7 @@ export const EvidenceWhyList: React.FC<EvidenceWhyListProps> = ({ findings, auth
 
         {/* Authentication Summary Grid */}
         {authStatus && (
-          <div className="p-2 rounded bg-[#13161A] border border-[#262C34] grid grid-cols-4 gap-1.5 text-center text-[10px] font-mono">
+          <div className="p-2.5 rounded-lg bg-[#0A1628] border border-white/10 grid grid-cols-4 gap-1.5 text-center text-[10px]">
             <div>
               <div className="text-slate-500 text-[9px]">SPF</div>
               <div className={`font-semibold ${authStatus.spf === 'PASS' ? 'text-emerald-400' : 'text-rose-400'}`}>

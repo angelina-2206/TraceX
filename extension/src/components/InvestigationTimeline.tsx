@@ -10,8 +10,8 @@ export const InvestigationTimeline: React.FC = () => {
   ];
 
   return (
-    <div className="p-2.5 rounded bg-[#13161A] border border-[#262C34] space-y-1.5 text-xs">
-      <div className="flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase border-b border-[#1C2128] pb-1">
+    <div className="p-3 rounded-lg bg-[#0A1628] border border-white/10 space-y-1.5 text-xs">
+      <div className="flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase border-b border-white/10 pb-1.5">
         <span>Verification Telemetry</span>
         <span className="font-mono text-[9px] text-slate-500">Integrity Verified</span>
       </div>

@@ -15,8 +15,8 @@ const STAGES = [
 
 export const ForensicProgress: React.FC<ForensicProgressProps> = ({ currentStep }) => {
   return (
-    <div className="p-3.5 rounded-md bg-[#13161A] border border-[#262C34] space-y-2.5">
-      <div className="flex items-center justify-between text-xs font-semibold text-slate-200 border-b border-[#1C2128] pb-2">
+    <div className="p-3.5 rounded-lg bg-[#0A1628] border border-white/10 space-y-2.5">
+      <div className="flex items-center justify-between text-xs font-semibold text-slate-200 border-b border-white/10 pb-2">
         <span className="flex items-center gap-1.5 text-slate-300">
           <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-400" />
           <span>Analyzing Artifact</span>
