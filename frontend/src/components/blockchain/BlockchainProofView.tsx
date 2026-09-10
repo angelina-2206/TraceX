@@ -356,8 +356,8 @@ export const BlockchainProofView: React.FC<BlockchainProofViewProps> = ({ caseDe
                   <div className="p-3.5 rounded-xl space-y-2 bg-teal-500/10 border border-teal-500/30 animate-fade-in">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-semibold text-slate-200">On-Chain Audit Result</span>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-teal-500/20 text-teal-300 border border-teal-500/40">
-                        ● VALID (MATCH)
+                      <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-teal-500/20 text-teal-300 border border-teal-500/40 flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3 text-teal-300" /> VALID (MATCH)
                       </span>
                     </div>
 

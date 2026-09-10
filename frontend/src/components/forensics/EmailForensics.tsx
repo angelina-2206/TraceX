@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, ShieldCheck, ShieldAlert, FileCode, Paperclip, Eye, EyeOff, CheckCircle2, XCircle } from 'lucide-react';
+import { Mail, ShieldCheck, ShieldAlert, FileCode, Paperclip, Eye, EyeOff, CheckCircle2, XCircle, X } from 'lucide-react';
 import { CaseDetail } from '../../types';
 
 interface EmailForensicsProps {
@@ -215,7 +215,7 @@ export const EmailForensics: React.FC<EmailForensicsProps> = ({ caseDetail }) =>
           <div className="bg-slate-900 border border-slate-700 rounded-xl max-w-4xl w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl">
             <div className="p-4 border-b border-slate-800 flex items-center justify-between font-mono text-sm">
               <span className="font-bold text-slate-100">RAW FORENSIC EMAIL HEADERS ({caseDetail.case_id})</span>
-              <button onClick={() => setShowRawHeaders(false)} className="text-slate-400 hover:text-slate-100">✕ CLOSE</button>
+              <button onClick={() => setShowRawHeaders(false)} className="text-slate-400 hover:text-slate-100 flex items-center gap-1.5"><X className="w-4 h-4" /> CLOSE</button>
             </div>
             <div className="p-4 bg-slate-950 font-mono text-xs text-slate-300 overflow-y-auto whitespace-pre-wrap select-all leading-relaxed">
               {caseDetail.header_hops.map(h => h.raw_header).join('\n')}
