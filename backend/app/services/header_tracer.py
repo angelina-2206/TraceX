@@ -1,5 +1,5 @@
 import re
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from app.schemas.forensics import HeaderHop, AuthStatus
 
 class HeaderTracerService:
@@ -90,13 +90,16 @@ class HeaderTracerService:
         return hops
 
     @staticmethod
-    def parse_auth_headers(raw_headers: Dict[str, str], received_spf: str, auth_results: str) -> AuthStatus:
+    def parse_auth_headers(raw_headers: Optional[Dict[str, str]] = None, received_spf: Optional[str] = None, auth_results: Optional[str] = None) -> AuthStatus:
         """
         Parses SPF, DKIM, and DMARC result headers and determines alignment.
         """
-        auth_str = (auth_results + " " + received_spf + " " + raw_headers.get("dmarc-filter", "")).lower()
+        raw_headers = raw_headers or {}
+        spf_str = str(received_spf or "")
+        auth_res_str = str(auth_results or "")
+        auth_str = (auth_res_str + " " + spf_str + " " + str(raw_headers.get("dmarc-filter", ""))).lower()
         
-        spf_status = "FAIL" if "spf=fail" in auth_str or "softfail" in auth_str or "fail" in received_spf.lower() else ("PASS" if "spf=pass" in auth_str or "pass" in received_spf.lower() else "FAIL")
+        spf_status = "FAIL" if "spf=fail" in auth_str or "softfail" in auth_str or "fail" in spf_str.lower() else ("PASS" if "spf=pass" in auth_str or "pass" in spf_str.lower() else "FAIL")
         dkim_status = "FAIL" if "dkim=fail" in auth_str else ("PASS" if "dkim=pass" in auth_str else "FAIL")
         dmarc_status = "FAIL" if "dmarc=fail" in auth_str else ("PASS" if "dmarc=pass" in auth_str else "FAIL")
         

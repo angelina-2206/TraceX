@@ -35,19 +35,47 @@ export const App: React.FC = () => {
 
   const fetchCases = async () => {
     try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const deepLinkCaseId = urlParams.get('case') || urlParams.get('investigate');
+      const deepLinkTab = urlParams.get('tab');
+
       const res = await fetch('http://127.0.0.1:8000/api/v1/cases');
       const summaries = await res.json();
       
       if (summaries.length > 0) {
-        const fullRes = await fetch(`http://127.0.0.1:8000/api/v1/cases/${summaries[0].case_id}`);
-        const fullDetail = await fullRes.json();
-        setCases([fullDetail]);
-        setActiveCase(fullDetail);
-
         const allDetails = await Promise.all(
           summaries.map((s: any) => fetch(`http://127.0.0.1:8000/api/v1/cases/${s.case_id}`).then(r => r.json()))
         );
         setCases(allDetails);
+
+        if (deepLinkCaseId) {
+          const matched = allDetails.find((c: CaseDetail) => c.case_id.toLowerCase() === deepLinkCaseId.toLowerCase());
+          if (matched) {
+            setActiveCase(matched);
+            setShowLanding(false);
+            if (deepLinkTab) setActiveTab(deepLinkTab);
+            else setActiveTab('email_forensics');
+            return;
+          } else {
+            // Fetch case directly in case it was just captured by extension
+            try {
+              const specificRes = await fetch(`http://127.0.0.1:8000/api/v1/cases/${deepLinkCaseId}`);
+              if (specificRes.ok) {
+                const specificDetail = await specificRes.json();
+                setCases(prev => [specificDetail, ...prev.filter(c => c.case_id !== specificDetail.case_id)]);
+                setActiveCase(specificDetail);
+                setShowLanding(false);
+                if (deepLinkTab) setActiveTab(deepLinkTab);
+                else setActiveTab('email_forensics');
+                return;
+              }
+            } catch (err) {
+              console.warn("Could not fetch deep linked case directly:", err);
+            }
+          }
+        }
+
+        setActiveCase(allDetails[0]);
       }
     } catch (e) {
       console.error("Error fetching cases from backend:", e);

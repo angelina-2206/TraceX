@@ -1,0 +1,1 @@
+import{A as s,d as e,s as o,a as r}from"./styles-BZGe8k2k-EAHKEAMQ.js";const t=()=>e.jsx("div",{className:"w-full min-h-screen bg-[#0A0A0A]",children:e.jsx(r,{})});s.createRoot(document.getElementById("root")).render(e.jsx(o.StrictMode,{children:e.jsx(t,{})}));

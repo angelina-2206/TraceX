@@ -1,0 +1,1 @@
+import{j as e,A as t,c as r,R as s}from"./styles-CgnYNhBH.js";import"./tracex-client--HSQLZHG.js";const n=()=>e.jsx("div",{className:"w-full min-h-screen bg-[#0A0A0A]",children:e.jsx(t,{})});r.createRoot(document.getElementById("root")).render(e.jsx(s.StrictMode,{children:e.jsx(n,{})}));

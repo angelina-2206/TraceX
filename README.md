@@ -184,19 +184,34 @@ npm run dev
 ```
 Open `http://localhost:5173/` in your browser.
 
+### 7. Run TRACE-X Sentinel Chrome Extension
+Build the extension bundle and load it into Google Chrome:
+```bash
+cd ../extension
+npm install
+npm run build
+```
+1. Open Google Chrome and go to `chrome://extensions/`.
+2. Enable **Developer mode** (top right).
+3. Click **Load unpacked** and select the `extension/` directory (or `extension/dist/`).
+4. Pin **TRACE-X Sentinel** to your Chrome toolbar.
+5. Open any email in **Gmail** or **Outlook Web** to evaluate instant forensic verdicts or inspect destination link safety.
+
 ---
 
 ## Verification & Testing
 
-Verify that all backend modules, AI layers, database connectors, and blockchain services function correctly:
+Verify that all backend modules, extension APIs, AI layers, database connectors, and blockchain services function correctly:
 
-*   **Run Complete Pytest Suite**:
+*   **Backend Pytest Suite**:
     ```bash
     cd backend
-    python -m pytest
+    python -m pytest tests/test_extension_api.py tests/test_blockchain.py tests/test_security.py
     ```
-*   **Run Specific Test Modules**:
+*   **Extension Vitest Suite**:
     ```bash
-    python -m pytest tests/test_gemini_rag.py tests/test_blockchain.py tests/test_security.py
+    cd extension
+    npm test
     ```
+
 

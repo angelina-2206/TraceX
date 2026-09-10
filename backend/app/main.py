@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.api.endpoints import cases, investigate, rag
+from app.api.endpoints import cases, investigate, rag, extension
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -9,10 +9,11 @@ app = FastAPI(
     description="TRACE-X: An Interactive Cyber-Forensic Intelligence Workstation API for SIH 2026 Problem Statement 26106"
 )
 
-# CORS middleware for React Vite Frontend
+# CORS middleware for React Vite Frontend and Chrome Extension
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
+    allow_origin_regex=r"chrome-extension://.*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -20,6 +21,8 @@ app.add_middleware(
 
 # Include API Routers
 app.include_router(cases.router, prefix=settings.API_V1_STR)
+app.include_router(extension.router, prefix=settings.API_V1_STR)
+app.include_router(extension.router, prefix="/api")
 app.include_router(investigate.router, prefix=settings.API_V1_STR)
 app.include_router(investigate.router, prefix="/api")
 app.include_router(rag.router, prefix="/api")

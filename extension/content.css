@@ -1,0 +1,140 @@
+/* TRACE-X Sentinel Minimal Academic Style */
+
+.tracex-sentinel-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #18191C;
+  color: #E2E8F0;
+  border: 1px solid #333842;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  margin-left: 8px;
+  vertical-align: middle;
+  user-select: none;
+}
+
+.tracex-sentinel-btn:hover {
+  background: #23272F;
+  border-color: #64748B;
+  color: #FFFFFF;
+}
+
+.tracex-sentinel-btn svg {
+  width: 12px;
+  height: 12px;
+  color: #94A3B8;
+}
+
+.tracex-sentinel-btn.analyzing {
+  border-color: #D97706;
+  color: #D97706;
+  cursor: wait;
+}
+
+.tracex-sentinel-btn.analyzed-critical,
+.tracex-sentinel-btn.analyzed-high {
+  border-color: #BE123C;
+  background: #27141A;
+  color: #FDA4AF;
+}
+
+.tracex-sentinel-btn.analyzed-safe {
+  border-color: #047857;
+  background: #0D241E;
+  color: #A7F3D0;
+}
+
+/* Minimal Academic Link Tooltip */
+.tracex-link-inspector-tooltip {
+  position: absolute;
+  background: #14161A;
+  border: 1px solid #2D333B;
+  border-radius: 6px;
+  padding: 8px 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 11px;
+  color: #E2E8F0;
+  z-index: 999999;
+  max-width: 280px;
+  pointer-events: auto;
+}
+
+.tracex-tooltip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #22272E;
+  padding-bottom: 3px;
+}
+
+.tracex-tooltip-title {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #94A3B8;
+  text-transform: uppercase;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.tracex-tooltip-badge {
+  font-size: 9px;
+  font-weight: 600;
+  padding: 1px 4px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.tracex-tooltip-badge.critical {
+  background: #3B1219;
+  border: 1px solid #BE123C;
+  color: #FDA4AF;
+}
+
+.tracex-tooltip-badge.warning {
+  background: #38240D;
+  border: 1px solid #D97706;
+  color: #FDE68A;
+}
+
+.tracex-tooltip-badge.safe {
+  background: #0E2E21;
+  border: 1px solid #059669;
+  color: #A7F3D0;
+}
+
+.tracex-tooltip-domain {
+  font-weight: 500;
+  color: #F1F5F9;
+  word-break: break-all;
+  margin-bottom: 4px;
+  font-size: 11px;
+}
+
+.tracex-tooltip-action {
+  margin-top: 6px;
+  display: block;
+  width: 100%;
+  background: #1C2128;
+  border: 1px solid #373E47;
+  color: #CBD5E1;
+  padding: 3px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+}
+
+.tracex-tooltip-action:hover {
+  background: #2D333B;
+  color: #FFFFFF;
+}
