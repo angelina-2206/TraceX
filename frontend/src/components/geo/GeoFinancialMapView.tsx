@@ -8,7 +8,7 @@ import { CaseDetail } from '../../types';
 // Custom Leaflet Markers
 const bankIcon = L.divIcon({
   className: 'custom-bank-marker',
-  html: '<div style="background-color:#10b981; width:16px; height:16px; border-radius:50%; border:2px solid #ffffff; box-shadow:0 0 10px #10b981;"></div>',
+  html: '<div style="background-color:#14B8A6; width:16px; height:16px; border-radius:50%; border:2px solid #ffffff; box-shadow:0 0 10px #14B8A6;"></div>',
   iconSize: [16, 16]
 });
 
@@ -37,30 +37,30 @@ export const GeoFinancialMapView: React.FC<GeoFinancialMapViewProps> = ({ caseDe
   const geo = caseDetail.geo_financial;
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 animate-fade-in font-sans">
       {/* Header */}
-      <div className="border-b border-slate-800 pb-4">
-        <h2 className="text-xl font-bold font-mono text-slate-100 flex items-center space-x-2">
-          <MapPin className="w-5 h-5 text-cyan-400" />
+      <div className="tracex-card p-5 border-l-4 border-l-teal-500">
+        <h2 className="text-base font-bold font-mono text-slate-100 flex items-center space-x-2">
+          <MapPin className="w-5 h-5 text-teal-400" />
           <span>GEO-FINANCIAL FORENSIC INTELLIGENCE — PAYOUT & INFRASTRUCTURE MAP</span>
         </h2>
-        <p className="text-xs text-slate-400 font-mono mt-1">
+        <p className="text-xs text-slate-400 font-mono mt-0.5">
           Extracts financial beneficiary names, bank IFSC branch coordinates, and contrasts with technical server IP geolocations.
         </p>
       </div>
 
       {!geo ? (
-        <div className="forensic-card p-8 text-center text-slate-400 font-mono text-xs">
+        <div className="tracex-card p-8 text-center text-slate-400 font-mono text-xs">
           No financial payout entities or bank account details extracted in current case ({caseDetail.case_id}).
         </div>
       ) : (
         <div className="space-y-6">
           {/* Explicit Uncertainty Disclaimer Banner */}
-          <div className="p-4 rounded-lg bg-amber-950/40 border border-amber-800 text-amber-200 font-mono text-xs flex items-start space-x-3">
+          <div className="p-4 rounded-xl bg-amber-950/30 border border-amber-800/80 text-amber-200 font-mono text-xs flex items-start space-x-3">
             <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
             <div>
               <span className="font-bold uppercase tracking-wider text-amber-300">FORENSIC UNCERTAINTY & ATTRIBUTION LIMIT</span>
-              <p className="text-slate-300 mt-1 leading-relaxed">
+              <p className="text-slate-300 mt-1 leading-relaxed font-sans">
                 {geo.uncertainty_disclaimer}
               </p>
             </div>
@@ -68,7 +68,7 @@ export const GeoFinancialMapView: React.FC<GeoFinancialMapViewProps> = ({ caseDe
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Interactive Map (Left 2 columns) */}
-            <div className="lg:col-span-2 forensic-card h-[480px] relative overflow-hidden rounded-lg">
+            <div className="lg:col-span-2 tracex-card h-[480px] relative overflow-hidden p-0 rounded-xl">
               <MapContainer
                 center={[geo.lat, geo.lng]}
                 zoom={4}
@@ -83,7 +83,7 @@ export const GeoFinancialMapView: React.FC<GeoFinancialMapViewProps> = ({ caseDe
                 
                 <MapRecenter lat1={geo.lat} lng1={geo.lng} lat2={geo.ip_lat} lng2={geo.ip_lng} />
 
-                {/* Bank Branch Marker (Green) */}
+                {/* Bank Branch Marker (Teal) */}
                 <Marker position={[geo.lat, geo.lng]} icon={bankIcon}>
                   <Popup className="font-mono text-xs">
                     <div>
@@ -109,48 +109,39 @@ export const GeoFinancialMapView: React.FC<GeoFinancialMapViewProps> = ({ caseDe
             </div>
 
             {/* Financial Entity Details (Right column) */}
-            <div className="forensic-card p-6 space-y-4 font-mono text-xs">
-              <h3 className="text-xs font-semibold text-cyan-400 uppercase tracking-wider border-b border-slate-800 pb-2 flex items-center space-x-2">
-                <Building2 className="w-4 h-4 text-cyan-400" />
+            <div className="tracex-card p-6 space-y-4 font-mono text-xs">
+              <h3 className="text-xs font-semibold text-teal-400 uppercase tracking-wider border-b border-white/5 pb-2 flex items-center space-x-2">
+                <Building2 className="w-4 h-4 text-teal-400" />
                 <span>EXTRACTED FINANCIAL DETAILS</span>
               </h3>
 
               <div className="space-y-3">
                 <div>
-                  <span className="text-slate-400 text-[11px]">BENEFICIARY NAME:</span>
+                  <span className="text-slate-500 text-[11px]">BENEFICIARY NAME:</span>
                   <p className="text-slate-100 font-bold text-sm mt-0.5">{geo.beneficiary_name}</p>
                 </div>
 
                 <div>
-                  <span className="text-slate-400 text-[11px]">BANK & IFSC BRANCH:</span>
-                  <p className="text-cyan-300 font-semibold mt-0.5">{geo.bank_name}</p>
-                  <p className="text-slate-300 text-[11px]">IFSC: <code className="text-emerald-400">{geo.ifsc_code}</code> ({geo.branch_name})</p>
+                  <span className="text-slate-500 text-[11px]">BANK & IFSC BRANCH:</span>
+                  <p className="text-teal-300 font-semibold mt-0.5">{geo.bank_name}</p>
+                  <p className="text-slate-300 text-[11px]">IFSC: <code className="text-teal-400">{geo.ifsc_code}</code> ({geo.branch_name})</p>
                 </div>
 
                 <div>
-                  <span className="text-slate-400 text-[11px]">REQUESTED PAYOUT AMOUNT:</span>
-                  <p className="text-emerald-400 font-bold text-base mt-0.5">{geo.amount_requested}</p>
+                  <span className="text-slate-500 text-[11px]">REQUESTED PAYOUT AMOUNT:</span>
+                  <p className="text-teal-300 font-bold text-base mt-0.5">{geo.amount_requested}</p>
                 </div>
 
                 <div>
-                  <span className="text-slate-400 text-[11px]">MASKED ACCOUNT NUMBER:</span>
+                  <span className="text-slate-500 text-[11px]">MASKED ACCOUNT NUMBER:</span>
                   <p className="text-slate-200 mt-0.5">{geo.account_number_masked}</p>
                 </div>
 
                 <div className="pt-3 border-t border-slate-800 space-y-1">
-                  <span className="text-slate-400 text-[11px]">LOCATION MISMATCH STATUS:</span>
-                  <div className={`px-2.5 py-1 rounded border font-bold text-[10px] uppercase w-max tracking-wide ${
-                    geo.location_mismatch
-                      ? 'bg-amber-950/80 text-amber-400 border-amber-800'
-                      : 'bg-emerald-950/80 text-emerald-400 border-emerald-800'
-                  }`}>
-                    {geo.location_mismatch
-                      ? `CROSS-REGION MISMATCH (${geo.ip_geolocation.split(',')[0]} ➔ ${geo.branch_city || 'India'})`
-                      : 'DOMESTIC ROUTING MATCH'}
+                  <div className="text-slate-500 text-[10px]">GEOGRAPHIC DISTANCE DISCREPANCY</div>
+                  <div className="text-slate-300 text-xs">
+                    Server IP location is in <strong>{geo.ip_geolocation}</strong>, while payout bank is in <strong>{geo.branch_city}, India</strong>.
                   </div>
-                  <p className="text-[10px] text-slate-400 font-mono mt-1">
-                    Technical Origin: <span className="text-rose-400">{geo.ip_geolocation}</span> | Payout Branch: <span className="text-emerald-400">{geo.branch_city}, {geo.branch_state}</span>
-                  </p>
                 </div>
               </div>
             </div>

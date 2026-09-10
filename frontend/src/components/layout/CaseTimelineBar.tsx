@@ -23,28 +23,28 @@ export const CaseTimelineBar: React.FC<CaseTimelineBarProps> = ({ activeCase, on
   ];
 
   return (
-    <div className="bg-[#121518] border-t border-[#2A2E33] px-5 transition-all select-none shrink-0 z-30 font-mono">
+    <div className="bg-[#050B17] border-t border-white/10 px-5 transition-all select-none shrink-0 z-30 font-mono">
       {/* Expanded Full Timeline View */}
       {expanded && (
-        <div className="py-3 border-b border-[#2A2E33] flex items-center gap-2 overflow-x-auto animate-fade-in text-xs">
+        <div className="py-2.5 border-b border-white/5 flex items-center gap-2 overflow-x-auto text-xs">
           {timelineEvents.map((evt, idx) => (
             <React.Fragment key={idx}>
               <button
                 onClick={() => onNavigateToTab?.(evt.tab)}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#181C20] hover:bg-[#22262B] transition-colors border border-[#2A2E33] group shrink-0"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#0A1628] hover:bg-[#0F1E35] transition-colors border border-white/10 group shrink-0"
               >
                 {evt.alert ? (
                   <AlertCircle className="w-3 h-3 text-amber-400 shrink-0" />
                 ) : (
-                  <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
+                  <CheckCircle2 className="w-3 h-3 text-teal-400 shrink-0" />
                 )}
-                <span className={`font-semibold text-[11px] ${evt.alert ? 'text-amber-400' : 'text-gray-300'} group-hover:text-white`}>
+                <span className={`font-semibold text-[11px] ${evt.alert ? 'text-amber-400' : 'text-slate-300'} group-hover:text-white`}>
                   {evt.label}
                 </span>
-                <span className="text-gray-500 text-[10px]">{evt.time}</span>
+                <span className="text-slate-500 text-[10px]">{evt.time}</span>
               </button>
               {idx < timelineEvents.length - 1 && (
-                <ArrowRight className="w-3 h-3 text-gray-600 shrink-0" />
+                <ArrowRight className="w-3 h-3 text-slate-600 shrink-0" />
               )}
             </React.Fragment>
           ))}
@@ -52,20 +52,20 @@ export const CaseTimelineBar: React.FC<CaseTimelineBarProps> = ({ activeCase, on
       )}
 
       {/* Collapsed Bar Summary (Compact) */}
-      <div className="h-9 flex items-center justify-between text-xs text-gray-400">
+      <div className="h-9 flex items-center justify-between text-xs text-slate-400">
         <div className="flex items-center gap-3">
-          <span className="text-white font-bold">{activeCase.case_id}</span>
-          <span className="text-gray-600">•</span>
-          <span>7 EVENTS</span>
-          <span className="text-gray-600">•</span>
-          <span className="text-gray-300">LAST EVENT: SHA-256 SEALED</span>
+          <span className="text-slate-100 font-bold">{activeCase.case_id}</span>
+          <span className="text-slate-600">•</span>
+          <span>7 FORENSIC EVENTS</span>
+          <span className="text-slate-600">•</span>
+          <span className="text-teal-400 font-bold">CHAIN SEALED</span>
         </div>
 
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white font-medium transition-colors"
+          className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-slate-200 transition-colors"
         >
-          <span>{expanded ? 'COLLAPSE TIMELINE' : 'TIMELINE'}</span>
+          <span>{expanded ? 'HIDE TIMELINE' : 'EXPAND TIMELINE'}</span>
           {expanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronUp className="w-3.5 h-3.5" />}
         </button>
       </div>

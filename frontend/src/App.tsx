@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar } from './components/layout/Navbar';
-import { Sidebar } from './components/layout/Sidebar';
+import { TopNav } from './components/layout/TopNav';
 import { CaseDesk } from './components/case/CaseDesk';
 import { EmailForensics } from './components/forensics/EmailForensics';
 import { HeaderFlightRecorder } from './components/forensics/HeaderFlightRecorder';
@@ -21,7 +20,7 @@ import { CaseTimelineBar } from './components/layout/CaseTimelineBar';
 import { RisingLines } from './components/ui/RisingLines';
 import { LandingPage } from './components/layout/LandingPage';
 import { CaseDetail, UserRole } from './types';
-import { CheckCircle2, Circle } from 'lucide-react';
+
 
 export const App: React.FC = () => {
   const [showLanding, setShowLanding] = useState<boolean>(true);
@@ -133,92 +132,60 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen text-[#F2F2F2] flex flex-col font-sans antialiased relative overflow-hidden"
-         style={{ background: '#0B0D0F' }}>
-      
-      {/* Signature Ascending Lines - Monochrome Data Trajectory */}
+    <div className="min-h-screen flex flex-col font-sans antialiased relative overflow-hidden" style={{ background: 'var(--canvas-bg)', color: 'var(--text-primary)' }}>
+
+      {/* Subtle Rising Lines */}
       <RisingLines
         color="#FFFFFF"
-        horizonColor="#6B7280"
-        haloColor="#4B5563"
-        riseSpeed={0.7}
-        flowSpeed={0.25}
-        flowDensity={55}
+        horizonColor="#1E3A5F"
+        haloColor="#0F2040"
+        riseSpeed={0.5}
+        flowSpeed={0.2}
+        flowDensity={48}
         horizonHeight={0.98}
-        horizonIntensity={0.35}
-        haloIntensity={0.12}
+        horizonIntensity={0.12}
+        haloIntensity={0.07}
         circleScale={1.0}
       />
 
+
       <div className="flex flex-col h-screen overflow-hidden fade-enter relative z-10">
-        {/* Compact Header & Role Switcher */}
-        <Navbar
+        {/* Top Navigation (replaces Navbar + Sidebar) */}
+        <TopNav
           currentRole={currentRole}
           setCurrentRole={handleRoleChange}
           activeCase={activeCase}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
           voiceActive={voiceActive}
           setVoiceActive={setVoiceActive}
         />
 
+        {/* Primary Workstation Main Canvas - full width, no sidebar */}
         <div className="flex flex-1 overflow-hidden relative">
-          {/* Contextual Sidebar */}
-          <Sidebar
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            currentRole={currentRole}
-            activeCase={activeCase}
-          />
-
-          {/* Primary Workstation Main Canvas */}
-          <div className="flex-1 flex flex-col overflow-hidden bg-[#0B0D0F]/90">
-            {/* Top Workflow Indicator Bar inside main workspace when inspecting a case */}
+          <div className="flex-1 flex flex-col overflow-hidden" style={{ background: 'var(--canvas-bg)' }}>
+            {/* Case context bar */}
             {activeCase && activeTab !== 'case_desk' && (
-              <div className="bg-[#121518] border-b border-[#2A2E33] px-6 py-2.5 flex items-center justify-between font-mono text-xs z-20 shrink-0 select-none">
+              <div style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)' }} className="px-6 py-2.5 flex items-center justify-between font-mono text-xs z-20 shrink-0 select-none">
                 <div className="flex items-center gap-3">
-                  <span className="text-white font-bold text-sm">{activeCase.case_id}</span>
-                  <span className="text-gray-600">|</span>
-                  <span className="text-gray-300 font-semibold">{activeCase.title}</span>
+                  <span className="text-white font-bold">{activeCase.case_id}</span>
+                  <span style={{ color: 'var(--text-muted)' }}>|</span>
+                  <span style={{ color: 'var(--text-secondary)' }} className="font-semibold">{activeCase.title}</span>
                 </div>
-
-                {/* Horizontal Investigation Progress Indicator */}
-                <div className="hidden lg:flex items-center gap-4 text-[11px]">
-                  <div className="flex items-center gap-1 text-emerald-400 font-semibold">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>INGEST</span>
-                  </div>
-                  <span className="text-gray-700">──</span>
-                  <div className="flex items-center gap-1 text-emerald-400 font-semibold">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>ANALYZE</span>
-                  </div>
-                  <span className="text-gray-700">──</span>
-                  <div className="flex items-center gap-1 text-white font-bold">
-                    <span className="w-2 h-2 rounded-full bg-white" />
-                    <span>TRACE</span>
-                  </div>
-                  <span className="text-gray-700">──</span>
-                  <div className="flex items-center gap-1 text-gray-500">
-                    <Circle className="w-3 h-3 text-gray-600" />
-                    <span>CORRELATE</span>
-                  </div>
-                  <span className="text-gray-700">──</span>
-                  <div className="flex items-center gap-1 text-gray-500">
-                    <Circle className="w-3 h-3 text-gray-600" />
-                    <span>PRESERVE</span>
-                  </div>
-                </div>
-
                 <button
                   onClick={() => setActiveTab('case_desk')}
-                  className="text-xs text-gray-400 hover:text-white transition-colors font-mono font-medium"
+                  className="text-xs font-medium transition-colors"
+                  style={{ color: 'var(--text-muted)' }}
+                  onMouseOver={e => (e.currentTarget.style.color = '#FFFFFF')}
+                  onMouseOut={e => (e.currentTarget.style.color = 'var(--text-muted)')}
                 >
-                  Change Case →
+                  Change Case
                 </button>
               </div>
             )}
 
             {/* Investigation View Canvas */}
-            <main className="flex-1 overflow-y-auto">
+            <main className="flex-1 overflow-y-auto p-6 md:p-8 max-w-7xl mx-auto w-full">
               <div key={activeTab} className="animate-fade-in h-full">
                 {activeTab === 'case_desk' && (
                   <CaseDesk
@@ -257,7 +224,6 @@ export const App: React.FC = () => {
               </div>
             </main>
 
-            {/* Compact & Expandable Telemetry Bar */}
             {activeCase && (
               <CaseTimelineBar
                 activeCase={activeCase}

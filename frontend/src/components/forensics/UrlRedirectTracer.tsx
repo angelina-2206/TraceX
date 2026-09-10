@@ -10,33 +10,33 @@ export const UrlRedirectTracer: React.FC<UrlRedirectTracerProps> = ({ caseDetail
   const urls = caseDetail.urls;
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 animate-fade-in font-sans">
       {/* Title */}
-      <div className="border-b border-slate-800 pb-4">
-        <h2 className="text-xl font-bold font-mono text-slate-100 flex items-center space-x-2">
-          <ExternalLink className="w-5 h-5 text-cyan-400" />
+      <div className="tracex-card p-5 border-l-4 border-l-teal-500">
+        <h2 className="text-base font-bold font-mono text-slate-100 flex items-center space-x-2">
+          <ExternalLink className="w-5 h-5 text-teal-400" />
           <span>URL REDIRECT TRACER & INFRASTRUCTURE PIPELINE</span>
         </h2>
-        <p className="text-xs text-slate-400 font-mono mt-1">
-          Un-shortens links, resolves multi-hop redirect chains, inspects landing page credential forms, and applies SSRF security guardrails.
+        <p className="text-xs text-slate-400 font-mono mt-0.5">
+          Un-shortens links, resolves multi-hop redirect chains, inspects landing page credential forms, and applies security guardrails.
         </p>
       </div>
 
       {urls.length === 0 ? (
-        <div className="forensic-card p-8 text-center text-slate-400 font-mono text-xs">
-          No external hyperlinks or embedded URLs detected in email content.
+        <div className="tracex-card p-8 text-center text-slate-400 font-mono text-xs">
+          No external hyperlinks or embedded URLs detected in email payload.
         </div>
       ) : (
         <div className="space-y-6">
           {urls.map((u) => (
-            <div key={u.url_id} className="forensic-card p-6 space-y-4 font-mono text-xs">
+            <div key={u.url_id} className="tracex-card p-6 space-y-4 font-mono text-xs">
               {/* Top Summary Bar */}
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center justify-between border-b border-white/5 pb-3">
                 <div className="flex items-center space-x-3">
-                  <span className="font-bold text-cyan-400">{u.url_id}</span>
-                  <span className="text-slate-300 font-semibold">{u.domain}</span>
+                  <span className="font-bold text-teal-400">{u.url_id}</span>
+                  <span className="text-slate-100 font-semibold">{u.domain}</span>
                   {u.redirect_count > 0 && (
-                    <span className="px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800 text-[10px]">
+                    <span className="px-2 py-0.5 rounded bg-amber-950/60 text-amber-300 border border-amber-800 text-[10px]">
                       {u.redirect_count} REDIRECT HOP(S)
                     </span>
                   )}
@@ -44,12 +44,12 @@ export const UrlRedirectTracer: React.FC<UrlRedirectTracerProps> = ({ caseDetail
 
                 <div className="flex items-center space-x-2">
                   {u.has_credential_form && (
-                    <span className="px-2 py-0.5 rounded bg-red-950 text-red-400 border border-red-800 text-[10px] font-bold flex items-center space-x-1">
+                    <span className="px-2 py-0.5 rounded bg-red-950/60 text-red-300 border border-red-800 text-[10px] font-bold flex items-center space-x-1">
                       <Lock className="w-3 h-3" />
-                      <span>CREDENTIAL FORM</span>
+                      <span>CREDENTIAL HARVEST FORM</span>
                     </span>
                   )}
-                  <span className="text-slate-400">Risk Rating: </span>
+                  <span className="text-slate-400">Risk Score: </span>
                   <span className="text-red-400 font-bold">{u.reputation_score.toFixed(0)}/100</span>
                 </div>
               </div>
@@ -59,9 +59,9 @@ export const UrlRedirectTracer: React.FC<UrlRedirectTracerProps> = ({ caseDetail
                 <div className="text-slate-400 text-[11px] uppercase mb-3">RESOLVED REDIRECT CHAIN STEP-BY-STEP</div>
                 <div className="space-y-3">
                   {u.redirect_chain.map((hop) => (
-                    <div key={hop.step} className="p-3 rounded bg-slate-950 border border-slate-800 flex items-center justify-between">
+                    <div key={hop.step} className="p-3.5 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-between">
                       <div className="flex items-center space-x-3">
-                        <div className="w-6 h-6 rounded bg-cyan-950 text-cyan-400 border border-cyan-800 flex items-center justify-center font-bold text-[11px]">
+                        <div className="w-6 h-6 rounded bg-teal-500/10 text-teal-300 border border-teal-500/30 flex items-center justify-center font-bold text-[11px]">
                           #{hop.step}
                         </div>
                         <div>
@@ -72,7 +72,7 @@ export const UrlRedirectTracer: React.FC<UrlRedirectTracerProps> = ({ caseDetail
 
                       <div className="text-right">
                         <div className="text-slate-300">{hop.ip || 'Pending IP'}</div>
-                        <div className="text-[10px] text-slate-400">{hop.asn}</div>
+                        <div className="text-[10px] text-slate-500">{hop.asn}</div>
                       </div>
                     </div>
                   ))}
