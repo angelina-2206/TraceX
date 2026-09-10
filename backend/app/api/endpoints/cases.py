@@ -16,6 +16,7 @@ from app.services.chain_of_custody import ChainOfCustodyService
 from app.services.impact_lab import ImpactLabService
 from app.services.forensic_rag import ForensicRagService
 from app.services.sandbox_service import SandboxService
+from app.services.blockchain_service import BlockchainService
 
 router = APIRouter(prefix="/cases", tags=["Cases & Forensics"])
 
@@ -94,17 +95,18 @@ async def ingest_email(
     urls = UrlTracerService.analyze_urls(parsed["urls"])
     
     # 4. Geo-Financial
+    from app.services.ipgeolocation_service import IpGeolocationService
+    seed_key = parsed.get("subject", "") + parsed.get("from", "") + parsed.get("body_text", "")
+    
     if hops:
         first_hop = hops[0]
-        from app.services.ipgeolocation_service import IpGeolocationService
-        geo_info = IpGeolocationService.geolocate_ip(first_hop.ip)
-        ip_geo = f"{geo_info['city']}, {geo_info['country']}"
-        ip_lat = geo_info['lat']
-        ip_lng = geo_info['lng']
+        geo_info = IpGeolocationService.geolocate_ip(first_hop.ip, seed_text=seed_key)
     else:
-        ip_geo = "Sofia, Bulgaria"
-        ip_lat = 42.6977
-        ip_lng = 23.3219
+        geo_info = IpGeolocationService.get_fallback_location(seed_key)
+        
+    ip_geo = f"{geo_info['city']}, {geo_info['country']}"
+    ip_lat = geo_info['lat']
+    ip_lng = geo_info['lng']
         
     geo_fin = GeoFinancialService.extract_geo_financial(
         parsed["body_text"],
@@ -303,3 +305,43 @@ def detonate_attachment(
     case.chain_of_custody.append(coc_event)
 
     return report
+
+
+@router.post("/{case_id}/blockchain/anchor")
+def anchor_case_evidence(case_id: str):
+    """
+    Anchors finalized case evidence hash on Polygon POS blockchain via Alchemy RPC.
+    """
+    if case_id not in cases_db:
+        raise HTTPException(status_code=404, detail=f"Case '{case_id}' not found")
+    case = cases_db[case_id]
+    case_dict = case.model_dump()
+    anchor_record = BlockchainService.anchor_evidence(case_id, case_dict)
+    
+    # Update chain of custody with real blockchain proof
+    coc_event = ChainOfCustodyService.create_event(
+        actor="SOC Blockchain Agent",
+        role="SYSTEM",
+        action="BLOCKCHAIN_ANCHOR",
+        artifact_id=f"EV-ANCHOR-{case_id}",
+        details=f"Anchored evidence hash {anchor_record['evidence_hash'][:12]}... on {anchor_record['network']} (Tx: {anchor_record['tx_hash'][:12]}...). Status: {anchor_record['anchoring_status']}",
+        prev_events=case.chain_of_custody
+    )
+    case.chain_of_custody.append(coc_event)
+    return anchor_record
+
+
+@router.post("/{case_id}/blockchain/verify")
+def verify_case_evidence(case_id: str, payload: Optional[Dict[str, Any]] = None):
+    """
+    Verifies case evidence hash against Polygon on-chain record.
+    Returns VALID or TAMPERED.
+    """
+    if case_id not in cases_db:
+        raise HTTPException(status_code=404, detail=f"Case '{case_id}' not found")
+    case = cases_db[case_id]
+    
+    # If custom evidence payload is provided, verify it; otherwise verify current case state
+    evidence_to_verify = payload if payload else case.model_dump()
+    return BlockchainService.verify_evidence(evidence_to_verify, case_id)
+

@@ -93,6 +93,17 @@ export const App: React.FC = () => {
     }} />;
   }
 
+  const handleRoleChange = (role: UserRole) => {
+    setCurrentRole(role);
+    if (role === 'EXECUTIVE' && activeTab !== 'executive_risk' && activeTab !== 'geo_financial' && activeTab !== 'blockchain_proof' && activeTab !== 'evidence_vault' && activeTab !== 'ai_copilot') {
+      setActiveTab('executive_risk');
+    } else if (role === 'INVESTIGATOR' && activeTab === 'executive_risk') {
+      setActiveTab('attack_graph');
+    } else if (role === 'SOC_ANALYST' && (activeTab === 'executive_risk' || activeTab === 'attack_graph' || activeTab === 'campaign_intel' || activeTab === 'attachment_sandbox')) {
+      setActiveTab('case_desk');
+    }
+  };
+
   return (
     <div className="min-h-screen text-[#F2F2F2] flex flex-col font-sans antialiased relative overflow-hidden"
          style={{ background: '#0B0D0F' }}>
@@ -115,7 +126,7 @@ export const App: React.FC = () => {
         {/* Compact Header & Role Switcher */}
         <Navbar
           currentRole={currentRole}
-          setCurrentRole={setCurrentRole}
+          setCurrentRole={handleRoleChange}
           activeCase={activeCase}
           voiceActive={voiceActive}
           setVoiceActive={setVoiceActive}
@@ -192,24 +203,29 @@ export const App: React.FC = () => {
                   />
                 )}
 
-                {activeCase && (
-                  <>
-                    {activeTab === 'email_forensics' && <EmailForensics caseDetail={activeCase} />}
-                    {activeTab === 'header_recorder' && <HeaderFlightRecorder caseDetail={activeCase} />}
-                    {activeTab === 'identity_deception' && <IdentityDeceptionView caseDetail={activeCase} />}
-                    {activeTab === 'social_engineering' && <SocialEngineeringView caseDetail={activeCase} />}
-                    {activeTab === 'url_tracer' && <UrlRedirectTracer caseDetail={activeCase} />}
-                    {activeTab === 'attachment_sandbox' && <AttachmentSandboxView caseDetail={activeCase} />}
-                    {activeTab === 'attack_graph' && <AttackGraphView caseDetail={activeCase} />}
-                    {activeTab === 'campaign_intel' && <CampaignIntelligenceView caseDetail={activeCase} />}
-                    {activeTab === 'geo_financial' && <GeoFinancialMapView caseDetail={activeCase} />}
-                    {activeTab === 'impact_lab' && <ImpactLabView caseDetail={activeCase} />}
-                    {activeTab === 'ai_copilot' && <ForensicRagCopilotView caseDetail={activeCase} voiceActive={voiceActive} />}
-                    {activeTab === 'blockchain_proof' && <BlockchainProofView caseDetail={activeCase} />}
-                    {activeTab === 'evidence_vault' && <EvidenceVaultView caseDetail={activeCase} />}
-                    {activeTab === 'executive_risk' && <ExecutiveRiskView caseDetail={activeCase} />}
-                  </>
-                )}
+                {(() => {
+                  const currentCase = activeCase || cases[0];
+                  if (!currentCase) return null;
+
+                  return (
+                    <>
+                      {activeTab === 'email_forensics' && <EmailForensics caseDetail={currentCase} />}
+                      {activeTab === 'header_recorder' && <HeaderFlightRecorder caseDetail={currentCase} />}
+                      {activeTab === 'identity_deception' && <IdentityDeceptionView caseDetail={currentCase} />}
+                      {activeTab === 'social_engineering' && <SocialEngineeringView caseDetail={currentCase} />}
+                      {activeTab === 'url_tracer' && <UrlRedirectTracer caseDetail={currentCase} />}
+                      {activeTab === 'attachment_sandbox' && <AttachmentSandboxView caseDetail={currentCase} />}
+                      {activeTab === 'attack_graph' && <AttackGraphView caseDetail={currentCase} />}
+                      {activeTab === 'campaign_intel' && <CampaignIntelligenceView caseDetail={currentCase} />}
+                      {activeTab === 'geo_financial' && <GeoFinancialMapView caseDetail={currentCase} />}
+                      {activeTab === 'impact_lab' && <ImpactLabView caseDetail={currentCase} />}
+                      {activeTab === 'ai_copilot' && <ForensicRagCopilotView caseDetail={currentCase} voiceActive={voiceActive} />}
+                      {activeTab === 'blockchain_proof' && <BlockchainProofView caseDetail={currentCase} />}
+                      {activeTab === 'evidence_vault' && <EvidenceVaultView caseDetail={currentCase} />}
+                      {activeTab === 'executive_risk' && <ExecutiveRiskView caseDetail={currentCase} />}
+                    </>
+                  );
+                })()}
               </div>
             </main>
 

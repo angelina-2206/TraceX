@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional, Dict, TYPE_CHECKING
+from typing import List, Optional, Dict, Any, TYPE_CHECKING
 
 if TYPE_CHECKING:
     pass
@@ -102,6 +102,8 @@ class UnifiedThreatReport(BaseModel):
     risk: RiskEngineRating
     provider_status: Dict[str, str]
     rag: Optional["InvestigationRAGContext"] = None
+    ai_analysis: Optional[Dict[str, Any]] = None
+    blockchain_anchor: Optional[Dict[str, Any]] = None
 
 
 # Deferred import to avoid circular dependency

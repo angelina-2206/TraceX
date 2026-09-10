@@ -1,9 +1,11 @@
 import logging
+from typing import Dict, Any, Optional
 from fastapi import APIRouter, HTTPException, Request, status
 from app.schemas.threat import InvestigationTarget, UnifiedThreatReport
 from app.utils.indicators import extract_and_normalize_target
 from app.services.threat_aggregator import ThreatAggregatorService
-from app.core.security import enforce_rate_limit, InMemoryRateLimiter
+from app.services.blockchain_service import BlockchainService
+from app.core.security import enforce_rate_limit, InMemoryRateLimiter, validate_ssrf_safe_url
 
 logger = logging.getLogger("uvicorn.error")
 
@@ -17,7 +19,8 @@ async def investigate_indicator(request: Request, payload: InvestigationTarget):
     """
     Submits a URL, IP, Domain, or Hash to the threat aggregator.
     Executes parallel lookups across VirusTotal, AbuseIPDB, URLScan, and IPGeolocation,
-    calculates a transparent risk score, and returns normalized evidence.
+    calculates a transparent risk score, runs Qdrant RAG + Gemini synthesis,
+    and anchors evidence to Polygon POS blockchain.
     """
     # 1. Enforce Rate Limiting
     enforce_rate_limit(request, investigate_limiter)
@@ -29,16 +32,28 @@ async def investigate_indicator(request: Request, payload: InvestigationTarget):
             detail="Investigation target cannot be empty."
         )
 
+    if len(target_str) > 2048:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Investigation target exceeds maximum allowable length of 2048 characters."
+        )
+
     # 2. Extract and Normalize target details
     normalized = extract_and_normalize_target(target_str)
     
-    # 3. Prevent SSRF/Private host lookups directly at the gateway level
+    # 3. Prevent SSRF/Private host lookups directly at gateway level
     ip = normalized.get("ip")
-    if ip and ip.startswith(("127.", "10.", "192.168.", "172.16.", "0.")):
+    if ip and ip.startswith(("127.", "10.", "192.168.", "172.16.", "0.", "169.254.", "::1")):
          raise HTTPException(
              status_code=status.HTTP_400_BAD_REQUEST,
              detail="SSRF Protection: Lookups on private or loopback IP ranges are forbidden."
          )
+
+    if normalized["indicator_type"] == "url" and not validate_ssrf_safe_url(normalized["url"]):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="SSRF Protection: URL target host resolves to a forbidden private or local range."
+        )
 
     logger.info(f"[API-Investigate] Received investigation request. target={target_str[:40]} type={normalized['indicator_type']}")
 
@@ -52,3 +67,17 @@ async def investigate_indicator(request: Request, payload: InvestigationTarget):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="An error occurred while compiling threat intelligence data."
         )
+
+@router.post("/investigate/verify", summary="Verify indicator investigation evidence against Polygon POS on-chain proof")
+def verify_investigation_evidence(request: Request, payload: Dict[str, Any]):
+    """
+    Verifies the SHA-256 evidence hash of an investigation report against on-chain records.
+    Returns status 'VALID' or 'TAMPERED'.
+    """
+    enforce_rate_limit(request, investigate_limiter)
+    report_data = payload.get("report") or payload
+    target = payload.get("target", payload.get("investigation_id", ""))
+    tx_hash = payload.get("tx_hash")
+    
+    return BlockchainService.verify_evidence(report_data, target, tx_hash)
+

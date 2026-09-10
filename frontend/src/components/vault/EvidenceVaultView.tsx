@@ -53,39 +53,133 @@ export const EvidenceVaultView: React.FC<EvidenceVaultViewProps> = ({ caseDetail
   const cocEvents = caseDetail.chain_of_custody;
 
   const downloadStix = async () => {
-    const res = await fetch(`http://127.0.0.1:8000/api/v1/cases/${caseDetail.case_id}/stix`);
-    const stixData = await res.json();
-    const blob = new Blob([JSON.stringify(stixData, null, 2)], { type: 'application/json' });
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/v1/cases/${caseDetail.case_id}/stix`);
+      const stixData = await res.json();
+      const blob = new Blob([JSON.stringify(stixData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url;
+      a.download = `STIX_Bundle_${caseDetail.case_id}.json`; a.click();
+    } catch (e) {
+      console.error("STIX download error:", e);
+    }
+  };
+
+  const downloadJsonReport = () => {
+    const blob = new Blob([JSON.stringify(caseDetail, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url;
-    a.download = `STIX_Bundle_${caseDetail.case_id}.json`; a.click();
+    a.download = `Forensic_Evidence_Package_${caseDetail.case_id}.json`; a.click();
   };
 
   const downloadReport = () => {
-    const reportText = `# TRACE-X FORENSIC INVESTIGATION REPORT — ${caseDetail.case_id}
-Generated: ${new Date().toISOString()}
+    const gf = caseDetail.geo_financial;
+    const auth = caseDetail.auth_status;
+    const threat = caseDetail.threat_score;
+    const identity = caseDetail.identity_analysis;
 
-## 1. CASE SUMMARY
-- Case ID: ${caseDetail.case_id}
-- Title: ${caseDetail.title}
-- Overall Threat Rating: ${caseDetail.threat_score.overall_score} / 100 (${caseDetail.threat_score.severity})
-- Subject: ${caseDetail.email_subject}
-- From: ${caseDetail.email_from}
+    const reportText = `================================================================================
+                    TRACE-X CYBER-FORENSIC INVESTIGATION REPORT
+================================================================================
+Report Generated : ${new Date().toISOString()}
+Case Identifier  : ${caseDetail.case_id}
+Classification   : LAW ENFORCEMENT & SOC COURT-ADMISSIBLE FORENSIC EVIDENCE
 
-## 2. FORENSIC FINDINGS
-- SPF Status: ${caseDetail.auth_status.spf_status}
-- DKIM Status: ${caseDetail.auth_status.dkim_status}
-- DMARC Status: ${caseDetail.auth_status.dmarc_status}
-- Envelope Alignment: ${caseDetail.auth_status.alignment}
-- Sender Deception Score: ${caseDetail.identity_analysis.deception_score} / 100
+--------------------------------------------------------------------------------
+1. EXECUTIVE THREAT ASSESSMENT & RISK PARAMETERS
+--------------------------------------------------------------------------------
+- Overall Risk Score       : ${threat.overall_score} / 100 (${threat.severity})
+- Threat Classification    : Business Email Compromise (BEC) / Financial Redirection
+- Primary Incident Status  : ${caseDetail.status}
+- Ingestion Timestamp      : ${caseDetail.created_at}
 
-## 3. BLOCKCHAIN CHAIN OF CUSTODY LEDGER
-${cocEvents.map(e => `[${e.event_id}] ${e.action} by ${e.actor} | Current Hash: ${e.current_hash}`).join('\n')}
+--------------------------------------------------------------------------------
+2. EMAIL ARTIFACT & MIME INTAKE DECOMPOSITION
+--------------------------------------------------------------------------------
+- Subject Line             : ${caseDetail.email_subject}
+- Visible Sender (From)    : ${caseDetail.email_from}
+- Declared Reply-To        : ${identity.reply_to || 'None'}
+- Reply-To Mismatch Flag   : ${identity.reply_to_mismatch ? 'CRITICAL MISMATCH DETECTED' : 'Matched'}
+- Recipient Target (To)    : ${caseDetail.email_to}
+
+--------------------------------------------------------------------------------
+3. AUTHENTICATION ALIGNMENT & HEADER VERIFICATION MATRIX
+--------------------------------------------------------------------------------
+- SPF Protocol Result     : ${auth.spf_status} (Domain: ${auth.spf_domain})
+- DKIM Signature Result    : ${auth.dkim_status} (Selector: ${auth.dkim_selector || 'N/A'})
+- DMARC Policy Evaluation  : ${auth.dmarc_status} (Policy: ${auth.dmarc_policy})
+- Domain Alignment Verdict : ${auth.alignment}
+- Display Name Homoglyphs  : ${identity.homoglyph_detected ? 'YES (Homoglyph Character Spoofing)' : 'None'}
+- Claimed Brand Target     : ${identity.claimed_brand || 'N/A'}
+- Sender Deception Score   : ${identity.deception_score} / 100
+
+--------------------------------------------------------------------------------
+4. HEADER FLIGHT PATH RECONSTRUCTION & RELAY PARAMETERS
+--------------------------------------------------------------------------------
+Total Delivery Hops: ${caseDetail.header_hops.length}
+
+${caseDetail.header_hops.map((h, i) => `[HOP #${i + 1}]
+  - Origin IP     : ${h.ip}
+  - Host Route    : ${h.from_host} -> ${h.by_host}
+  - Geolocation   : ${h.geo_location || 'Unknown'} (ASN: ${h.asn}, ISP: ${h.isp})
+  - Hop Latency   : ${h.delay_seconds}s
+  - Relay Risk    : ${h.is_suspicious ? 'SUSPICIOUS RELAY NODE' : 'Standard Node'}`).join('\n\n')}
+
+--------------------------------------------------------------------------------
+5. EMBEDDED URL HYPERLINK & REDIRECT CHAIN ANALYSIS
+--------------------------------------------------------------------------------
+Total Extracted Hyperlinks: ${caseDetail.urls.length}
+
+${caseDetail.urls.map(u => `[URL ID: ${u.url_id}]
+  - Original URL    : ${u.original_url}
+  - Final Unshortened: ${u.final_url}
+  - Domain Name     : ${u.domain}
+  - Redirect Hops   : ${u.redirect_count}
+  - Credential Form : ${u.has_credential_form ? 'DETECTED (Phishing Form)' : 'None'}
+  - Risk Reputation : ${u.reputation_score} / 100`).join('\n\n')}
+
+--------------------------------------------------------------------------------
+6. GEO-FINANCIAL PAYOUT REDIRECTION ANOMALY PARAMETERS
+--------------------------------------------------------------------------------
+${gf ? `- Target Beneficiary Name  : ${gf.beneficiary_name}
+- Target Bank Institution   : ${gf.bank_name}
+- Target IFSC Code          : ${gf.ifsc_code}
+- Bank Branch Geolocation   : ${gf.branch_city}, ${gf.branch_state}
+- Requested Payout Amount   : ${gf.amount_requested}
+- Originating Mail Hop IP   : ${gf.ip_geolocation}
+- Financial Mismatch Status : ${gf.location_mismatch ? 'HIGH PRIORITY REDIRECTION ANOMALY' : 'Normal'}
+- Anomaly Uncertainty Note  : ${gf.uncertainty_disclaimer}` : '- No financial payout redirection clues detected in email body payload.'}
+
+--------------------------------------------------------------------------------
+7. ATTACHMENT SANDBOX DETONATION & METRICS
+--------------------------------------------------------------------------------
+${caseDetail.attachments.length > 0 ? caseDetail.attachments.map(att => `[ATTACHMENT: ${att.filename}]
+  - SHA-256 Hash    : ${att.sha256}
+  - MIME File Type  : ${att.mime_type} (${(att.size_bytes / 1024).toFixed(0)} KB)
+  - Risk Level      : ${att.risk_level}
+  - Executable Flag : ${att.is_executable ? 'YES' : 'NO'}`).join('\n\n') : '- No email attachments present.'}
+
+--------------------------------------------------------------------------------
+8. TAMPER-EVIDENT BLOCKCHAIN PROOF LEDGER & MERKLE TREE
+--------------------------------------------------------------------------------
+Total Recorded Audit Events: ${cocEvents.length}
+
+${cocEvents.map(e => `[EVENT ID: ${e.event_id}]
+  - Action Executed: ${e.action}
+  - Performed By   : ${e.actor} (${e.role})
+  - Timestamp (UTC): ${e.timestamp}
+  - SHA-256 Hash   : ${e.current_hash}
+  - Previous Hash  : ${e.prev_hash}`).join('\n\n')}
+
+================================================================================
+                    END OF TRACE-X COURT-ADMISSIBLE REPORT
+================================================================================
 `;
+
     const blob = new Blob([reportText], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url;
-    a.download = `Forensic_Report_${caseDetail.case_id}.md`; a.click();
+    a.download = `TRACE-X_Detailed_Forensic_Report_${caseDetail.case_id}.md`; a.click();
   };
 
   return (
@@ -124,7 +218,7 @@ ${cocEvents.map(e => `[${e.event_id}] ${e.action} by ${e.actor} | Current Hash: 
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={downloadStix}
               className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all"
@@ -134,10 +228,27 @@ ${cocEvents.map(e => `[${e.event_id}] ${e.action} by ${e.actor} | Current Hash: 
                 border: '1px solid rgba(6,182,212,0.25)',
                 color: '#67e8f9',
               }}
+              title="Export STIX 2.1 JSON threat bundle"
             >
               <ExternalLink className="w-3.5 h-3.5" />
               STIX 2.1 IOC
             </button>
+
+            <button
+              onClick={downloadJsonReport}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all"
+              style={{
+                fontFamily: 'JetBrains Mono, monospace',
+                background: 'rgba(168,85,247,0.08)',
+                border: '1px solid rgba(168,85,247,0.25)',
+                color: '#d8b4fe',
+              }}
+              title="Export raw JSON case parameters package"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              JSON PACKAGE
+            </button>
+
             <button
               onClick={downloadReport}
               className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all"
@@ -147,9 +258,10 @@ ${cocEvents.map(e => `[${e.event_id}] ${e.action} by ${e.actor} | Current Hash: 
                 border: '1px solid rgba(16,185,129,0.3)',
                 color: '#6ee7b7',
               }}
+              title="Export detailed court-admissible markdown report"
             >
               <Download className="w-3.5 h-3.5" />
-              EXPORT REPORT
+              DETAILED REPORT (.MD)
             </button>
           </div>
         </div>

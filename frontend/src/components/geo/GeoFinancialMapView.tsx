@@ -1,5 +1,5 @@
-import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import React, { useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MapPin, AlertTriangle, Building2, Globe, DollarSign, Info } from 'lucide-react';
@@ -17,6 +17,17 @@ const ipIcon = L.divIcon({
   html: '<div style="background-color:#ef4444; width:16px; height:16px; border-radius:50%; border:2px solid #ffffff; box-shadow:0 0 10px #ef4444;"></div>',
   iconSize: [16, 16]
 });
+
+const MapRecenter: React.FC<{ lat1: number; lng1: number; lat2: number; lng2: number }> = ({ lat1, lng1, lat2, lng2 }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (lat1 && lng1 && lat2 && lng2) {
+      const bounds = L.latLngBounds([[lat1, lng1], [lat2, lng2]]);
+      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 8 });
+    }
+  }, [lat1, lng1, lat2, lng2, map]);
+  return null;
+};
 
 interface GeoFinancialMapViewProps {
   caseDetail: CaseDetail;
@@ -40,7 +51,7 @@ export const GeoFinancialMapView: React.FC<GeoFinancialMapViewProps> = ({ caseDe
 
       {!geo ? (
         <div className="forensic-card p-8 text-center text-slate-400 font-mono text-xs">
-          No financial payout entities or bank account details extracted in current case.
+          No financial payout entities or bank account details extracted in current case ({caseDetail.case_id}).
         </div>
       ) : (
         <div className="space-y-6">
@@ -59,8 +70,8 @@ export const GeoFinancialMapView: React.FC<GeoFinancialMapViewProps> = ({ caseDe
             {/* Interactive Map (Left 2 columns) */}
             <div className="lg:col-span-2 forensic-card h-[480px] relative overflow-hidden rounded-lg">
               <MapContainer
-                center={[25.0, 50.0]}
-                zoom={3}
+                center={[geo.lat, geo.lng]}
+                zoom={4}
                 scrollWheelZoom={false}
                 className="w-full h-full"
               >
@@ -70,11 +81,13 @@ export const GeoFinancialMapView: React.FC<GeoFinancialMapViewProps> = ({ caseDe
                   maxZoom={16}
                 />
                 
+                <MapRecenter lat1={geo.lat} lng1={geo.lng} lat2={geo.ip_lat} lng2={geo.ip_lng} />
+
                 {/* Bank Branch Marker (Green) */}
                 <Marker position={[geo.lat, geo.lng]} icon={bankIcon}>
                   <Popup className="font-mono text-xs">
                     <div>
-                      <strong>FINANCIAL DESTINATION:</strong><br />
+                      <strong>FINANCIAL DESTINATION ({caseDetail.case_id}):</strong><br />
                       Bank: {geo.bank_name}<br />
                       IFSC: {geo.ifsc_code}<br />
                       Branch: {geo.branch_city}, India
@@ -86,7 +99,7 @@ export const GeoFinancialMapView: React.FC<GeoFinancialMapViewProps> = ({ caseDe
                 <Marker position={[geo.ip_lat, geo.ip_lng]} icon={ipIcon}>
                   <Popup className="font-mono text-xs">
                     <div>
-                      <strong>TECHNICAL ORIGIN IP:</strong><br />
+                      <strong>TECHNICAL ORIGIN IP ({caseDetail.case_id}):</strong><br />
                       Region: {geo.ip_geolocation}<br />
                       Coords: {geo.ip_lat}, {geo.ip_lng}
                     </div>
@@ -124,11 +137,20 @@ export const GeoFinancialMapView: React.FC<GeoFinancialMapViewProps> = ({ caseDe
                   <p className="text-slate-200 mt-0.5">{geo.account_number_masked}</p>
                 </div>
 
-                <div className="pt-3 border-t border-slate-800">
+                <div className="pt-3 border-t border-slate-800 space-y-1">
                   <span className="text-slate-400 text-[11px]">LOCATION MISMATCH STATUS:</span>
-                  <div className="mt-1 px-2.5 py-1 rounded bg-amber-950 text-amber-400 border border-amber-800 font-bold text-[10px] uppercase w-max">
-                    CROSS-REGION MISMATCH DETECTED
+                  <div className={`px-2.5 py-1 rounded border font-bold text-[10px] uppercase w-max tracking-wide ${
+                    geo.location_mismatch
+                      ? 'bg-amber-950/80 text-amber-400 border-amber-800'
+                      : 'bg-emerald-950/80 text-emerald-400 border-emerald-800'
+                  }`}>
+                    {geo.location_mismatch
+                      ? `CROSS-REGION MISMATCH (${geo.ip_geolocation.split(',')[0]} ➔ ${geo.branch_city || 'India'})`
+                      : 'DOMESTIC ROUTING MATCH'}
                   </div>
+                  <p className="text-[10px] text-slate-400 font-mono mt-1">
+                    Technical Origin: <span className="text-rose-400">{geo.ip_geolocation}</span> | Payout Branch: <span className="text-emerald-400">{geo.branch_city}, {geo.branch_state}</span>
+                  </p>
                 </div>
               </div>
             </div>

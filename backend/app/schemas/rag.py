@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 
 class RAGSearchRequest(BaseModel):
@@ -49,3 +49,4 @@ class InvestigationRAGContext(BaseModel):
     """
     queries: List[str] = Field(default_factory=list, description="Semantic queries derived from the observed evidence.")
     relevant_knowledge: List[RAGSearchResult] = Field(default_factory=list, description="Retrieved cybersecurity knowledge chunks.")
+    ai_synthesis: Optional[Dict[str, Any]] = Field(default=None, description="Grounded Gemini analysis of threat evidence + RAG knowledge.")

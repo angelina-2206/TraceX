@@ -29,7 +29,7 @@ class Settings:
     ABUSEIPDB_API_KEY: str = os.getenv("ABUSEIPDB_API_KEY", "")
     URLSCAN_API_KEY: str = os.getenv("URLSCAN_API_KEY", "")
     
-    OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
     QDRANT_URL: str = os.getenv("QDRANT_URL", "http://localhost:6333")
     QDRANT_API_KEY: str = os.getenv("QDRANT_API_KEY", "")
     
@@ -81,7 +81,7 @@ def verify_environment_variables():
         "VIRUSTOTAL_API_KEY": "VirusTotal Intel Service",
         "ABUSEIPDB_API_KEY": "AbuseIPDB Ingress Check",
         "URLSCAN_API_KEY": "URLScan.io Sandbox Link Analysis",
-        "OPENAI_API_KEY": "OpenAI Forensic RAG Context Generator",
+        "GEMINI_API_KEY": "Gemini Forensic RAG Context Generator",
         "ALCHEMY_RPC_URL": "Alchemy Polygon JSON-RPC Anchoring Node",
         "BLOCKCHAIN_PRIVATE_KEY": "Polygon POS Merkle Anchoring Private Key",
         "IPGEOLOCATION_API_KEY": "IP Geolocation API Service"
