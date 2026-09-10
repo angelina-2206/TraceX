@@ -1,17 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&display=swap');
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
 /* ================================================
    TRACE-X  —  Institutional Forensic Workstation
-   Reference: Forensic Analytics UK
-   Palette & Color Hierarchy:
-     Navy deep    #050B17
-     Navy mid     #0A1628
-     Navy surface #0F1E35
-     Teal accent  #0E7063   (hover: #0B5C51, highlight: #14B8A6)
-     Light Slate  #F1F5F9 / #E2E8F0
-     Muted        #64748B
+   Simple, Clean, Professional Academic Font System
    ================================================ */
 
 :root {
@@ -40,21 +33,30 @@
   --green: #10b981;
 }
 
-/* ── Reset & Base ── */
+/* ── Reset & Clean Simple Base Font ── */
 *, *::before, *::after { box-sizing: border-box; }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
   background: var(--canvas-bg);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
-code, pre, .font-mono {
-  font-family: 'JetBrains Mono', ui-monospace, monospace !important;
+/* Code & raw hashes only */
+code, pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+}
+
+/* Clean up font-mono to fallback to clean sans-serif for UI readability */
+.font-mono {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+.code-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
 }
 
 /* ================================================
@@ -78,10 +80,10 @@ code, pre, .font-mono {
   color: var(--teal-light);
 }
 .tracex-brand {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   color: #FFFFFF;
 }
 .tracex-brand-x { color: var(--teal-light); }
@@ -152,7 +154,6 @@ code, pre, .font-mono {
 .tracex-no-case {
   font-size: 11px;
   color: var(--text-muted);
-  font-family: 'JetBrains Mono', monospace;
 }
 
 /* Control buttons */
@@ -178,7 +179,7 @@ code, pre, .font-mono {
   color: #5eead4;
 }
 
-/* ── Dropdowns ── */
+/* Dropdowns */
 .tracex-dropdown {
   position: absolute;
   top: calc(100% + 6px);
@@ -205,7 +206,7 @@ code, pre, .font-mono {
 .tracex-dropdown-header {
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--text-muted);
   padding: 12px 14px 8px;
@@ -234,10 +235,8 @@ code, pre, .font-mono {
 }
 .tracex-active-badge {
   margin-left: auto;
-  font-size: 9px;
-  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
   color: var(--teal-light);
 }
 .tracex-persona-desc {
@@ -248,7 +247,7 @@ code, pre, .font-mono {
   line-height: 1.4;
 }
 
-/* ── Mega-Menu ── */
+/* Mega-Menu */
 .tracex-megamenu {
   position: absolute;
   left: 0; right: 0;
@@ -273,8 +272,6 @@ code, pre, .font-mono {
   font-size: 13px;
   font-weight: 700;
   color: #FFFFFF;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
 }
 .tracex-megamenu-close {
   color: var(--text-muted);
@@ -285,9 +282,8 @@ code, pre, .font-mono {
 }
 .tracex-megamenu-close:hover { color: #FFFFFF; }
 .tracex-megamenu-group-heading {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-size: 11px;
+  font-weight: 600;
   text-transform: uppercase;
   color: var(--text-muted);
   margin-bottom: 12px;
@@ -313,7 +309,6 @@ code, pre, .font-mono {
 .tracex-megamenu-item:hover {
   background: rgba(255,255,255,0.04);
   border-color: rgba(255,255,255,0.12);
-  transform: translateY(-1px);
 }
 .tracex-megamenu-item-active {
   background: rgba(14,112,99,0.15);
@@ -334,33 +329,21 @@ code, pre, .font-mono {
   line-height: 1.4;
 }
 
-/* ================================================
-   FORENSIC CARD & CONTAINER SYSTEM
-   ================================================ */
-
+/* Cards */
 .tracex-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
 .tracex-card:hover {
   border-color: var(--border-hi);
   background: var(--surface-2);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
 }
 .tracex-card-active {
   border-color: rgba(20, 184, 166, 0.4) !important;
   background: var(--surface-2) !important;
-  box-shadow: 0 0 24px rgba(20, 184, 166, 0.12) !important;
-}
-
-.tracex-card-light {
-  background: #111E36;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
 }
 
 .forensic-card {
@@ -378,7 +361,7 @@ code, pre, .font-mono {
   background: var(--surface-2) !important;
 }
 
-/* ── Buttons ── */
+/* Buttons */
 .btn-primary {
   background: linear-gradient(135deg, #0E7063 0%, #0B5C51 100%);
   border: 1px solid rgba(20,184,166,0.3);
@@ -386,16 +369,13 @@ code, pre, .font-mono {
   font-size: 13px;
   font-weight: 600;
   border-radius: 8px;
-  padding: 9px 20px;
+  padding: 8px 18px;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 10px rgba(14,112,99,0.2);
 }
 .btn-primary:hover {
   background: linear-gradient(135deg, #14B8A6 0%, #0E7063 100%);
   border-color: rgba(20,184,166,0.6);
-  box-shadow: 0 4px 16px rgba(20,184,166,0.3);
-  transform: translateY(-1px);
 }
 
 .btn-secondary {
@@ -405,7 +385,7 @@ code, pre, .font-mono {
   font-size: 13px;
   font-weight: 500;
   border-radius: 8px;
-  padding: 9px 20px;
+  padding: 8px 18px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -413,29 +393,16 @@ code, pre, .font-mono {
   background: rgba(255,255,255,0.08);
   border-color: rgba(20,184,166,0.4);
   color: #FFFFFF;
-  transform: translateY(-1px);
 }
 
-/* ── Status LEDs ── */
+/* Status LEDs */
 .status-led { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.status-led-green { background: var(--green); box-shadow: 0 0 8px rgba(16,185,129,0.5); }
-.status-led-red   { background: var(--red); box-shadow: 0 0 8px rgba(239,68,68,0.5); }
-.status-led-amber { background: var(--amber); box-shadow: 0 0 8px rgba(245,158,11,0.5); }
-.status-led-cyan  { background: var(--teal-light); box-shadow: 0 0 8px rgba(20,184,166,0.5); }
+.status-led-green { background: var(--green); }
+.status-led-red   { background: var(--red); }
+.status-led-amber { background: var(--amber); }
+.status-led-cyan  { background: var(--teal-light); }
 
-/* ── Background grid ── */
-.forensic-grid-bg {
-  background-color: var(--canvas-bg);
-  background-image:
-    linear-gradient(to right,  rgba(255,255,255,0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
-  background-size: 28px 28px;
-}
-
-/* ================================================
-   TRANSITIONS & ANIMATIONS
-   ================================================ */
-
+/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -443,16 +410,7 @@ code, pre, .font-mono {
 .animate-fade-in { animation: fadeIn 0.2s ease-out both; }
 .fade-enter      { animation: fadeIn 0.25s ease-out both; }
 
-@keyframes slideInRight {
-  from { opacity: 0; transform: translateX(10px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-.animate-slide-in { animation: slideInRight 0.2s ease-out both; }
-
-/* ================================================
-   SCROLLBARS
-   ================================================ */
-
+/* Scrollbars */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
