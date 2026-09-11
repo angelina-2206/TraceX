@@ -44,9 +44,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterWorkspace }) =>
       {/* ── Clean, Enlarged Hero Section ── */}
       <main className="relative flex-1 flex flex-col items-center justify-center text-center px-6 sm:px-12 py-16 max-w-5xl mx-auto z-10 w-full">
         {/* Academic Platform Badge */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-8 rounded-full text-xs font-medium tracking-wide bg-[var(--surface-2)] border border-[var(--border)] text-[var(--teal-primary)] shadow-sm">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 rounded-full text-xs font-medium tracking-wide bg-[var(--surface-2)] border border-[var(--border)] text-[var(--teal-primary)] shadow-sm">
           <ShieldCheck className="w-4 h-4 text-[var(--teal-primary)]" />
           <span>Institutional Cyber-Forensics Workstation</span>
+        </div>
+
+        {/* Central Emblem Showcase */}
+        <div className="mb-4 flex items-center justify-center">
+          <img
+            src="/anveshak-logo.png"
+            alt="ANVESHAK Logo"
+            className="w-24 h-24 sm:w-28 sm:h-28 object-contain filter drop-shadow-md select-none transition-transform hover:scale-105 duration-300"
+          />
         </div>
 
         {/* Large Prominent Title */}

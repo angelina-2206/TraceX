@@ -9,8 +9,8 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({ online = true }) => {
   return (
     <header className="flex items-center justify-between px-3.5 py-2.5 bg-white border-b border-slate-200 select-none shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
       <div className="flex items-center gap-2">
-        <div className="w-6.5 h-6.5 rounded bg-teal-50 border border-teal-200 flex items-center justify-center text-teal-600">
-          <Shield className="w-3.5 h-3.5 text-teal-600" />
+        <div className="w-6 h-6 flex items-center justify-center">
+          <img src="/anveshak-logo.png" alt="ANVESHAK" className="w-full h-full object-contain" />
         </div>
         <div>
           <div className="flex items-center gap-1.5">
