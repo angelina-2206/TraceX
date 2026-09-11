@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
-import { Mail, ShieldCheck, ShieldAlert, FileCode, Paperclip, Eye, EyeOff, CheckCircle2, XCircle, X } from 'lucide-react';
+import { Mail, ShieldCheck, ShieldAlert, FileCode, Paperclip, Eye, EyeOff, CheckCircle2, XCircle, X, Network, ExternalLink, Zap, AlertTriangle } from 'lucide-react';
 import { CaseDetail } from '../../types';
 import { PageHeader } from '../common/PageHeader';
 
 interface EmailForensicsProps {
   caseDetail: CaseDetail;
+  onSelectTab?: (tab: string) => void;
 }
 
-export const EmailForensics: React.FC<EmailForensicsProps> = ({ caseDetail }) => {
+export const EmailForensics: React.FC<EmailForensicsProps> = ({ caseDetail, onSelectTab }) => {
   const [showRawHeaders, setShowRawHeaders] = useState(false);
   const [activeTab, setActiveTab] = useState<'HEADER' | 'BODY' | 'ATTACHMENTS'>('HEADER');
 
   const auth = caseDetail.auth_status;
   const identity = caseDetail.identity_analysis;
+  const classification = caseDetail.classification;
+  const primaryCampaign = caseDetail.campaign_matches && caseDetail.campaign_matches.length > 0 ? caseDetail.campaign_matches[0] : null;
 
   return (
     <div className="space-y-6 animate-fade-in font-sans">
@@ -41,6 +44,98 @@ export const EmailForensics: React.FC<EmailForensicsProps> = ({ caseDetail }) =>
           </button>
         }
       />
+
+      {/* ── EMAIL CATEGORIZATION & EXPLAINABLE CONFIDENCE BANNER ── */}
+      {classification && (
+        <div className="tracex-card p-5 border-l-4 border-l-[var(--blue-primary)] space-y-3 bg-[var(--surface)]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[var(--blue-primary)]/10 text-[var(--blue-primary)] flex items-center justify-center font-bold">
+                <Zap className="w-4 h-4" />
+              </div>
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
+                  Automated Classifier Verdict
+                </span>
+                <h3 className="text-base font-extrabold text-[var(--text-primary)]">
+                  {classification.summary_label || `${classification.category} — ${classification.confidence.toFixed(0)}% confidence`}
+                </h3>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className={`px-2.5 py-1 rounded text-xs font-bold uppercase ${
+                classification.severity === 'CRITICAL' ? 'badge-critical' :
+                classification.severity === 'HIGH' ? 'badge-high' : 'badge-safe'
+              }`}>
+                {classification.severity} Severity
+              </span>
+              <span className="px-2.5 py-1 rounded bg-[var(--surface-2)] border border-[var(--border)] text-xs font-semibold text-[var(--text-secondary)] font-mono">
+                {classification.confidence.toFixed(1)}% Confidence
+              </span>
+            </div>
+          </div>
+
+          {/* Explainable Reasons List */}
+          {classification.explainable_reasons && classification.explainable_reasons.length > 0 && (
+            <div className="pt-2 border-t border-[var(--border)] space-y-1.5">
+              <span className="text-[11px] font-semibold text-[var(--text-muted)] uppercase">
+                Explainable Decision Factors:
+              </span>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {classification.explainable_reasons.map((reason, idx) => (
+                  <div key={idx} className="flex items-start gap-2 text-xs text-[var(--text-secondary)] bg-[var(--surface-2)] p-2 rounded border border-[var(--border)]">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[var(--blue-primary)] shrink-0 mt-0.5" />
+                    <span>{reason}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── CAMPAIGN CORRELATION ENGINE BANNER ── */}
+      {primaryCampaign && (
+        <div className="tracex-card p-5 border-l-4 border-l-amber-500 bg-[var(--surface)] space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center font-bold">
+                <Network className="w-4 h-4" />
+              </div>
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-500">
+                  Campaign Correlation Engine Overlap ({primaryCampaign.confidence.toFixed(1)}% match)
+                </span>
+                <h4 className="text-sm font-bold text-[var(--text-primary)]">
+                  {primaryCampaign.campaign_summary || `${primaryCampaign.campaign_id} — ${primaryCampaign.campaign_name}`}
+                </h4>
+              </div>
+            </div>
+
+            {onSelectTab && (
+              <button
+                onClick={() => onSelectTab('attack_graph')}
+                className="px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 border border-amber-500/40 text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-all cursor-pointer"
+              >
+                <span>Open Campaign in Attack Graph</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+
+          {/* Matched Signal Tags */}
+          {primaryCampaign.matched_signals && primaryCampaign.matched_signals.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              {primaryCampaign.matched_signals.map((sig, idx) => (
+                <span key={idx} className="text-[11px] px-2 py-0.5 rounded bg-[var(--surface-2)] text-[var(--text-secondary)] border border-[var(--border)]">
+                  ⚡ {sig}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
 
       {/* Authentication Status Pills */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs">

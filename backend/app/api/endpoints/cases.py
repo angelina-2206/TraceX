@@ -17,6 +17,7 @@ from app.services.impact_lab import ImpactLabService
 from app.services.forensic_rag import ForensicRagService
 from app.services.sandbox_service import SandboxService
 from app.services.blockchain_service import BlockchainService
+from app.services.email_classifier import EmailClassifierService
 
 router = APIRouter(prefix="/cases", tags=["Cases & Forensics"])
 
@@ -26,7 +27,7 @@ cases_db: Dict[str, CaseDetail] = get_seed_cases()
 @router.get("", response_model=List[Dict[str, Any]])
 def list_cases():
     """
-    Returns high-level summary cards for all active cases.
+    Returns high-level summary cards for all active cases with classification and campaign tags.
     """
     summaries = []
     for c_id, c in cases_db.items():
@@ -39,7 +40,9 @@ def list_cases():
             "email_subject": c.email_subject,
             "email_from": c.email_from,
             "assignee": c.assignee,
-            "created_at": c.created_at
+            "created_at": c.created_at,
+            "classification": c.classification.dict() if c.classification else None,
+            "campaign_matches": [cm.dict() for cm in c.campaign_matches] if c.campaign_matches else []
         })
     return summaries
 
@@ -129,10 +132,27 @@ async def ingest_email(
         historical_cases=list(cases_db.values()),
         subject=parsed.get("subject", ""),
         sender_email=identity.sender_email,
-        urls=urls
+        urls=urls,
+        hops=hops,
+        attachments=parsed.get("attachments", []),
+        reply_to=parsed.get("reply_to", "") or "",
+        message_id=parsed.get("raw_headers_dict", {}).get("message-id", "")
     )
     
-    # 6. Decomposed Threat Score
+    # 6. Email Classification (Categorization & Explainable Confidence)
+    classification = EmailClassifierService.classify(
+        subject=parsed.get("subject", ""),
+        body_text=parsed.get("body_text", ""),
+        identity=identity,
+        auth_status=auth,
+        urls=urls,
+        attachments=parsed.get("attachments", []),
+        hops=hops,
+        geo_financial=geo_fin,
+        campaigns=campaigns
+    )
+
+    # 7. Decomposed Threat Score
     threat_score = ThreatScorerService.calculate_decomposed_score(
         identity=identity,
         auth=auth,
@@ -141,7 +161,7 @@ async def ingest_email(
         campaign_matches=campaigns
     )
     
-    # 7. Attack Graph
+    # 8. Attack Graph
     graph = GraphBuilderService.build_attack_graph(
         case_id=case_id,
         sender_email=identity.sender_email,
@@ -152,13 +172,13 @@ async def ingest_email(
         campaigns=campaigns
     )
     
-    # 8. Chain of Custody Event
+    # 9. Chain of Custody Event
     coc_event = ChainOfCustodyService.create_event(
         actor="SOC Ingestion Engine",
         role="SYSTEM",
         action="EVIDENCE_UPLOAD",
         artifact_id=f"EV-EML-{case_num}",
-        details=f"Ingested email artifact '{file_name}' and reconstructed attack graph.",
+        details=f"Ingested email artifact '{file_name}' and reconstructed attack graph with classification '{classification.summary_label}'.",
         prev_events=[]
     )
 
@@ -170,7 +190,7 @@ async def ingest_email(
         created_at="2026-08-30T20:50:00Z",
         updated_at="2026-08-30T20:50:00Z",
         assignee="Unassigned (Active Investigation)",
-        summary=f"Automated forensic ingestion of '{file_name}'. Sender identity deception rating evaluated at {identity.deception_score:.0f}/100.",
+        summary=f"Automated forensic ingestion of '{file_name}'. Classified as {classification.summary_label}. Sender deception rating evaluated at {identity.deception_score:.0f}/100.",
         raw_email_id=f"EV-EML-{case_num}",
         email_subject=parsed["subject"],
         email_from=parsed["from"],
@@ -187,7 +207,8 @@ async def ingest_email(
         attack_dna=attack_dna,
         campaign_matches=campaigns,
         attack_graph=graph,
-        chain_of_custody=[coc_event]
+        chain_of_custody=[coc_event],
+        classification=classification
     )
 
     cases_db[case_id] = new_case

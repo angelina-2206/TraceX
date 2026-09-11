@@ -3,7 +3,7 @@ from app.schemas.forensics import (
     CaseDetail, HeaderHop, AuthStatus, IdentityAnalysis, SocialEngSignal,
     UrlAnalysisItem, UrlRedirectHop, AttachmentItem, GeoFinancialEntity,
     DecomposedThreatScore, ThreatScoreComponent, AttackDNA, CampaignMatch,
-    AttackGraphData, GraphNode, GraphEdge, ChainOfCustodyEvent
+    AttackGraphData, GraphNode, GraphEdge, ChainOfCustodyEvent, EmailClassification
 )
 from app.services.chain_of_custody import ChainOfCustodyService
 
@@ -268,20 +268,53 @@ def get_seed_cases() -> Dict[str, CaseDetail]:
             infrastructure_asn_set=["AS204915", "AS13335"],
             similarity_vectors={"CASE-206": 0.82, "CASE-177": 0.65}
         ),
+        classification=EmailClassification(
+            category="Financial Fraud",
+            confidence=91.0,
+            severity="HIGH",
+            summary_label="Financial Fraud — 91% confidence",
+            explainable_reasons=[
+                "Detected bank routing alteration (State Bank of India IFSC SBIN0000847, ₹ 4,85,000 INR)",
+                "Sender/domain mismatch (claimed Robert Vance CEO, Reply-To wire-transfer@micr0soft-login-check.net)",
+                "Complete authentication failure (SPF FAIL, DKIM FAIL, DMARC FAIL)",
+                "Urgent wire transfer coercion combined with offshore relay AS204915",
+                "Domain homoglyph and credential harvesting URL structure"
+            ],
+            key_indicators={
+                "financial_destination": "State Bank of India (SBIN0000847)",
+                "amount": "₹ 4,85,000 INR",
+                "auth_status": "MISALIGNED",
+                "reply_to_mismatch": True,
+                "relay_asn": "AS204915"
+            }
+        ),
         campaign_matches=[
             CampaignMatch(
-                campaign_id="CAMP-PHANTOM-01",
-                campaign_name="PhishPhantom Invoice Campaign",
-                confidence=78.5,
+                campaign_id="CAMP-PHANTOM-001",
+                campaign_name="PhishPhantom Invoice & Financial Fraud Ring",
+                confidence=91.4,
                 matched_signals=[
-                    "Shared ASN 204915 (CyberCloud Host LLC)",
-                    "Matching 2-step redirect structure to lookalike domains",
-                    "Identical invoice wording pattern targeting Indian financial accounts"
+                    "Shared Bulletproof ASNs (AS204915, AS13335)",
+                    "Coordinated wire transfer redirection & IFSC spoofing lure",
+                    "Identical URL redirect pattern (REDIRECT_2HOP_HOMOGLYPH)",
+                    "Repetitive Message-ID namespace (*.sec-mailrelay.org) across 27 cases"
                 ],
-                shared_asns=["AS204915"],
-                shared_domains=["micr0soft-login-check.net", "auth-verify-session.xyz"],
-                historical_case_ids=["CASE-206"],
-                status="SUSPECTED"
+                shared_asns=["AS204915", "AS13335"],
+                shared_domains=["micr0soft-login-check.net", "fin-settlement-portal.org", "auth-verify-session.xyz"],
+                historical_case_ids=["CASE-204", "CASE-206", "CASE-108", "CASE-112"],
+                status="CONFIRMED",
+                related_emails_count=27,
+                related_domains_count=8,
+                related_ips_count=4,
+                related_urls_count=13,
+                related_hashes_count=5,
+                shared_ips=["185.220.101.45", "194.26.29.112", "45.154.255.89", "91.240.118.23"],
+                shared_urls=["https://secure-payment.vendor-example.com/invoice-84920", "http://micr0soft-login-check.net/login.php"],
+                shared_attachment_hashes=["e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],
+                shared_reply_tos=["wire-transfer@micr0soft-login-check.net"],
+                shared_message_id_patterns=["<*@sec-mailrelay.org>"],
+                threat_techniques=["T1566.002 Spearphishing Link", "T1534 Internal Spearphishing", "T1071 Application Layer Protocol"],
+                campaign_summary="Campaign #001 — 27 related emails, 8 domains, 4 IPs, 13 URLs"
             )
         ],
         attack_graph=AttackGraphData(
@@ -464,18 +497,68 @@ def get_seed_cases() -> Dict[str, CaseDetail]:
             infrastructure_asn_set=["AS44477"],
             similarity_vectors={"CASE-204": 0.45}
         ),
-        campaign_matches=[],
+        classification=EmailClassification(
+            category="Phishing",
+            confidence=95.0,
+            severity="CRITICAL",
+            summary_label="Phishing — 95% confidence",
+            explainable_reasons=[
+                "Detected brand impersonation targeting Microsoft 365 Single Sign-On (SSO)",
+                "Obfuscated Bitly shortener redirecting to credential harvesting form",
+                "Severe urgency coercion (threat of 2-hour permanent account suspension)",
+                "Authentication failure (SPF FAIL, DKIM NONE, DMARC FAIL)",
+                "Hosted on known bulletproof provider AS44477"
+            ],
+            key_indicators={
+                "targeted_brand": "Microsoft 365",
+                "credential_harvesting": True,
+                "urgency_level": "CRITICAL",
+                "hosting_provider": "AS44477 Bulletproof Host",
+                "redirect_hops": 3
+            }
+        ),
+        campaign_matches=[
+            CampaignMatch(
+                campaign_id="CAMP-DARKSSO-002",
+                campaign_name="DarkSSO Credential Harvesting Campaign",
+                confidence=89.5,
+                matched_signals=[
+                    "Shared credential harvest landing page DOM structure",
+                    "Host ASN overlap with known offshore hosting (AS44477, AS16276)",
+                    "Executive SSO session timeout lure signature",
+                    "Overlapping reverse proxy relay nodes"
+                ],
+                shared_asns=["AS44477", "AS16276"],
+                shared_domains=["login-microsoft-auth-session.xyz", "auth-verify-session.xyz", "sso-portal-redirect.online"],
+                historical_case_ids=["CASE-205", "CASE-119"],
+                status="CONFIRMED",
+                related_emails_count=19,
+                related_domains_count=6,
+                related_ips_count=3,
+                related_urls_count=9,
+                related_hashes_count=2,
+                shared_ips=["194.26.29.112", "198.51.100.23", "203.0.113.195"],
+                shared_urls=["https://bit.ly/m365-sso-verify-portal", "https://login-microsoft-auth-session.xyz/sso/login.php"],
+                shared_attachment_hashes=["4a5b6c7d8e9f0123456789abcdef0123456789abcdef0123456789abcdef0123"],
+                shared_reply_tos=["accounts@sec-token-renew.org"],
+                shared_message_id_patterns=["<*-auth@relay.darkdomain.top>"],
+                threat_techniques=["T1566.002 Spearphishing Link", "T1056 Input Capture", "T1539 Steal Web Session Cookie"],
+                campaign_summary="Campaign #002 — 19 related emails, 6 domains, 3 IPs, 9 URLs"
+            )
+        ],
         attack_graph=AttackGraphData(
             nodes=[
                 GraphNode(id="n_email205", label="Email: CASE-205", type="EMAIL", details={"case_id": "CASE-205"}, severity="CRITICAL"),
                 GraphNode(id="n_msft", label="Claimed: Microsoft Security", type="IDENTITY", details={}, severity="CRITICAL"),
                 GraphNode(id="n_bitly", label="URL: bit.ly/m365-sso", type="URL", details={}, severity="HIGH"),
-                GraphNode(id="n_phish_dest", label="Domain: login-microsoft-auth-session.xyz", type="DOMAIN", details={}, severity="CRITICAL")
+                GraphNode(id="n_phish_dest", label="Domain: login-microsoft-auth-session.xyz", type="DOMAIN", details={}, severity="CRITICAL"),
+                GraphNode(id="n_camp205", label="Campaign: DarkSSO Credential Harvesting", type="CAMPAIGN", details={"confidence": 89.5}, severity="CRITICAL")
             ],
             edges=[
                 GraphEdge(id="e205_1", source="n_email205", target="n_msft", relationship="CLAIMS_TO_BE", confidence=1.0, evidence_id="EV-ID-205"),
                 GraphEdge(id="e205_2", source="n_email205", target="n_bitly", relationship="CONTAINS", confidence=1.0, evidence_id="EV-URL-205-1"),
-                GraphEdge(id="e205_3", source="n_bitly", target="n_phish_dest", relationship="REDIRECTS_TO", confidence=1.0, evidence_id="EV-URL-205-1")
+                GraphEdge(id="e205_3", source="n_bitly", target="n_phish_dest", relationship="REDIRECTS_TO", confidence=1.0, evidence_id="EV-URL-205-1"),
+                GraphEdge(id="e205_4", source="n_email205", target="n_camp205", relationship="PART_OF_CAMPAIGN", confidence=0.89, evidence_id="EV-CAMP-205")
             ]
         ),
         chain_of_custody=[coc_205_1]
@@ -533,7 +616,51 @@ def get_seed_cases() -> Dict[str, CaseDetail]:
             campaign_score=ThreatScoreComponent(category="Campaign", score=8.0, max_score=10.0, weight=0.10, confidence=0.8, reasons=[], evidence_ids=[])
         ),
         attack_dna=AttackDNA(dna_hash="DNA-206-HIST", identity_fingerprint="VENDOR_BILLING", url_structure_hash="REDIRECT_XYZ", language_vector_id="INVOICE_BEC", auth_behavior_code="SPF_FAIL", infrastructure_asn_set=["AS204915"], similarity_vectors={"CASE-204": 0.82}),
-        campaign_matches=[],
+        classification=EmailClassification(
+            category="BEC",
+            confidence=88.0,
+            severity="HIGH",
+            summary_label="BEC — 88% confidence",
+            explainable_reasons=[
+                "Vendor billing identity impersonation with unverified relay domain",
+                "Wire redirection requested to Cyphersoft Global Payments (HDFC Bank IFSC HDFC0000060)",
+                "Authentication failure across SPF, DKIM, and DMARC",
+                "Infrastructure correlation matches PhishPhantom cluster AS204915"
+            ],
+            key_indicators={
+                "category": "BEC",
+                "bank_destination": "HDFC Bank (HDFC0000060)",
+                "asn": "AS204915"
+            }
+        ),
+        campaign_matches=[
+            CampaignMatch(
+                campaign_id="CAMP-PHANTOM-001",
+                campaign_name="PhishPhantom Invoice & Financial Fraud Ring",
+                confidence=91.4,
+                matched_signals=[
+                    "Shared Bulletproof ASNs (AS204915)",
+                    "Coordinated wire transfer redirection lure",
+                    "Repetitive Message-ID namespace (*.sec-mailrelay.org)"
+                ],
+                shared_asns=["AS204915"],
+                shared_domains=["vendor-billing-group.com", "fin-settlement-portal.org"],
+                historical_case_ids=["CASE-204", "CASE-206"],
+                status="CONFIRMED",
+                related_emails_count=27,
+                related_domains_count=8,
+                related_ips_count=4,
+                related_urls_count=13,
+                related_hashes_count=5,
+                shared_ips=["185.220.101.45", "194.26.29.112"],
+                shared_urls=["https://vendor-billing-group.com/pay"],
+                shared_attachment_hashes=[],
+                shared_reply_tos=[],
+                shared_message_id_patterns=["<*@sec-mailrelay.org>"],
+                threat_techniques=["T1566.002 Spearphishing Link", "T1534 Internal Spearphishing"],
+                campaign_summary="Campaign #001 — 27 related emails, 8 domains, 4 IPs, 13 URLs"
+            )
+        ],
         attack_graph=AttackGraphData(nodes=[], edges=[]),
         chain_of_custody=[]
     )

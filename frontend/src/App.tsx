@@ -188,14 +188,14 @@ const MainApp: React.FC = () => {
 
                   return (
                     <>
-                      {activeTab === 'email_forensics' && <EmailForensics caseDetail={currentCase} />}
+                      {activeTab === 'email_forensics' && <EmailForensics caseDetail={currentCase} onSelectTab={setActiveTab} />}
                       {activeTab === 'header_recorder' && <HeaderFlightRecorder caseDetail={currentCase} />}
                       {activeTab === 'identity_deception' && <IdentityDeceptionView caseDetail={currentCase} />}
                       {activeTab === 'social_engineering' && <SocialEngineeringView caseDetail={currentCase} />}
                       {activeTab === 'url_tracer' && <UrlRedirectTracer caseDetail={currentCase} />}
                       {activeTab === 'attachment_sandbox' && <AttachmentSandboxView caseDetail={currentCase} />}
                       {activeTab === 'attack_graph' && <AttackGraphView caseDetail={currentCase} />}
-                      {activeTab === 'campaign_intel' && <CampaignIntelligenceView caseDetail={currentCase} />}
+                      {activeTab === 'campaign_intel' && <CampaignIntelligenceView caseDetail={currentCase} onSelectTab={setActiveTab} />}
                       {activeTab === 'geo_financial' && <GeoFinancialMapView caseDetail={currentCase} />}
                       {activeTab === 'impact_lab' && <ImpactLabView caseDetail={currentCase} />}
                       {activeTab === 'ai_copilot' && <ForensicRagCopilotView caseDetail={currentCase} voiceActive={voiceActive} />}

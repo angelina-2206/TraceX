@@ -134,6 +134,15 @@ export interface AttackDNA {
   similarity_vectors: Record<string, number>;
 }
 
+export interface EmailClassification {
+  category: string; // Legitimate, Suspicious, Phishing, Impersonation, Financial Fraud, BEC, Malware
+  confidence: number;
+  severity: string;
+  summary_label: string;
+  explainable_reasons: string[];
+  key_indicators: Record<string, any>;
+}
+
 export interface CampaignMatch {
   campaign_id: string;
   campaign_name: string;
@@ -143,6 +152,18 @@ export interface CampaignMatch {
   shared_domains: string[];
   historical_case_ids: string[];
   status: string;
+  related_emails_count?: number;
+  related_domains_count?: number;
+  related_ips_count?: number;
+  related_urls_count?: number;
+  related_hashes_count?: number;
+  shared_ips?: string[];
+  shared_urls?: string[];
+  shared_attachment_hashes?: string[];
+  shared_reply_tos?: string[];
+  shared_message_id_patterns?: string[];
+  threat_techniques?: string[];
+  campaign_summary?: string;
 }
 
 export interface GraphNode {
@@ -179,6 +200,20 @@ export interface ChainOfCustodyEvent {
   details: string;
 }
 
+export interface CaseSummary {
+  case_id: string;
+  title: string;
+  status: string;
+  severity: string;
+  threat_score: number;
+  email_subject: string;
+  email_from: string;
+  assignee: string;
+  created_at: string;
+  classification?: EmailClassification;
+  campaign_matches?: CampaignMatch[];
+}
+
 export interface CaseDetail {
   case_id: string;
   title: string;
@@ -205,4 +240,5 @@ export interface CaseDetail {
   campaign_matches: CampaignMatch[];
   attack_graph: AttackGraphData;
   chain_of_custody: ChainOfCustodyEvent[];
+  classification?: EmailClassification;
 }

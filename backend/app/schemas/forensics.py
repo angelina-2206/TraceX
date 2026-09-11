@@ -130,6 +130,14 @@ class AttackDNA(BaseModel):
     infrastructure_asn_set: List[str]
     similarity_vectors: Dict[str, float]
 
+class EmailClassification(BaseModel):
+    category: str # Legitimate, Suspicious, Phishing, Impersonation, Financial Fraud, BEC, Malware
+    confidence: float # 0 to 100, e.g. 91.0
+    severity: str = "HIGH" # CRITICAL, HIGH, MEDIUM, LOW, CLEAN
+    summary_label: str = "" # e.g. "Financial Fraud — 91% confidence"
+    explainable_reasons: List[str] = Field(default_factory=list)
+    key_indicators: Dict[str, Any] = Field(default_factory=dict)
+
 class CampaignMatch(BaseModel):
     campaign_id: str
     campaign_name: str
@@ -139,6 +147,18 @@ class CampaignMatch(BaseModel):
     shared_domains: List[str]
     historical_case_ids: List[str]
     status: str = "SUSPECTED" # CONFIRMED, REJECTED, SUSPECTED
+    related_emails_count: int = 1
+    related_domains_count: int = 1
+    related_ips_count: int = 1
+    related_urls_count: int = 1
+    related_hashes_count: int = 0
+    shared_ips: List[str] = Field(default_factory=list)
+    shared_urls: List[str] = Field(default_factory=list)
+    shared_attachment_hashes: List[str] = Field(default_factory=list)
+    shared_reply_tos: List[str] = Field(default_factory=list)
+    shared_message_id_patterns: List[str] = Field(default_factory=list)
+    threat_techniques: List[str] = Field(default_factory=list)
+    campaign_summary: str = ""
 
 class GraphNode(BaseModel):
     id: str
@@ -198,6 +218,7 @@ class CaseDetail(BaseModel):
     threat_score: DecomposedThreatScore
     attack_dna: AttackDNA
     campaign_matches: List[CampaignMatch]
+    classification: Optional[EmailClassification] = None
     attack_graph: AttackGraphData
     chain_of_custody: List[ChainOfCustodyEvent]
     mitre_techniques: Optional[List[Dict[str, Any]]] = None
