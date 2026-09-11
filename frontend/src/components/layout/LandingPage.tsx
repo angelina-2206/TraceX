@@ -49,12 +49,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterWorkspace }) =>
           <span>Institutional Cyber-Forensics Workstation</span>
         </div>
 
-        {/* Central Logo Showcase - Translucent Blending with Background */}
+        {/* Central Logo Showcase - Clean Transparent Emblem */}
         <div className="mb-6 flex items-center justify-center relative">
           <img
             src="/anveshak-logo.png"
             alt="ANVESHAK Logo"
-            className="w-36 h-36 sm:w-48 sm:h-48 object-contain opacity-65 dark:opacity-60 select-none transition-all duration-300 hover:opacity-85 filter drop-shadow-sm pointer-events-none"
+            className="w-36 h-36 sm:w-48 sm:h-48 object-contain opacity-95 select-none transition-transform hover:scale-105 duration-300"
           />
         </div>
 
