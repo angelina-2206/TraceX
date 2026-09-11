@@ -1,7 +1,7 @@
 import { ExtractedEmail } from '../types/investigation';
 import { extractUrlsFromText, sanitizeText } from '../utils/sanitizer';
 
-console.log('[TRACE-X Sentinel] Gmail content script active.');
+console.log('[Anveshak] Gmail content script active.');
 
 let lastAnalyzedFingerprint = '';
 let currentEmailData: ExtractedEmail | null = null;
@@ -239,6 +239,28 @@ function extractGmailData(container: HTMLElement): ExtractedEmail | null {
   }
 }
 
+let activeTooltipEl: HTMLElement | null = null;
+let tooltipRemoveTimer: number | null = null;
+
+function removeAllLinkTooltips() {
+  if (tooltipRemoveTimer) {
+    window.clearTimeout(tooltipRemoveTimer);
+    tooltipRemoveTimer = null;
+  }
+  document.querySelectorAll('.tracex-link-inspector-tooltip').forEach((el) => el.remove());
+  activeTooltipEl = null;
+}
+
+function scheduleTooltipRemoval(delayMs = 250) {
+  if (tooltipRemoveTimer) window.clearTimeout(tooltipRemoveTimer);
+  tooltipRemoveTimer = window.setTimeout(() => {
+    removeAllLinkTooltips();
+  }, delayMs);
+}
+
+// Clean up tooltips on page scroll
+window.addEventListener('scroll', () => removeAllLinkTooltips(), { passive: true });
+
 function attachLinkHoverInspectors(container: HTMLElement) {
   // Only target links inside the actual email message body (ignore Gmail top navbar / account links)
   const bodyEl = container.querySelector('.a3s.aiL, .a3s, div[dir="ltr"], .ii.gt');
@@ -250,16 +272,28 @@ function attachLinkHoverInspectors(container: HTMLElement) {
     const href = a.getAttribute('href');
     if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.includes('google.com') || href.includes('gstatic.com')) return;
 
-    let tooltip: HTMLElement | null = null;
+    (a as HTMLElement).addEventListener('mouseenter', () => {
+      // Immediately purge any existing open tooltips to prevent overlapping
+      removeAllLinkTooltips();
 
-    a.addEventListener('mouseenter', () => {
       const rect = a.getBoundingClientRect();
       const domain = extractDomain(href);
 
-      tooltip = document.createElement('div');
+      const tooltip = document.createElement('div');
       tooltip.className = 'tracex-link-inspector-tooltip';
-      tooltip.style.top = `${window.scrollY + rect.bottom + 4}px`;
-      tooltip.style.left = `${window.scrollX + Math.max(8, rect.left)}px`;
+
+      // Smart viewport fixed positioning to prevent link coverage or bottom overflow
+      const estimatedHeight = 78;
+      const spaceBelow = window.innerHeight - rect.bottom;
+      let topPos = rect.bottom + 6;
+      if (spaceBelow < estimatedHeight + 15 && rect.top > estimatedHeight + 15) {
+        topPos = rect.top - estimatedHeight - 6;
+      }
+      const leftPos = Math.max(8, Math.min(rect.left, window.innerWidth - 290));
+
+      tooltip.style.position = 'fixed';
+      tooltip.style.top = `${Math.max(8, topPos)}px`;
+      tooltip.style.left = `${leftPos}px`;
 
       tooltip.innerHTML = `
         <div class="tracex-tooltip-header">
@@ -273,6 +307,19 @@ function attachLinkHoverInspectors(container: HTMLElement) {
       `;
 
       document.body.appendChild(tooltip);
+      activeTooltipEl = tooltip;
+
+      // Keep tooltip visible when mouse hovers inside the tooltip itself
+      tooltip.addEventListener('mouseenter', () => {
+        if (tooltipRemoveTimer) {
+          window.clearTimeout(tooltipRemoveTimer);
+          tooltipRemoveTimer = null;
+        }
+      });
+
+      tooltip.addEventListener('mouseleave', () => {
+        scheduleTooltipRemoval(150);
+      });
 
       const traceBtn = tooltip.querySelector('.tracex-tooltip-action');
       if (traceBtn) {
@@ -280,7 +327,7 @@ function attachLinkHoverInspectors(container: HTMLElement) {
           ev.stopPropagation();
           traceBtn.textContent = 'Scanning...';
           chrome.runtime.sendMessage({ type: 'TRACE_LINK', url: href }, (res) => {
-            if (res && res.data && tooltip) {
+            if (res && res.data && activeTooltipEl === tooltip && document.body.contains(tooltip)) {
               const d = res.data;
               const isSafe = !d.is_suspicious && d.reputation_score >= 70;
               tooltip.innerHTML = `
@@ -288,10 +335,10 @@ function attachLinkHoverInspectors(container: HTMLElement) {
                   <span class="tracex-tooltip-title">Safety Result</span>
                   <span class="tracex-tooltip-badge ${isSafe ? 'safe' : 'critical'}">${isSafe ? 'Safe Link' : 'Suspicious'}</span>
                 </div>
-                <div style="font-size: 11px; color: #CBD5E1; margin-bottom: 2px;">
+                <div style="font-size: 11px; color: #334155; margin-bottom: 2px;">
                   Reputation: <b>${d.reputation_score}/100</b>
                 </div>
-                <div style="font-size: 10px; color: #94A3B8; line-height: 1.3;">
+                <div style="font-size: 10px; color: #64748B; line-height: 1.3;">
                   ${isSafe ? 'No malicious redirects or threat indicators detected.' : escapeHtml(d.risk_factors.join(' · '))}
                 </div>
               `;
@@ -301,13 +348,8 @@ function attachLinkHoverInspectors(container: HTMLElement) {
       }
     });
 
-    a.addEventListener('mouseleave', () => {
-      setTimeout(() => {
-        if (tooltip && document.body.contains(tooltip)) {
-          tooltip.remove();
-          tooltip = null;
-        }
-      }, 400);
+    (a as HTMLElement).addEventListener('mouseleave', () => {
+      scheduleTooltipRemoval(250);
     });
   });
 }

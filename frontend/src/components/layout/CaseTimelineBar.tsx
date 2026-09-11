@@ -23,28 +23,28 @@ export const CaseTimelineBar: React.FC<CaseTimelineBarProps> = ({ activeCase, on
   ];
 
   return (
-    <div className="bg-[#050B17] border-t border-white/10 px-5 transition-all select-none shrink-0 z-30 font-mono">
+    <div className="bg-[var(--surface)] border-t border-[var(--border)] px-6 transition-all select-none shrink-0 z-30 font-sans shadow-sm">
       {/* Expanded Full Timeline View */}
       {expanded && (
-        <div className="py-2.5 border-b border-white/5 flex items-center gap-2 overflow-x-auto text-xs">
+        <div className="py-2.5 border-b border-[var(--border)] flex items-center gap-2 overflow-x-auto text-xs">
           {timelineEvents.map((evt, idx) => (
             <React.Fragment key={idx}>
               <button
                 onClick={() => onNavigateToTab?.(evt.tab)}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#0A1628] hover:bg-[#0F1E35] transition-colors border border-white/10 group shrink-0"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[var(--surface-2)] hover:bg-[var(--surface-light)] transition-colors border border-[var(--border)] group shrink-0 cursor-pointer"
               >
                 {evt.alert ? (
-                  <AlertCircle className="w-3 h-3 text-amber-400 shrink-0" />
+                  <AlertCircle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                 ) : (
-                  <CheckCircle2 className="w-3 h-3 text-teal-400 shrink-0" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                 )}
-                <span className={`font-semibold text-[11px] ${evt.alert ? 'text-amber-400' : 'text-slate-300'} group-hover:text-white`}>
+                <span className={`font-semibold text-[11px] ${evt.alert ? 'text-amber-600 dark:text-amber-400' : 'text-[var(--text-primary)]'}`}>
                   {evt.label}
                 </span>
-                <span className="text-slate-500 text-[10px]">{evt.time}</span>
+                <span className="text-[var(--text-muted)] text-[10px]">{evt.time}</span>
               </button>
               {idx < timelineEvents.length - 1 && (
-                <ArrowRight className="w-3 h-3 text-slate-600 shrink-0" />
+                <ArrowRight className="w-3 h-3 text-[var(--border-hi)] shrink-0" />
               )}
             </React.Fragment>
           ))}
@@ -52,20 +52,20 @@ export const CaseTimelineBar: React.FC<CaseTimelineBarProps> = ({ activeCase, on
       )}
 
       {/* Collapsed Bar Summary (Compact) */}
-      <div className="h-9 flex items-center justify-between text-xs text-slate-400">
+      <div className="h-9 flex items-center justify-between text-xs text-[var(--text-secondary)]">
         <div className="flex items-center gap-3">
-          <span className="text-slate-100 font-bold">{activeCase.case_id}</span>
-          <span className="text-slate-600">•</span>
-          <span>7 FORENSIC EVENTS</span>
-          <span className="text-slate-600">•</span>
-          <span className="text-teal-400 font-bold">CHAIN SEALED</span>
+          <span className="text-[var(--text-primary)] font-bold">{activeCase.case_id}</span>
+          <span className="text-[var(--border-hi)]">•</span>
+          <span>7 Forensic Events</span>
+          <span className="text-[var(--border-hi)]">•</span>
+          <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Chain Sealed (SHA-256)</span>
         </div>
 
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-slate-200 transition-colors"
+          className="flex items-center gap-1 text-[11px] text-[var(--blue-primary)] hover:underline font-semibold cursor-pointer"
         >
-          <span>{expanded ? 'HIDE TIMELINE' : 'EXPAND TIMELINE'}</span>
+          <span>{expanded ? 'Hide Timeline' : 'Expand Timeline'}</span>
           {expanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronUp className="w-3.5 h-3.5" />}
         </button>
       </div>

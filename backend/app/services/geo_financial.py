@@ -18,7 +18,7 @@ class GeoFinancialService:
     }
 
     @staticmethod
-    def extract_geo_financial(body_text: str, ip_geo: str = "Sofia, Bulgaria", ip_lat: float = 42.6977, ip_lng: float = 23.3219) -> Optional[GeoFinancialEntity]:
+    def extract_geo_financial(body_text: str, ip_geo: str = "Shenzhen, China", ip_lat: float = 22.5431, ip_lng: float = 114.0579) -> Optional[GeoFinancialEntity]:
         """
         Extracts financial entities (IFSC codes, beneficiary names, requested amounts) from email body text.
         Resolves IFSC prefix to bank branch coordinates and contrasts with network IP origin.

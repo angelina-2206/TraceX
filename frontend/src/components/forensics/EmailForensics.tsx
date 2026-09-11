@@ -18,7 +18,7 @@ export const EmailForensics: React.FC<EmailForensicsProps> = ({ caseDetail }) =>
     <div className="space-y-6 animate-fade-in font-sans">
       {/* ── Page Header ── */}
       <PageHeader
-        breadcrumbs={['TRACE-X', caseDetail.case_id, 'Forensic Analysis', 'Email Artifacts']}
+        breadcrumbs={['ANVESHAK', caseDetail.case_id, 'Forensic Analysis', 'Email Artifacts']}
         title="Email Artifacts & MIME Analysis"
         description="Detailed MIME structure decomposition, identity alignment verification, SPF/DKIM/DMARC authentication, and payload artifact inspection."
         metadata={

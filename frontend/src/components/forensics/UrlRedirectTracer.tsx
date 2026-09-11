@@ -14,7 +14,7 @@ export const UrlRedirectTracer: React.FC<UrlRedirectTracerProps> = ({ caseDetail
     <div className="space-y-6 animate-fade-in font-sans">
       {/* ── Page Header ── */}
       <PageHeader
-        breadcrumbs={['TRACE-X', caseDetail.case_id, 'Forensic Analysis', 'Redirect Tracer']}
+        breadcrumbs={['ANVESHAK', caseDetail.case_id, 'Forensic Analysis', 'Redirect Tracer']}
         title="URL Redirect Tracer & Infrastructure Pipeline"
         description="Un-shorten links, resolve multi-hop redirect chains, inspect landing page credential harvesting forms, and fingerprint destination domains."
         metadata={

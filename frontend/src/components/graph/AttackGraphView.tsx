@@ -81,7 +81,7 @@ export const AttackGraphView: React.FC<AttackGraphViewProps> = ({ caseDetail }) 
     <div className="space-y-6 animate-fade-in font-sans">
       {/* ── Page Header ── */}
       <PageHeader
-        breadcrumbs={['TRACE-X', caseDetail.case_id, 'Correlation', 'Attack Graph']}
+        breadcrumbs={['ANVESHAK', caseDetail.case_id, 'Correlation', 'Attack Graph']}
         title="Attack Graph Correlator"
         description="Visualise actor-infrastructure relationships across cases to surface campaign patterns, shared domain nodes, and threat infrastructure."
         metadata={

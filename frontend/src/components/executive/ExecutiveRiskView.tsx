@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BarChart3, TrendingDown, ShieldCheck, DollarSign, Calculator, AlertCircle } from 'lucide-react';
 import { CaseDetail } from '../../types';
+import { PageHeader } from '../common/PageHeader';
 
 interface ExecutiveRiskViewProps {
   caseDetail: CaseDetail;
@@ -19,66 +20,72 @@ export const ExecutiveRiskView: React.FC<ExecutiveRiskViewProps> = ({ caseDetail
 
   return (
     <div className="space-y-6 animate-fade-in font-sans">
-      {/* Title */}
-      <div className="tracex-card p-5 border-l-4 border-l-teal-500">
-        <h2 className="text-base font-bold font-mono text-slate-100 flex items-center space-x-2">
-          <BarChart3 className="w-5 h-5 text-teal-400" />
-          <span>EXECUTIVE RISK VIEW & FINANCIAL EXPOSURE SIMULATOR</span>
-        </h2>
-        <p className="text-xs text-slate-400 font-mono mt-0.5">
-          High-level institutional campaign exposure metrics, decomposed risk vectors, and security investment ROI simulator.
-        </p>
-      </div>
+      {/* ── Page Header ── */}
+      <PageHeader
+        breadcrumbs={['ANVESHAK', caseDetail.case_id, 'Governance', 'Executive Risk']}
+        title="Executive Risk View & Financial Exposure Simulator"
+        description="High-level institutional campaign exposure metrics, decomposed risk vectors, and security control investment ROI simulator."
+        metadata={
+          <>
+            <span className="px-2.5 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] font-medium text-[var(--text-secondary)]">
+              Modeled Exposure: ₹ {(baseExposureINR / 100000).toFixed(2)} Lakhs
+            </span>
+            <span className="px-2.5 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] font-medium text-[var(--text-secondary)]">
+              Overall Severity: {threat.severity}
+            </span>
+          </>
+        }
+      />
 
       {/* High-Level Executive Risk Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 font-mono text-xs">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs">
         <div className="tracex-card p-5">
-          <div className="text-slate-400 text-[11px] uppercase">MODELED EXPOSURE</div>
-          <div className="text-xl font-bold text-red-400 mt-1">
+          <div className="text-[var(--text-muted)] text-[11px] font-semibold uppercase">Modeled Exposure</div>
+          <div className="text-xl font-bold text-rose-600 dark:text-rose-400 mt-1 code-mono">
             ₹ {(baseExposureINR / 100000).toFixed(2)} Lakhs
           </div>
-          <div className="text-[10px] text-slate-500 mt-1">4 Potential Compromise Incidents</div>
+          <div className="text-[10px] text-[var(--text-muted)] mt-1">4 Potential Compromise Incidents</div>
         </div>
 
         <div className="tracex-card p-5">
-          <div className="text-slate-400 text-[11px] uppercase">THREAT SEVERITY</div>
-          <div className="text-xl font-bold text-amber-400 mt-1 uppercase">
+          <div className="text-[var(--text-muted)] text-[11px] font-semibold uppercase">Threat Severity</div>
+          <div className="text-xl font-bold text-amber-600 dark:text-amber-400 mt-1 uppercase">
             {threat.severity} ({threat.overall_score}/100)
           </div>
-          <div className="text-[10px] text-slate-500 mt-1">Requires SOC Escalation</div>
+          <div className="text-[10px] text-[var(--text-muted)] mt-1">Requires SOC Escalation</div>
         </div>
 
         <div className="tracex-card p-5">
-          <div className="text-slate-400 text-[11px] uppercase">PROJECTED LOSS (POST-INVESTMENT)</div>
-          <div className="text-xl font-bold text-teal-300 mt-1">
+          <div className="text-[var(--text-muted)] text-[11px] font-semibold uppercase">Projected Loss (Mitigated)</div>
+          <div className="text-xl font-bold text-[var(--blue-primary)] mt-1 code-mono">
             ₹ {(projectedLossINR / 100000).toFixed(2)} Lakhs
           </div>
-          <div className="text-[10px] text-slate-500 mt-1">{riskReductionPct.toFixed(0)}% Risk Mitigated</div>
+          <div className="text-[10px] text-[var(--text-muted)] mt-1">{riskReductionPct.toFixed(0)}% Risk Mitigated</div>
         </div>
 
         <div className="tracex-card p-5">
-          <div className="text-slate-400 text-[11px] uppercase">ESTIMATED ROI</div>
-          <div className="text-xl font-bold text-emerald-400 mt-1">
+          <div className="text-[var(--text-muted)] text-[11px] font-semibold uppercase">Estimated ROI</div>
+          <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400 mt-1 code-mono">
             {((netSavedINR / (investmentLakhs * 100000)) * 100).toFixed(0)}%
           </div>
-          <div className="text-[10px] text-slate-500 mt-1">Net Savings: ₹ {(netSavedINR / 100000).toFixed(2)}L</div>
+          <div className="text-[10px] text-[var(--text-muted)] mt-1">Net Savings: ₹ {(netSavedINR / 100000).toFixed(2)}L</div>
         </div>
       </div>
 
       {/* Security Investment Interactive Slider */}
-      <div className="tracex-card p-6 space-y-6 font-mono text-xs">
-        <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-wider border-b border-white/5 pb-2 flex items-center justify-between">
+      <div className="tracex-card p-6 space-y-6 text-xs">
+        <h3 className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider border-b border-[var(--border)] pb-2 flex items-center justify-between">
           <span className="flex items-center space-x-2">
-            <Calculator className="w-4 h-4 text-teal-400" />
-            <span>SECURITY CONTROL INVESTMENT SIMULATOR</span>
+            <Calculator className="w-4 h-4 text-[var(--blue-primary)]" />
+            <span>Security Control Investment Simulator</span>
           </span>
-          <span className="text-teal-400 font-bold">CONFIGURE SECURITY BUDGET</span>
+          <span className="text-[var(--blue-primary)] font-semibold">CONFIGURE SECURITY BUDGET</span>
         </h3>
 
         <div className="space-y-4">
-          <div className="flex items-center justify-between text-slate-200">
-            <span>ANNUAL SECURITY INVESTMENT:</span>
-            <span className="text-teal-400 font-bold text-base">₹ {investmentLakhs} LAKHS INR</span>
+          <div className="flex items-center justify-between text-[var(--text-primary)]">
+            <span className="font-medium text-sm">ANNUAL SECURITY INVESTMENT:</span>
+            <span className="text-[var(--blue-primary)] font-bold text-base code-mono">₹ {investmentLakhs} LAKHS INR</span>
           </div>
 
           <input
@@ -88,20 +95,20 @@ export const ExecutiveRiskView: React.FC<ExecutiveRiskViewProps> = ({ caseDetail
             step="1"
             value={investmentLakhs}
             onChange={(e) => setInvestmentLakhs(Number(e.target.value))}
-            className="w-full h-2 bg-slate-950 rounded-lg appearance-none cursor-pointer accent-teal-400"
+            className="w-full h-2 bg-[var(--surface-2)] rounded-lg appearance-none cursor-pointer accent-[var(--blue-primary)]"
           />
 
-          <div className="flex justify-between text-[10px] text-slate-500">
+          <div className="flex justify-between text-[10px] text-[var(--text-muted)]">
             <span>₹ 1L (Basic Filter)</span>
-            <span>₹ 10L (MDR + TRACE-X SOC)</span>
+            <span>₹ 10L (MDR + ANVESHAK SOC)</span>
             <span>₹ 20L (Full Enterprise Zero-Trust)</span>
           </div>
         </div>
 
         {/* Executive Disclaimer */}
-        <div className="p-3.5 rounded-lg bg-slate-950 border border-slate-800 text-[11px] text-slate-400 flex items-center space-x-2">
-          <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
-          <span>Illustrative risk exposure model based on configured organization parameters. Not a guaranteed financial forecast.</span>
+        <div className="p-3.5 rounded-lg bg-[var(--surface-2)] border border-[var(--border)] text-[11px] text-[var(--text-muted)] flex items-center space-x-2">
+          <AlertCircle className="w-4 h-4 text-amber-500 shrink-0" />
+          <span>Illustrative risk exposure model based on configured organizational parameters. Not a guaranteed financial forecast.</span>
         </div>
       </div>
     </div>

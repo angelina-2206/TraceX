@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import {
   Lock, Download, ShieldCheck, FileText, CheckCircle2,
-  History, Hash, Copy, Check, Blocks, Shield, ExternalLink
+  History, Hash, Copy, Check, Blocks, Shield, ExternalLink, Printer
 } from 'lucide-react';
 import { CaseDetail } from '../../types';
 import { PageHeader } from '../common/PageHeader';
+import { PdfDownloadMenu } from '../common/PdfDownloadMenu';
 
 interface EvidenceVaultViewProps {
   caseDetail: CaseDetail;
@@ -60,7 +61,7 @@ export const EvidenceVaultView: React.FC<EvidenceVaultViewProps> = ({ caseDetail
     const threat = caseDetail.threat_score;
     const identity = caseDetail.identity_analysis;
 
-    const reportContent = `# TRACE-X DIGITAL FORENSICS & THREAT INVESTIGATION REPORT
+    const reportContent = `# ANVESHAK DIGITAL FORENSICS & THREAT INVESTIGATION REPORT
 **Case Reference:** ${caseDetail.case_id}
 **Ingestion Timestamp:** ${new Date(caseDetail.created_at).toUTCString()}
 **Classification:** RESTRICTED — COURT-ADMISSIBLE FORENSIC EVIDENCE PACKAGE
@@ -104,19 +105,19 @@ ${cocEvents.map(e => `- **[${e.event_id}]** \`${e.timestamp}\` — **${e.action}
 `).join('\n')}
 
 ---
-*END OF OFFICIAL FORENSIC REPORT — TRACE-X PLATFORM*`;
+*END OF OFFICIAL FORENSIC REPORT — ANVESHAK PLATFORM*`;
 
     const blob = new Blob([reportContent], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url;
-    a.download = `TRACE-X_Forensic_Report_${caseDetail.case_id}.md`; a.click();
+    a.download = `ANVESHAK_Forensic_Report_${caseDetail.case_id}.md`; a.click();
   };
 
   return (
     <div className="space-y-6 animate-fade-in font-sans">
       {/* ── Page Header ── */}
       <PageHeader
-        breadcrumbs={['TRACE-X', caseDetail.case_id, 'Evidence Vault', 'STIX 2.1 Exporter']}
+        breadcrumbs={['ANVESHAK', caseDetail.case_id, 'Evidence Vault', 'STIX 2.1 Exporter']}
         title="Evidence Vault & STIX 2.1 Export Portal"
         description="Court-admissible evidence package repository, STIX 2.1 JSON bundle generator, and immutable SHA-256 chain of custody audit ledger."
         metadata={
@@ -131,6 +132,7 @@ ${cocEvents.map(e => `- **[${e.event_id}]** \`${e.timestamp}\` — **${e.action}
         }
         actions={
           <div className="flex items-center gap-2 flex-wrap">
+            <PdfDownloadMenu caseDetail={caseDetail} variant="primary" />
             <button
               onClick={downloadStix}
               className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5"
@@ -149,11 +151,11 @@ ${cocEvents.map(e => `- **[${e.event_id}]** \`${e.timestamp}\` — **${e.action}
             </button>
             <button
               onClick={downloadReport}
-              className="btn-primary text-xs py-1.5 px-3 font-semibold flex items-center gap-1.5"
+              className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5"
               title="Export detailed court-admissible markdown report"
             >
-              <Download className="w-3.5 h-3.5" />
-              <span>Export Report (.md)</span>
+              <FileText className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+              <span>Report (.md)</span>
             </button>
           </div>
         }

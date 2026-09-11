@@ -120,8 +120,11 @@ const MainApp: React.FC = () => {
     }
   };
 
-  const handleEnterWorkspace = (initialTab?: string) => {
+  const handleEnterWorkspace = (initialTab?: string, initialRole?: UserRole) => {
     setShowLanding(false);
+    if (initialRole) {
+      setCurrentRole(initialRole);
+    }
     if (initialTab) {
       setActiveTab(initialTab);
     }

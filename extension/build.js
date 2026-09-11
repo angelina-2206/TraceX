@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function run() {
-  console.log('🚀 Building TRACE-X Sentinel Chrome Extension...');
+  console.log('🚀 Building Anveshak Chrome Extension...');
 
   // 1. Build UI pages (popup & sidepanel) via Vite with React plugin & zero data: URI inlining
   await viteBuild({
@@ -80,6 +80,9 @@ async function run() {
     fs.copyFileSync('dist/src/sidepanel/index.html', 'dist/sidepanel.html');
     fs.copyFileSync('dist/src/sidepanel/index.html', 'sidepanel.html');
   }
+  if (fs.existsSync('assets')) {
+    fs.rmSync('assets', { recursive: true, force: true });
+  }
   if (fs.existsSync('dist/assets')) {
     fs.cpSync('dist/assets', 'assets', { recursive: true });
   }
@@ -87,7 +90,7 @@ async function run() {
   fs.copyFileSync('dist/content-outlook.js', 'content-outlook.js');
   fs.copyFileSync('dist/service-worker.js', 'service-worker.js');
 
-  console.log('✅ TRACE-X Sentinel Extension build complete and CSP verified!');
+  console.log('✅ Anveshak Extension build complete and CSP verified!');
 }
 
 run().catch((err) => {

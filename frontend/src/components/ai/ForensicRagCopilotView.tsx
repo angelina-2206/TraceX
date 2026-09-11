@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  Bot, Send, Mic, MicOff, Sparkles, Database,
+  Bot, Send, Mic, MicOff, Database, ShieldCheck,
   Copy, Check, Search, Cpu, Terminal, ArrowRight,
   ShieldAlert, Route, Building2, Target, Link2, FileText, CheckCircle2
 } from 'lucide-react';
@@ -40,7 +40,7 @@ export const ForensicRagCopilotView: React.FC<ForensicRagCopilotViewProps> = ({
   const [messages, setMessages] = useState<Message[]>([
     {
       sender: 'AI',
-      text: `### TRACE-X FORENSIC RAG COPILOT — GROUNDED INVESTIGATOR ACTIVE FOR ${caseId}\n\nAsk technical questions regarding observable MIME headers, sender identity alignment, URL redirect chains, or financial payout targets. Answers cite verified case vault evidence and vector knowledge strictly.`,
+      text: `ANVESHAK FORENSIC RAG COPILOT — GROUNDED INVESTIGATOR ACTIVE FOR ${caseId}\n\nAsk technical questions regarding observable MIME headers, sender identity alignment, URL redirect chains, or financial payout targets. Answers cite verified case vault evidence and vector knowledge strictly.`,
       evidence_references: ['EV-VAULT', 'QDRANT-KB'],
       confidence: 98.4,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -122,7 +122,7 @@ export const ForensicRagCopilotView: React.FC<ForensicRagCopilotViewProps> = ({
     <div className="space-y-6 font-sans max-w-7xl mx-auto animate-fade-in">
       {/* ── Page Header ── */}
       <PageHeader
-        breadcrumbs={['TRACE-X', caseId, 'Threat Intelligence', 'RAG Copilot']}
+        breadcrumbs={['ANVESHAK', caseId, 'Threat Intelligence', 'RAG Copilot']}
         title="Forensic RAG Copilot & Investigation Assistant"
         description="Retrieval-augmented AI query engine over ingested case evidence corpus, citing verified MIME headers, relay telemetry, and vector store facts."
         metadata={
@@ -133,7 +133,7 @@ export const ForensicRagCopilotView: React.FC<ForensicRagCopilotViewProps> = ({
             </span>
             <span className="px-2.5 py-0.5 rounded-full bg-[var(--surface-2)] border border-[var(--border)] font-medium text-[var(--text-secondary)] flex items-center gap-1.5">
               <Cpu className="w-3 h-3 text-[var(--blue-primary)]" />
-              <span>TRACE-LLM v4.2</span>
+              <span>ANVESHAK-LLM v4.2</span>
             </span>
           </>
         }
@@ -183,8 +183,8 @@ export const ForensicRagCopilotView: React.FC<ForensicRagCopilotViewProps> = ({
                       </span>
                     ) : (
                       <span className="font-semibold text-xs text-[var(--blue-primary)] flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-[var(--blue-primary)]" />
-                        TRACE-X Grounded Copilot
+                        <ShieldCheck className="w-3.5 h-3.5 text-[var(--blue-primary)]" />
+                        ANVESHAK Grounded Copilot
                       </span>
                     )}
                   </div>
@@ -207,9 +207,18 @@ export const ForensicRagCopilotView: React.FC<ForensicRagCopilotViewProps> = ({
 
                 {/* Message Content */}
                 <div className="prose prose-invert max-w-none text-xs leading-relaxed space-y-2 select-text">
-                  {m.text.split('\n\n').map((para, pIdx) => (
-                    <p key={pIdx}>{para}</p>
-                  ))}
+                  {m.text.split('\n\n').map((para, pIdx) => {
+                    const isHeading = /^#{1,6}\s+/.test(para);
+                    const cleanText = para.replace(/^#{1,6}\s+/, '');
+                    if (isHeading || pIdx === 0 && m.sender === 'AI' && cleanText.includes('FORENSIC RAG COPILOT')) {
+                      return (
+                        <h4 key={pIdx} className="font-bold text-xs text-[var(--blue-primary)] uppercase tracking-wider mb-1">
+                          {cleanText}
+                        </h4>
+                      );
+                    }
+                    return <p key={pIdx}>{cleanText}</p>;
+                  })}
                 </div>
 
                 {/* Grounded Evidence References */}

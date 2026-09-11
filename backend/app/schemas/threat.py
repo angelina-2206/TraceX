@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional, Dict, Any, TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -7,12 +7,13 @@ if TYPE_CHECKING:
 class InvestigationTarget(BaseModel):
     target: str = Field(..., description="The suspicious URL, IP address, domain, or related indicator to aggregate intelligence for.")
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "target": "https://suspicious-example.com/login"
             }
         }
+    )
 
 class IndicatorDetails(BaseModel):
     original_target: str

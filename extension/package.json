@@ -1,8 +1,8 @@
 {
-  "name": "tracex-sentinel",
-  "displayName": "TRACE-X Sentinel — Cyber-Forensic Webmail Sensor",
+  "name": "anveshak-extension",
+  "displayName": "Anveshak — Cyber-Forensic Webmail Sensor",
   "version": "1.0.0",
-  "description": "Browser-level cyber-forensic sensor and preliminary threat verdict companion for the TRACE-X investigation platform.",
+  "description": "Browser-level cyber-forensic sensor and preliminary threat verdict companion for the Anveshak investigation platform.",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -1,5 +1,5 @@
 /**
- * Security Sanitization Utilities for TRACE-X Sentinel
+ * Security Sanitization Utilities for Anveshak
  * Strictly isolates all untrusted webmail inputs (HTML, scripts, payloads).
  */
 

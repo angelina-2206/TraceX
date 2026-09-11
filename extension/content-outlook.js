@@ -28,7 +28,7 @@
   }
 
   // src/content/outlook.ts
-  console.log("[TRACE-X Sentinel] Outlook content script active.");
+  console.log("[Anveshak] Outlook content script active.");
   var lastAnalyzedFingerprint = "";
   var injectedButton = null;
   var debounceTimer = null;
@@ -114,6 +114,23 @@
       return null;
     }
   }
+  var activeOutlookTooltipEl = null;
+  var outlookTooltipRemoveTimer = null;
+  function removeAllOutlookLinkTooltips() {
+    if (outlookTooltipRemoveTimer) {
+      window.clearTimeout(outlookTooltipRemoveTimer);
+      outlookTooltipRemoveTimer = null;
+    }
+    document.querySelectorAll(".tracex-link-inspector-tooltip").forEach((el) => el.remove());
+    activeOutlookTooltipEl = null;
+  }
+  function scheduleOutlookTooltipRemoval(delayMs = 250) {
+    if (outlookTooltipRemoveTimer) window.clearTimeout(outlookTooltipRemoveTimer);
+    outlookTooltipRemoveTimer = window.setTimeout(() => {
+      removeAllOutlookLinkTooltips();
+    }, delayMs);
+  }
+  window.addEventListener("scroll", () => removeAllOutlookLinkTooltips(), { passive: true });
   function attachOutlookLinkInspectors(container) {
     const bodyEl = container.querySelector('[aria-label="Message body"], .ItemPartBody, [data-log-name="Body"]') || container;
     const anchors = bodyEl.querySelectorAll("a[href]:not(.tracex-inspected)");
@@ -121,18 +138,26 @@
       a.classList.add("tracex-inspected");
       const href = a.getAttribute("href");
       if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.includes("microsoft.com") || href.includes("live.com") || href.includes("office.com")) return;
-      let tooltip = null;
       a.addEventListener("mouseenter", () => {
+        removeAllOutlookLinkTooltips();
         const rect = a.getBoundingClientRect();
         let domain = href;
         try {
           domain = new URL(href).hostname;
         } catch {
         }
-        tooltip = document.createElement("div");
+        const tooltip = document.createElement("div");
         tooltip.className = "tracex-link-inspector-tooltip";
-        tooltip.style.top = `${window.scrollY + rect.bottom + 4}px`;
-        tooltip.style.left = `${window.scrollX + Math.max(8, rect.left)}px`;
+        const estimatedHeight = 78;
+        const spaceBelow = window.innerHeight - rect.bottom;
+        let topPos = rect.bottom + 6;
+        if (spaceBelow < estimatedHeight + 15 && rect.top > estimatedHeight + 15) {
+          topPos = rect.top - estimatedHeight - 6;
+        }
+        const leftPos = Math.max(8, Math.min(rect.left, window.innerWidth - 290));
+        tooltip.style.position = "fixed";
+        tooltip.style.top = `${Math.max(8, topPos)}px`;
+        tooltip.style.left = `${leftPos}px`;
         tooltip.innerHTML = `
         <div class="tracex-tooltip-header">
           <span class="tracex-tooltip-title">Link Safety Check</span>
@@ -142,13 +167,23 @@
         <button class="tracex-tooltip-action">Scan Link Safety</button>
       `;
         document.body.appendChild(tooltip);
+        activeOutlookTooltipEl = tooltip;
+        tooltip.addEventListener("mouseenter", () => {
+          if (outlookTooltipRemoveTimer) {
+            window.clearTimeout(outlookTooltipRemoveTimer);
+            outlookTooltipRemoveTimer = null;
+          }
+        });
+        tooltip.addEventListener("mouseleave", () => {
+          scheduleOutlookTooltipRemoval(150);
+        });
         const traceBtn = tooltip.querySelector(".tracex-tooltip-action");
         if (traceBtn) {
           traceBtn.addEventListener("click", (ev) => {
             ev.stopPropagation();
             traceBtn.textContent = "Scanning...";
             chrome.runtime.sendMessage({ type: "TRACE_LINK", url: href }, (res) => {
-              if (res && res.data && tooltip) {
+              if (res && res.data && activeOutlookTooltipEl === tooltip && document.body.contains(tooltip)) {
                 const d = res.data;
                 const isSafe = !d.is_suspicious && d.reputation_score >= 70;
                 tooltip.innerHTML = `
@@ -156,8 +191,8 @@
                   <span class="tracex-tooltip-title">Safety Result</span>
                   <span class="tracex-tooltip-badge ${isSafe ? "safe" : "critical"}">${isSafe ? "Safe Link" : "Suspicious"}</span>
                 </div>
-                <div style="font-size: 11px; color: #CBD5E1; margin-bottom: 2px;">Reputation: <b>${d.reputation_score}/100</b></div>
-                <div style="font-size: 10px; color: #94A3B8;">${isSafe ? "No malicious indicators detected." : escapeHtml(d.risk_factors.join(" \xB7 "))}</div>
+                <div style="font-size: 11px; color: #334155; margin-bottom: 2px;">Reputation: <b>${d.reputation_score}/100</b></div>
+                <div style="font-size: 10px; color: #64748B;">${isSafe ? "No malicious indicators detected." : escapeHtml(d.risk_factors.join(" \xB7 "))}</div>
               `;
               }
             });
@@ -165,12 +200,7 @@
         }
       });
       a.addEventListener("mouseleave", () => {
-        setTimeout(() => {
-          if (tooltip && document.body.contains(tooltip)) {
-            tooltip.remove();
-            tooltip = null;
-          }
-        }, 400);
+        scheduleOutlookTooltipRemoval(250);
       });
     });
   }

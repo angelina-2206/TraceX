@@ -123,7 +123,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Header / Brand */}
         <div className="p-4 border-b border-[#2A2E33]">
           <div className="text-white font-bold font-mono tracking-wide text-sm flex items-center justify-between">
-            <span>TRACE-X</span>
+            <span>ANVESHAK</span>
             <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border ${currentRoleInfo.badgeColor}`}>
               {currentRole}
             </span>

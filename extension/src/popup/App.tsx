@@ -188,26 +188,26 @@ export const App: React.FC = () => {
   const isWebmail = tabDomain.includes('mail.google.com') || tabDomain.includes('outlook') || tabDomain.includes('office');
 
   return (
-    <div className="flex flex-col min-h-[500px] bg-[#07101D] text-slate-100 font-sans antialiased select-none">
+    <div className="flex flex-col min-h-[500px] bg-[#F8FAFC] text-slate-900 font-sans antialiased select-none">
       <HeaderBar online={state.status !== 'ERROR'} />
 
       <main className="flex-1 p-3.5 space-y-3.5 overflow-y-auto">
         {/* State 1: NO EMAIL DETECTED */}
         {state.status === 'NO_EMAIL_DETECTED' && (
           <div className="py-1 space-y-3 animate-fade-in">
-            <div className="p-3.5 rounded-lg bg-[#0A1628] border border-white/10 text-center space-y-2.5">
-              <div className="w-8 h-8 rounded bg-[#0F1E35] border border-white/10 flex items-center justify-center mx-auto text-teal-400">
-                <Mail className="w-4 h-4 text-[#14B8A6]" />
+            <div className="p-3.5 rounded-lg bg-white border border-slate-200 shadow-sm text-center space-y-2.5">
+              <div className="w-8 h-8 rounded bg-teal-50 border border-teal-200 flex items-center justify-center mx-auto text-teal-600">
+                <Mail className="w-4 h-4 text-teal-600" />
               </div>
               <div className="space-y-1">
-                <div className="text-xs font-semibold text-slate-200 uppercase tracking-tight">
+                <div className="text-xs font-semibold text-slate-800 uppercase tracking-tight">
                   No Active Message Detected
                 </div>
-                <p className="text-[11px] text-slate-400 leading-relaxed max-w-[280px] mx-auto">
+                <p className="text-[11px] text-slate-600 leading-relaxed max-w-[280px] mx-auto">
                   {isWebmail ? (
                     <span>Open any email in your webmail tab to run automated forensic extraction.</span>
                   ) : (
-                    <span>Sentinel activates inside Gmail and Outlook Web when viewing an email message.</span>
+                    <span>Anveshak activates inside Gmail and Outlook Web when viewing an email message.</span>
                   )}
                 </p>
               </div>
@@ -216,9 +216,9 @@ export const App: React.FC = () => {
                 <button
                   onClick={scanForActiveEmail}
                   disabled={isScanningTab}
-                  className="px-3 py-1 rounded bg-[#0F1E35] border border-white/10 hover:border-teal-500/40 text-slate-300 hover:text-slate-100 text-[11px] inline-flex items-center gap-1.5 transition-colors"
+                  className="px-3 py-1 rounded bg-slate-100 border border-slate-200 hover:border-teal-500/40 text-slate-700 hover:text-slate-900 text-[11px] inline-flex items-center gap-1.5 transition-colors"
                 >
-                  <RefreshCw className={`w-3 h-3 ${isScanningTab ? 'animate-spin text-teal-400' : ''}`} />
+                  <RefreshCw className={`w-3 h-3 ${isScanningTab ? 'animate-spin text-teal-600' : ''}`} />
                   <span>{isScanningTab ? 'Scanning...' : 'Scan Active Tab'}</span>
                 </button>
               </div>
@@ -226,7 +226,7 @@ export const App: React.FC = () => {
 
             {/* Clean Test Artifacts */}
             <div className="space-y-1.5">
-              <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider px-0.5">
+              <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider px-0.5">
                 Demonstration Artifacts
               </div>
 
@@ -235,17 +235,17 @@ export const App: React.FC = () => {
                   <button
                     key={key}
                     onClick={() => handleLoadDemoSample(key)}
-                    className="w-full text-left p-2.5 rounded-lg bg-[#0A1628] border border-white/10 hover:border-teal-500/30 hover:bg-[#0F1E35] transition-colors group"
+                    className="w-full text-left p-2.5 rounded-lg bg-white border border-slate-200 hover:border-teal-400 hover:bg-slate-50 transition-colors shadow-sm group"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-slate-200 group-hover:text-white">
+                      <span className="text-xs font-medium text-slate-800 group-hover:text-teal-800">
                         {item.label}
                       </span>
-                      <span className="text-[9px] text-teal-300 px-1.5 py-0.5 rounded bg-teal-500/10 border border-teal-500/30 font-medium">
+                      <span className="text-[9px] text-teal-700 px-1.5 py-0.5 rounded bg-teal-50 border border-teal-200 font-medium">
                         {item.tag}
                       </span>
                     </div>
-                    <p className="text-[10px] text-slate-400 mt-0.5 leading-snug">
+                    <p className="text-[10px] text-slate-500 mt-0.5 leading-snug">
                       {item.desc}
                     </p>
                   </button>
@@ -255,9 +255,9 @@ export const App: React.FC = () => {
 
             <button
               onClick={() => handleOpenDashboard()}
-              className="w-full py-2 rounded-lg bg-[#0A1628] border border-white/10 text-slate-300 hover:text-white hover:border-teal-500/40 text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors"
+              className="w-full py-2 rounded-lg bg-white border border-slate-200 text-slate-700 hover:text-slate-950 hover:border-teal-400 hover:bg-slate-50 text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors shadow-sm"
             >
-              <span>Launch TRACE-X Workstation</span>
+              <span>Launch Anveshak Workstation</span>
               <ExternalLink className="w-3 h-3" />
             </button>
           </div>
@@ -266,31 +266,31 @@ export const App: React.FC = () => {
         {/* State 2: EMAIL DETECTED — READY FOR ANALYSIS */}
         {state.status === 'EMAIL_DETECTED' && (
           <div className="space-y-3 animate-fade-in">
-            <div className="p-3.5 rounded-lg bg-[#0A1628] border border-white/10 space-y-2">
-              <div className="flex items-center justify-between text-[10px] text-slate-400 border-b border-white/10 pb-1.5">
+            <div className="p-3.5 rounded-lg bg-white border border-slate-200 shadow-sm space-y-2">
+              <div className="flex items-center justify-between text-[10px] text-slate-500 border-b border-slate-100 pb-1.5">
                 <span className="uppercase font-medium">Artifact: {state.email.source}</span>
-                <span className="text-amber-400 font-medium">Ready</span>
+                <span className="text-amber-600 font-semibold">Ready</span>
               </div>
               <div className="text-xs space-y-1">
                 <div>
                   <div className="text-slate-500 text-[9px]">SENDER</div>
-                  <div className="font-medium text-slate-200 truncate">{state.email.sender}</div>
+                  <div className="font-medium text-slate-800 truncate">{state.email.sender}</div>
                 </div>
                 <div>
                   <div className="text-slate-500 text-[9px]">SUBJECT</div>
-                  <div className="font-medium text-slate-300 truncate">{state.email.subject}</div>
+                  <div className="font-medium text-slate-700 truncate">{state.email.subject}</div>
                 </div>
               </div>
               {state.email.urls && state.email.urls.length > 0 && (
-                <div className="text-[10px] text-slate-400 pt-1 border-t border-white/10">
-                  Embedded links: <span className="text-teal-300 font-medium">{state.email.urls.length}</span>
+                <div className="text-[10px] text-slate-500 pt-1 border-t border-slate-100">
+                  Embedded links: <span className="text-teal-700 font-semibold">{state.email.urls.length}</span>
                 </div>
               )}
             </div>
 
             <button
               onClick={() => handleRunAnalysis(state.email)}
-              className="w-full py-2.5 rounded-lg bg-gradient-to-r from-[#0E7063] to-[#0B5C51] hover:from-[#14B8A6] hover:to-[#0E7063] text-white transition-all text-xs font-semibold flex items-center justify-center gap-2 border border-[#14B8A6]/30 shadow-sm"
+              className="w-full py-2.5 rounded-lg bg-teal-600 hover:bg-teal-700 text-white transition-all text-xs font-semibold flex items-center justify-center gap-2 shadow-sm"
             >
               <Shield className="w-3.5 h-3.5" />
               <span>Evaluate Security Threat</span>
@@ -298,7 +298,7 @@ export const App: React.FC = () => {
 
             <button
               onClick={scanForActiveEmail}
-              className="w-full py-1 text-[11px] text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1.5 transition-colors"
+              className="w-full py-1 text-[11px] text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1.5 transition-colors"
             >
               <RefreshCw className="w-3 h-3" />
               <span>Rescan active tab</span>
@@ -334,11 +334,11 @@ export const App: React.FC = () => {
             <InvestigationTimeline />
 
             {/* Secondary Action */}
-            <div className="pt-2 border-t border-[#1E2328] flex items-center justify-between text-xs">
+            <div className="pt-2 border-t border-slate-200 flex items-center justify-between text-xs">
               <button
                 onClick={handleReportSuspicious}
                 disabled={isReporting}
-                className="text-[11px] text-slate-400 hover:text-slate-200 flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                className="text-[11px] text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition-colors disabled:opacity-50"
               >
                 <Bookmark className="w-3 h-3 text-slate-400" />
                 <span>{reportSuccess ? 'Evidence Recorded' : 'Mark for Review'}</span>
@@ -347,7 +347,7 @@ export const App: React.FC = () => {
               <button
                 onClick={() => handleRunAnalysis(state.email)}
                 title="Re-run Analysis"
-                className="text-slate-400 hover:text-slate-200 p-1 rounded hover:bg-[#181B20]"
+                className="text-slate-500 hover:text-slate-800 p-1 rounded hover:bg-slate-100"
               >
                 <RotateCw className="w-3.5 h-3.5" />
               </button>
@@ -357,20 +357,20 @@ export const App: React.FC = () => {
 
         {/* State 5: ERROR */}
         {state.status === 'ERROR' && (
-          <div className="p-3.5 rounded bg-[#1A1215] border border-rose-900/50 space-y-2.5 text-xs animate-fade-in">
-            <div className="flex items-center gap-2 text-rose-300 font-semibold">
-              <AlertCircle className="w-4 h-4 text-rose-400" />
+          <div className="p-3.5 rounded-lg bg-rose-50 border border-rose-200 space-y-2.5 text-xs animate-fade-in shadow-sm">
+            <div className="flex items-center gap-2 text-rose-700 font-semibold">
+              <AlertCircle className="w-4 h-4 text-rose-600" />
               <span>Analysis Unverified</span>
             </div>
-            <p className="text-slate-300 text-xs leading-relaxed">
+            <p className="text-slate-700 text-xs leading-relaxed">
               {state.message}
             </p>
             {state.email && (
               <button
                 onClick={() => handleRunAnalysis(state.email!)}
-                className="w-full py-1.5 rounded bg-[#201518] border border-rose-900/60 hover:border-rose-700 text-slate-200 text-xs font-medium flex items-center justify-center gap-1.5 mt-1"
+                className="w-full py-1.5 rounded bg-white border border-rose-300 hover:bg-rose-100 text-rose-800 text-xs font-medium flex items-center justify-center gap-1.5 mt-1 shadow-sm transition-colors"
               >
-                <RotateCw className="w-3 h-3" />
+                <RotateCw className="w-3.5 h-3.5" />
                 <span>Retry</span>
               </button>
             )}

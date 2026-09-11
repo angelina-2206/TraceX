@@ -15,16 +15,16 @@ class HeaderTracerService:
         headers_chronological = list(reversed(received_headers))
         
         if not headers_chronological:
-            # Fallback mock flight path if headers are sparse or synthesized
+            # Fallback flight path if headers are sparse or synthesized
             return [
                 HeaderHop(
                     hop_index=1,
                     from_host="mail.vendor-finance-portal.net",
                     by_host="relay-01.suspicious-hosting-infra.org",
                     ip="185.220.101.45",
-                    asn="AS204915 (CyberCloud Host LLC)",
+                    asn="AS204915 (APAC Offshore Host LLC)",
                     isp="Offshore High-Risk Hosting",
-                    geo_location="Sofia, Bulgaria",
+                    geo_location="Shenzhen, China",
                     timestamp="Sun, 30 Aug 2026 14:10:12 +0000",
                     delay_seconds=0,
                     raw_header="Received: from mail.vendor-finance-portal.net (185.220.101.45) by relay-01.suspicious-hosting-infra.org",
@@ -36,9 +36,9 @@ class HeaderTracerService:
                     from_host="relay-01.suspicious-hosting-infra.org",
                     by_host="mx.company-security-gateway.com",
                     ip="198.51.100.22",
-                    asn="AS15169 (Google LLC Security Gateway)",
+                    asn="AS15169 (Enterprise Cloud Security Gateway)",
                     isp="Corporate Email Ingress",
-                    geo_location="Frankfurt, Germany",
+                    geo_location="Singapore, Singapore",
                     timestamp="Sun, 30 Aug 2026 14:10:15 +0000",
                     delay_seconds=3,
                     raw_header="Received: from relay-01.suspicious-hosting-infra.org by mx.company-security-gateway.com with ESMTP id 84931a",

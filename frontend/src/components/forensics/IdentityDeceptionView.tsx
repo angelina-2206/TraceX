@@ -16,7 +16,7 @@ export const IdentityDeceptionView: React.FC<IdentityDeceptionViewProps> = ({ ca
     <div className="space-y-6 animate-fade-in font-sans">
       {/* ── Page Header ── */}
       <PageHeader
-        breadcrumbs={['TRACE-X', caseDetail.case_id, 'Forensic Analysis', 'Identity Deception Engine']}
+        breadcrumbs={['ANVESHAK', caseDetail.case_id, 'Forensic Analysis', 'Identity Deception Engine']}
         title="Identity Deception & Impersonation Engine"
         description="Detect display-name brand spoofing, homoglyph character substitutions, typosquatting, and envelope Reply-To misalignments across email headers."
         metadata={

@@ -172,7 +172,7 @@ export const BlockchainProofView: React.FC<BlockchainProofViewProps> = ({ caseDe
     <div className="space-y-6 animate-fade-in font-sans">
       {/* ── Page Header ── */}
       <PageHeader
-        breadcrumbs={['TRACE-X', caseDetail.case_id, 'Audit & Integrity', 'Merkle Chain of Custody']}
+        breadcrumbs={['ANVESHAK', caseDetail.case_id, 'Audit & Integrity', 'Merkle Chain of Custody']}
         title="Merkle Proof Ledger & Chain of Custody"
         description="Cryptographically anchor every evidence event into a SHA-256 Merkle tree with inclusion proof verification and Polygon POS mainnet audit records."
         metadata={

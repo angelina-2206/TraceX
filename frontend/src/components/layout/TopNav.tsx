@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown, Shield, Mic, MicOff, Activity, X, Sun, Moon, Laptop } from 'lucide-react';
+import { ChevronDown, Shield, Mic, MicOff, Activity, X, User, Sun, Moon, FileDown } from 'lucide-react';
 import { UserRole, CaseDetail } from '../../types';
+import { useTheme } from '../../context/ThemeContext';
 import { TracexLogo } from '../common/TracexLogo';
-import { useTheme, ThemeMode } from '../../context/ThemeContext';
+import { PdfDownloadMenu } from '../common/PdfDownloadMenu';
 
 interface TopNavProps {
   currentRole: UserRole;
@@ -152,11 +153,12 @@ function getMenusForRole(role: UserRole): MegaMenuDef[] {
 export const TopNav: React.FC<TopNavProps> = ({
   currentRole, setCurrentRole, activeCase, activeTab, setActiveTab, voiceActive, setVoiceActive,
 }) => {
+  const { theme, setTheme } = useTheme();
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [personaOpen, setPersonaOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
 
   const navRef = useRef<HTMLDivElement>(null);
+  const personaRef = useRef<HTMLDivElement>(null);
   const activeRole = ROLES.find(r => r.id === currentRole) || ROLES[0];
   const menus = getMenusForRole(currentRole);
 
@@ -164,6 +166,8 @@ export const TopNav: React.FC<TopNavProps> = ({
     const handler = (e: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(e.target as Node)) {
         setOpenMenu(null);
+      }
+      if (personaRef.current && !personaRef.current.contains(e.target as Node)) {
         setPersonaOpen(false);
       }
     };
@@ -186,75 +190,52 @@ export const TopNav: React.FC<TopNavProps> = ({
       {/* ── Main Header Bar ── */}
       <header className="tracex-topnav flex items-center justify-between px-6" style={{ height: '60px' }}>
 
-        {/* LEFT: Persona + Logo */}
-        <div className="flex items-center gap-0">
-          {/* Persona Selector */}
-          <div className="relative mr-6">
-            <button
-              onClick={() => { setPersonaOpen(v => !v); setOpenMenu(null); }}
-              className="px-3 py-1.5 rounded-md border border-white/20 bg-white/10 hover:bg-white/20 text-white text-xs font-medium flex items-center gap-2 transition-all cursor-pointer"
-            >
-              <span className="w-2 h-2 rounded-full shrink-0" style={{ background: roleColor(currentRole) }} />
-              <span>{activeRole.label}</span>
-              <ChevronDown className={`w-3.5 h-3.5 opacity-70 transition-transform ${personaOpen ? 'rotate-180' : ''}`} />
-            </button>
+        {/* LEFT: Brand Logo + Mega-Nav Links */}
+        <div className="flex items-center gap-4 h-full">
+          {/* Brand Logo */}
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => handleTabClick('case_desk')}>
+            <TracexLogo size="md" showSubtitle={false} themeVariant="dark" />
+          </div>
 
-            <div className={`tracex-dropdown tracex-persona-dropdown ${personaOpen ? 'tracex-dropdown-open' : ''}`}>
-              <div className="tracex-dropdown-header">Analyst Perspective</div>
-              {ROLES.map(r => (
+          <div className="h-6 w-px bg-white/20 hidden md:block" />
+
+          {/* Mega-Nav Tabs */}
+          <nav className="hidden lg:flex items-stretch gap-1 h-full">
+            {menus.map(menu => (
+              <div key={menu.label} className="relative flex items-center h-full">
                 <button
-                  key={r.id}
-                  onClick={() => { setCurrentRole(r.id); setPersonaOpen(false); }}
-                  className={`tracex-persona-item ${currentRole === r.id ? 'tracex-persona-item-active' : ''}`}
+                  onClick={() => { setOpenMenu(openMenu === menu.label ? null : menu.label); setPersonaOpen(false); }}
+                  className={`tracex-nav-link ${openMenu === menu.label ? 'tracex-nav-link-active' : ''}`}
                 >
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full shrink-0" style={{ background: roleColor(r.id) }} />
-                    <span className="tracex-persona-label">{r.label}</span>
-                    {currentRole === r.id && <span className="tracex-active-badge">Active</span>}
-                  </div>
-                  <p className="tracex-persona-desc">{r.desc}</p>
+                  <span>{menu.label}</span>
+                  <ChevronDown className={`w-3.5 h-3.5 opacity-70 transition-transform ${openMenu === menu.label ? 'rotate-180' : ''}`} />
                 </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Logo / Brand */}
-          <div className="flex items-center pr-8 border-r border-white/20">
-            <TracexLogo size="md" showSubtitle={false} />
-          </div>
-        </div>
-
-        {/* CENTRE: Mega-nav links */}
-        <nav className="hidden lg:flex items-stretch gap-0 h-full">
-          {menus.map(menu => (
-            <div key={menu.label} className="relative flex items-center">
+              </div>
+            ))}
+            <div className="flex items-center h-full">
               <button
-                onClick={() => setOpenMenu(openMenu === menu.label ? null : menu.label)}
-                className={`tracex-nav-link ${openMenu === menu.label ? 'tracex-nav-link-active' : ''}`}
+                onClick={() => handleTabClick('case_desk')}
+                className={`tracex-nav-link ${activeTab === 'case_desk' ? 'tracex-nav-link-active' : ''}`}
               >
-                {menu.label}
-                <ChevronDown className={`w-3.5 h-3.5 opacity-70 transition-transform ${openMenu === menu.label ? 'rotate-180' : ''}`} />
+                Case Desk
               </button>
             </div>
-          ))}
-          <button
-            onClick={() => handleTabClick('case_desk')}
-            className={`tracex-nav-link ${activeTab === 'case_desk' ? 'tracex-nav-link-active' : ''}`}
-          >
-            Case Desk
-          </button>
-        </nav>
+          </nav>
+        </div>
 
-        {/* RIGHT: Status + Theme Toggle + Controls */}
+        {/* RIGHT: Persona Selector + Active Case + Theme Toggle + Controls */}
         <div className="flex items-center gap-3">
-          {/* Active case badge */}
+          {/* Active case badge & PDF Quick Export */}
           {activeCase ? (
-            <div className="hidden xl:flex items-center gap-2 px-3 py-1 rounded-md bg-white/10 border border-white/20 text-xs">
-              <span className="font-semibold text-white">{activeCase.case_id}</span>
-              <span className="opacity-40">|</span>
-              <span className={`px-2 py-0.5 rounded text-[10px] uppercase ${severityBadgeClass}`}>
-                {activeCase.severity} · {activeCase.threat_score?.overall_score ?? '—'}/100
-              </span>
+            <div className="hidden xl:flex items-center gap-1.5">
+              <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-white/10 border border-white/20 text-xs">
+                <span className="font-semibold text-white">{activeCase.case_id}</span>
+                <span className="opacity-40">|</span>
+                <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-semibold ${severityBadgeClass}`}>
+                  {activeCase.severity} · {activeCase.threat_score?.overall_score ?? '—'}/100
+                </span>
+              </div>
+              <PdfDownloadMenu caseDetail={activeCase} variant="compact" />
             </div>
           ) : (
             <div className="hidden xl:flex items-center gap-1.5 text-xs text-white/70">
@@ -263,7 +244,41 @@ export const TopNav: React.FC<TopNavProps> = ({
             </div>
           )}
 
-          {/* Theme Toggle Button (Light / System / Dark) */}
+          {/* Persona / Role Selector Dropdown */}
+          <div className="relative" ref={personaRef}>
+            <button
+              onClick={() => { setPersonaOpen(v => !v); setOpenMenu(null); }}
+              className="px-3 py-1.5 rounded-md border border-white/20 bg-white/10 hover:bg-white/20 text-white text-xs font-medium flex items-center gap-2 transition-all cursor-pointer"
+              title="Switch Analyst Perspective"
+            >
+              <span className="w-2 h-2 rounded-full shrink-0" style={{ background: roleColor(currentRole) }} />
+              <span className="hidden sm:inline text-white/70 text-[11px]">Perspective:</span>
+              <span className="font-semibold">{activeRole.label}</span>
+              <ChevronDown className={`w-3.5 h-3.5 opacity-70 transition-transform ${personaOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {personaOpen && (
+              <div className="tracex-dropdown tracex-persona-dropdown tracex-dropdown-open">
+                <div className="tracex-dropdown-header">Analyst Investigation Perspective</div>
+                {ROLES.map(r => (
+                  <button
+                    key={r.id}
+                    onClick={() => { setCurrentRole(r.id); setPersonaOpen(false); }}
+                    className={`tracex-persona-item ${currentRole === r.id ? 'tracex-persona-item-active' : ''}`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full shrink-0" style={{ background: roleColor(r.id) }} />
+                      <span className="tracex-persona-label">{r.label}</span>
+                      {currentRole === r.id && <span className="tracex-active-badge">Active</span>}
+                    </div>
+                    <p className="tracex-persona-desc">{r.desc}</p>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Theme Toggle Button (Light / Dark) */}
           <div className="flex items-center bg-white/10 border border-white/20 rounded-md p-0.5">
             <button
               onClick={() => setTheme('light')}
@@ -272,14 +287,6 @@ export const TopNav: React.FC<TopNavProps> = ({
             >
               <Sun className="w-3.5 h-3.5" />
               <span className="hidden sm:inline text-[11px]">Light</span>
-            </button>
-            <button
-              onClick={() => setTheme('system')}
-              title="System Theme"
-              className={`p-1.5 rounded text-xs flex items-center gap-1 transition-colors ${theme === 'system' ? 'bg-white text-slate-900 font-semibold' : 'text-white/80 hover:text-white'}`}
-            >
-              <Laptop className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline text-[11px]">Auto</span>
             </button>
             <button
               onClick={() => setTheme('dark')}
@@ -291,6 +298,7 @@ export const TopNav: React.FC<TopNavProps> = ({
             </button>
           </div>
 
+          {/* Voice Copilot Button */}
           <button
             onClick={() => setVoiceActive(!voiceActive)}
             className={`px-3 py-1.5 rounded-md border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
@@ -313,9 +321,12 @@ export const TopNav: React.FC<TopNavProps> = ({
         return (
           <div className="tracex-megamenu">
             <div className="tracex-megamenu-inner">
-              <div className="flex justify-between items-start mb-6">
-                <h3 className="tracex-megamenu-title">{menu.label}</h3>
-                <button onClick={() => setOpenMenu(null)} className="tracex-megamenu-close">
+              <div className="flex justify-between items-center mb-6 pb-3 border-b border-[var(--border)]">
+                <h3 className="tracex-megamenu-title">
+                  <Shield className="w-4 h-4 text-[var(--blue-primary)]" />
+                  <span>{menu.label}</span>
+                </h3>
+                <button onClick={() => setOpenMenu(null)} className="tracex-megamenu-close" title="Close Menu">
                   <X className="w-4 h-4" />
                 </button>
               </div>

@@ -47,9 +47,9 @@ export class TraceXClient {
     } catch (err: any) {
       clearTimeout(timeoutId);
       if (err.name === 'AbortError') {
-        throw new Error('Analysis timed out. TRACE-X investigation engine did not respond in time.');
+        throw new Error('Analysis timed out. Anveshak investigation engine did not respond in time.');
       }
-      throw new Error(err.message || 'Unable to connect to TRACE-X forensic backend.');
+      throw new Error(err.message || 'Unable to connect to Anveshak forensic backend.');
     }
   }
 

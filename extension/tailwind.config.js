@@ -8,13 +8,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#0A0A0A',
-        card: '#121518',
-        border: '#2A2E33',
-        critical: '#E10600',
-        warning: '#F59E0B',
-        success: '#22C55E',
-        cyanAccent: '#00D2BE'
+        background: '#F8FAFC',
+        card: '#FFFFFF',
+        border: '#E2E8F0',
+        critical: '#DC2626',
+        warning: '#D97706',
+        success: '#16A34A',
+        tealAccent: '#0D9488'
       },
       fontFamily: {
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],

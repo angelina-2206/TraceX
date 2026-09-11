@@ -1,12 +1,20 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.api.endpoints import cases, investigate, rag, extension
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    from app.core.config import verify_environment_variables
+    verify_environment_variables()
+    yield
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
-    description="TRACE-X: An Interactive Cyber-Forensic Intelligence Workstation API for SIH 2026 Problem Statement 26106"
+    description="TRACE-X: An Interactive Cyber-Forensic Intelligence Workstation API for SIH 2026 Problem Statement 26106",
+    lifespan=lifespan
 )
 
 # CORS middleware for React Vite Frontend and Chrome Extension
@@ -26,11 +34,6 @@ app.include_router(extension.router, prefix="/api")
 app.include_router(investigate.router, prefix=settings.API_V1_STR)
 app.include_router(investigate.router, prefix="/api")
 app.include_router(rag.router, prefix="/api")
-
-@app.on_event("startup")
-def on_startup():
-    from app.core.config import verify_environment_variables
-    verify_environment_variables()
 
 @app.middleware("http")
 async def add_security_headers(request, call_next):

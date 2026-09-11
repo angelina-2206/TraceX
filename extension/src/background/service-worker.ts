@@ -17,7 +17,7 @@ const BADGE_COLORS: Record<string, string> = {
 };
 
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('[TRACE-X Sentinel] Background Service Worker initialized.');
+  console.log('[Anveshak] Background Service Worker initialized.');
 });
 
 // Enable side panel on action click if supported

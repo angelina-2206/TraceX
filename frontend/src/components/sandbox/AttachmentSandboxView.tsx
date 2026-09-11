@@ -507,7 +507,7 @@ export const AttachmentSandboxView: React.FC<AttachmentSandboxViewProps> = ({ ca
     <div className="space-y-6 animate-fade-in font-sans">
       {/* ── Page Header ── */}
       <PageHeader
-        breadcrumbs={['TRACE-X', caseDetail.case_id, 'Forensic Analysis', 'Attachment Sandbox']}
+        breadcrumbs={['ANVESHAK', caseDetail.case_id, 'Forensic Analysis', 'Attachment Sandbox']}
         title="Detonation Sandbox & Payload Disassembler"
         description="Isolated QEMU-KVM guest environment static & dynamic analysis, disassembly, network socket interception, and YARA signature correlation."
         metadata={

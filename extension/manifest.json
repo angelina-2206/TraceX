@@ -1,11 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "TRACE-X Sentinel — Cyber-Forensic Webmail Sensor",
+  "name": "Anveshak — Cyber-Forensic Webmail Sensor",
   "version": "1.0.0",
   "description": "Your inbox's first line of investigation. Fast preliminary verdict and deep forensic bridge for Gmail & Outlook.",
   "action": {
     "default_popup": "popup.html",
-    "default_title": "TRACE-X Sentinel",
+    "default_title": "Anveshak",
     "default_icon": {
       "16": "icons/icon-16.png",
       "32": "icons/icon-32.png",

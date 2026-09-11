@@ -3,12 +3,27 @@ import React from 'react';
 interface TracexLogoProps {
   size?: 'sm' | 'md' | 'lg';
   showSubtitle?: boolean;
+  themeVariant?: 'auto' | 'light' | 'dark';
 }
 
-export const TracexLogo: React.FC<TracexLogoProps> = ({ size = 'md', showSubtitle = true }) => {
+export const TracexLogo: React.FC<TracexLogoProps> = ({ size = 'md', showSubtitle = true, themeVariant = 'auto' }) => {
   const iconSize = size === 'sm' ? 24 : size === 'lg' ? 38 : 30;
   const textSize = size === 'sm' ? 'text-sm' : size === 'lg' ? 'text-xl' : 'text-base';
   const subtitleSize = size === 'sm' ? 'text-[9px]' : 'text-[10px]';
+
+  const textColorClass =
+    themeVariant === 'dark'
+      ? 'text-slate-100'
+      : themeVariant === 'light'
+      ? 'text-slate-900'
+      : 'text-[var(--text-primary)]';
+
+  const subtitleColorClass =
+    themeVariant === 'dark'
+      ? 'text-slate-400'
+      : themeVariant === 'light'
+      ? 'text-slate-500'
+      : 'text-[var(--text-muted)]';
 
   return (
     <div className="flex items-center gap-2.5 select-none group">
@@ -36,7 +51,7 @@ export const TracexLogo: React.FC<TracexLogoProps> = ({ size = 'md', showSubtitl
             fill="#0F1E35" 
             stroke="#14B8A6" 
             strokeWidth="1" 
-            strokeOpacity="0.5"
+            strokeOpacity="0.5" 
           />
 
           {/* Core Radar Scanning Lines & Center Target */}
@@ -54,15 +69,15 @@ export const TracexLogo: React.FC<TracexLogoProps> = ({ size = 'md', showSubtitl
 
       {/* Typography */}
       <div className="flex flex-col justify-center leading-tight">
-        <div className={`font-semibold tracking-wider text-slate-100 flex items-center gap-1 ${textSize}`}>
-          <span>TRACE</span>
-          <span className="bg-teal-500/20 text-teal-400 border border-teal-500/40 rounded px-1 text-[0.8em] font-bold tracking-normal">
-            X
+        <div className={`font-bold tracking-wider ${textColorClass} flex items-center gap-1.5 ${textSize}`}>
+          <span>ANVESHAK</span>
+          <span className="bg-teal-500/20 text-teal-600 dark:text-teal-400 border border-teal-500/40 rounded px-1 text-[0.75em] font-extrabold tracking-normal">
+            SEC
           </span>
         </div>
         {showSubtitle && (
-          <span className={`text-slate-400 font-mono tracking-widest uppercase ${subtitleSize}`}>
-            Forensic Intelligence
+          <span className={`font-mono tracking-widest uppercase ${subtitleColorClass} ${subtitleSize}`}>
+            Cyber Forensic Platform
           </span>
         )}
       </div>

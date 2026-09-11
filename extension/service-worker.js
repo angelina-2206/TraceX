@@ -39,9 +39,9 @@ var TraceXClient = class {
     } catch (err) {
       clearTimeout(timeoutId);
       if (err.name === "AbortError") {
-        throw new Error("Analysis timed out. TRACE-X investigation engine did not respond in time.");
+        throw new Error("Analysis timed out. Anveshak investigation engine did not respond in time.");
       }
-      throw new Error(err.message || "Unable to connect to TRACE-X forensic backend.");
+      throw new Error(err.message || "Unable to connect to Anveshak forensic backend.");
     }
   }
   async traceLink(url) {
@@ -90,7 +90,7 @@ var BADGE_COLORS = {
   UNVERIFIED: "#6B7280"
 };
 chrome.runtime.onInstalled.addListener(() => {
-  console.log("[TRACE-X Sentinel] Background Service Worker initialized.");
+  console.log("[Anveshak] Background Service Worker initialized.");
 });
 if (chrome.sidePanel && chrome.sidePanel.setPanelBehavior) {
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false }).catch(() => {

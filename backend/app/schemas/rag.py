@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional, Dict, Any
 
 
@@ -7,13 +7,14 @@ class RAGSearchRequest(BaseModel):
     query: str = Field(..., description="Natural language query to search the cybersecurity knowledge base.")
     top_k: int = Field(default=5, ge=1, le=20, description="Number of results to return.")
 
-    class Config:
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "query": "What does a suspicious login page with multiple redirects indicate?",
                 "top_k": 5
             }
         }
+    )
 
 
 class RAGSearchResult(BaseModel):

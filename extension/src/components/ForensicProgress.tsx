@@ -15,13 +15,13 @@ const STAGES = [
 
 export const ForensicProgress: React.FC<ForensicProgressProps> = ({ currentStep }) => {
   return (
-    <div className="p-3.5 rounded-lg bg-[#0A1628] border border-white/10 space-y-2.5">
-      <div className="flex items-center justify-between text-xs font-semibold text-slate-200 border-b border-white/10 pb-2">
-        <span className="flex items-center gap-1.5 text-slate-300">
-          <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-400" />
+    <div className="p-3.5 rounded-lg bg-white border border-slate-200 shadow-sm space-y-2.5">
+      <div className="flex items-center justify-between text-xs font-semibold text-slate-800 border-b border-slate-100 pb-2">
+        <span className="flex items-center gap-1.5 text-slate-800">
+          <Loader2 className="w-3.5 h-3.5 animate-spin text-teal-600" />
           <span>Analyzing Artifact</span>
         </span>
-        <span className="text-[10px] text-slate-500 font-mono">Step {Math.min(currentStep, 5)} / 5</span>
+        <span className="text-[10px] text-slate-400 font-mono">Step {Math.min(currentStep, 5)} / 5</span>
       </div>
 
       <div className="space-y-1.5 pt-0.5">
@@ -35,18 +35,18 @@ export const ForensicProgress: React.FC<ForensicProgressProps> = ({ currentStep 
               key={idx}
               className={`flex items-center gap-2 text-xs transition-opacity ${
                 isDone
-                  ? 'text-slate-400'
+                  ? 'text-slate-500'
                   : isCurrent
-                  ? 'text-slate-100 font-medium'
-                  : 'text-slate-600 opacity-50'
+                  ? 'text-slate-900 font-semibold'
+                  : 'text-slate-400 opacity-60'
               }`}
             >
               {isDone ? (
-                <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
               ) : isCurrent ? (
-                <Loader2 className="w-3.5 h-3.5 text-slate-300 animate-spin shrink-0" />
+                <Loader2 className="w-3.5 h-3.5 text-teal-600 animate-spin shrink-0" />
               ) : (
-                <div className="w-3.5 h-3.5 rounded-full border border-slate-700 shrink-0" />
+                <div className="w-3.5 h-3.5 rounded-full border border-slate-300 shrink-0" />
               )}
               <span className="truncate">{stage}</span>
             </div>

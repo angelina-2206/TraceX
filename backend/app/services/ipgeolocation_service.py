@@ -7,21 +7,24 @@ from app.core.config import settings
 logger = logging.getLogger("uvicorn.error")
 
 GLOBAL_LOCATIONS_POOL = [
-    {"city": "Frankfurt", "country": "Germany", "lat": 50.1109, "lng": 8.6821},
-    {"city": "Amsterdam", "country": "Netherlands", "lat": 52.3676, "lng": 4.9041},
-    {"city": "Sofia", "country": "Bulgaria", "lat": 42.6977, "lng": 23.3219},
-    {"city": "Bucharest", "country": "Romania", "lat": 44.4323, "lng": 26.1063},
-    {"city": "Zurich", "country": "Switzerland", "lat": 47.3769, "lng": 8.5417},
-    {"city": "Tokyo", "country": "Japan", "lat": 35.6762, "lng": 139.6503},
+    {"city": "Shenzhen", "country": "China", "lat": 22.5431, "lng": 114.0579},
+    {"city": "Shanghai", "country": "China", "lat": 31.2304, "lng": 121.4737},
+    {"city": "Beijing", "country": "China", "lat": 39.9042, "lng": 116.4074},
+    {"city": "Guangzhou", "country": "China", "lat": 23.1291, "lng": 113.2644},
+    {"city": "Chengdu", "country": "China", "lat": 30.5728, "lng": 104.0668},
+    {"city": "Hong Kong", "country": "Hong Kong SAR", "lat": 22.3193, "lng": 114.1694},
+    {"city": "Mumbai", "country": "India", "lat": 19.0760, "lng": 72.8777},
+    {"city": "New Delhi", "country": "India", "lat": 28.6139, "lng": 77.2090},
+    {"city": "Bengaluru", "country": "India", "lat": 12.9716, "lng": 77.5946},
+    {"city": "Hyderabad", "country": "India", "lat": 17.3850, "lng": 78.4867},
     {"city": "Singapore", "country": "Singapore", "lat": 1.3521, "lng": 103.8198},
-    {"city": "London", "country": "United Kingdom", "lat": 51.5074, "lng": -0.1278},
-    {"city": "Sao Paulo", "country": "Brazil", "lat": -23.5505, "lng": -46.6333},
-    {"city": "Toronto", "country": "Canada", "lat": 43.6532, "lng": -79.3832},
-    {"city": "Sydney", "country": "Australia", "lat": -33.8688, "lng": 151.2093},
-    {"city": "Warsaw", "country": "Poland", "lat": 52.2297, "lng": 21.0122},
-    {"city": "Reykjavik", "country": "Iceland", "lat": 64.1466, "lng": -21.9426},
-    {"city": "Helsinki", "country": "Finland", "lat": 60.1699, "lng": 24.9384},
-    {"city": "Ashburn", "country": "United States", "lat": 39.0438, "lng": -77.4874},
+    {"city": "Bangkok", "country": "Thailand", "lat": 13.7563, "lng": 100.5018},
+    {"city": "Kuala Lumpur", "country": "Malaysia", "lat": 3.1390, "lng": 101.6869},
+    {"city": "Tokyo", "country": "Japan", "lat": 35.6762, "lng": 139.6503},
+    {"city": "Seoul", "country": "South Korea", "lat": 37.5665, "lng": 126.9780},
+    {"city": "Taipei", "country": "Taiwan", "lat": 25.0330, "lng": 121.5654},
+    {"city": "Hanoi", "country": "Vietnam", "lat": 21.0285, "lng": 105.8542},
+    {"city": "Jakarta", "country": "Indonesia", "lat": -6.2088, "lng": 106.8456},
 ]
 
 class IpGeolocationService:

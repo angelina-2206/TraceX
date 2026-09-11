@@ -10,20 +10,20 @@ export const InvestigationTimeline: React.FC = () => {
   ];
 
   return (
-    <div className="p-3 rounded-lg bg-[#0A1628] border border-white/10 space-y-1.5 text-xs">
-      <div className="flex items-center justify-between text-[10px] text-slate-400 font-semibold uppercase border-b border-white/10 pb-1.5">
+    <div className="p-3 rounded-lg bg-white border border-slate-200 shadow-sm space-y-1.5 text-xs">
+      <div className="flex items-center justify-between text-[10px] text-slate-500 font-semibold uppercase border-b border-slate-100 pb-1.5">
         <span>Verification Telemetry</span>
-        <span className="font-mono text-[9px] text-slate-500">Integrity Verified</span>
+        <span className="font-mono text-[9px] text-slate-400">Integrity Verified</span>
       </div>
 
       <div className="space-y-1 pt-0.5">
         {steps.map((s, idx) => (
-          <div key={idx} className="flex items-center justify-between text-[10px] text-slate-400">
-            <div className="flex items-center gap-1.5 text-slate-300">
-              <Check className="w-3 h-3 text-emerald-400" />
+          <div key={idx} className="flex items-center justify-between text-[10px] text-slate-600">
+            <div className="flex items-center gap-1.5 text-slate-700">
+              <Check className="w-3 h-3 text-emerald-600" />
               <span>{s.label}</span>
             </div>
-            <span className="font-mono text-[9px] text-slate-500">{s.time}</span>
+            <span className="font-mono text-[9px] text-slate-400">{s.time}</span>
           </div>
         ))}
       </div>

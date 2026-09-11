@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import {
   Upload, FileText, ArrowRight, ShieldCheck, Hash, Lock,
-  Play, CheckCircle2, ChevronRight, Activity, Terminal
+  Play, CheckCircle2, ChevronRight, Activity, Terminal, Download
 } from 'lucide-react';
 import { CaseDetail } from '../../types';
 import { PageHeader } from '../common/PageHeader';
+import { PdfDownloadMenu } from '../common/PdfDownloadMenu';
 
 interface CaseDeskProps {
   cases: CaseDetail[];
@@ -61,7 +62,7 @@ export const CaseDesk: React.FC<CaseDeskProps> = ({
     <div className="space-y-6 font-sans max-w-7xl mx-auto animate-fade-in">
       {/* ── Page Header ── */}
       <PageHeader
-        breadcrumbs={['TRACE-X', 'Case Intake Workstation', 'Case Desk']}
+        breadcrumbs={['ANVESHAK', 'Case Intake Workstation', 'Case Desk']}
         title="Case Desk & Evidence Intake Portal"
         description="Ingest suspicious email payloads (.eml/.msg or raw RFC-822 headers) into the institutional forensic ledger for route reconstruction, threat scoring, and SHA-256 evidence sealing."
         metadata={
@@ -317,13 +318,16 @@ export const CaseDesk: React.FC<CaseDeskProps> = ({
                 </div>
               </div>
 
-              <button
-                onClick={() => onSelectTab?.('email_forensics')}
-                className="w-full btn-primary text-xs py-2.5 font-semibold flex items-center justify-center gap-2 mt-4"
-              >
-                <Play className="w-3.5 h-3.5 fill-current" />
-                <span>Launch Forensic Analysis Lab</span>
-              </button>
+              <div className="flex flex-col gap-2 mt-4">
+                <button
+                  onClick={() => onSelectTab?.('email_forensics')}
+                  className="w-full btn-primary text-xs py-2.5 font-semibold flex items-center justify-center gap-2"
+                >
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <span>Launch Forensic Analysis Lab</span>
+                </button>
+                <PdfDownloadMenu caseDetail={activeCase} variant="secondary" className="w-full" />
+              </div>
             </div>
           )}
         </div>

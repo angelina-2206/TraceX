@@ -2,9 +2,12 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
+/* Tailwind CSS v4 class-based dark mode activation */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ================================================
    TRACE-X  —  Institutional Cyber-Forensics Platform
-   CERT-In / NIST / Academic / Enterprise Theme Engine
+   Enterprise & Forensic Theme Engine
    ================================================ */
 
 :root, html.light {
@@ -23,8 +26,8 @@
 
   /* Typography */
   --text-primary:    #172033;
-  --text-secondary:  #526174;
-  --text-muted:      #7A8798;
+  --text-secondary:  #475569;
+  --text-muted:      #64748B;
 
   /* Institutional Accents */
   --blue-primary:    #164E78;
@@ -43,10 +46,11 @@
   --nav-border:      rgba(255, 255, 255, 0.15);
   --nav-text:        #E2E8F0;
   --nav-hover:       #FFFFFF;
-  --nav-active-bg:   rgba(255, 255, 255, 0.12);
+  --nav-active-bg:   rgba(255, 255, 255, 0.14);
 
-  /* Card Shadow */
+  /* Shadows */
   --card-shadow:     0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --dropdown-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
 }
 
 html.dark {
@@ -64,20 +68,20 @@ html.dark {
   --border-hi:       #3A4B66;
 
   /* Typography */
-  --text-primary:    #E8EEF6;
-  --text-secondary:  #A9B7C8;
-  --text-muted:      #738197;
+  --text-primary:    #F8FAFC;
+  --text-secondary:  #CBD5E1;
+  --text-muted:      #94A3B8;
 
   /* Institutional Accents */
-  --blue-primary:    #4D9DE0;
-  --blue-secondary:  #3B82F6;
-  --teal-primary:    #20B8B0;
-  --teal-light:      #20B8B0;
+  --blue-primary:    #38BDF8;
+  --blue-secondary:  #60A5FA;
+  --teal-primary:    #2DD4BF;
+  --teal-light:      #2DD4BF;
 
   /* Severity Status Palette */
-  --status-success:  #4CAF72;
-  --status-warning:  #D7A63A;
-  --status-danger:   #D95C5C;
+  --status-success:  #34D399;
+  --status-warning:  #FBBF24;
+  --status-danger:   #F87171;
   --status-critical: #EF4444;
 
   /* Top Nav System */
@@ -87,11 +91,12 @@ html.dark {
   --nav-hover:       #FFFFFF;
   --nav-active-bg:   #172033;
 
-  /* Card Shadow */
+  /* Shadows */
   --card-shadow:     0 4px 20px rgba(0, 0, 0, 0.35);
+  --dropdown-shadow: 0 14px 30px rgba(0, 0, 0, 0.5), 0 0 0 1px #273449;
 }
 
-/* ── Reset & Clean Academic Base Typography ── */
+/* ── Reset & Clean Base Typography ── */
 *, *::before, *::after { box-sizing: border-box; }
 
 body {
@@ -105,12 +110,11 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Monospace restricted to raw hashes, IPs, PIDs, and code blocks */
+/* Monospace restricted strictly to raw hashes, IPs, PIDs, and code */
 code, pre, .code-mono {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
 }
 
-/* Overriding font-mono fallback to clean UI sans-serif */
 .font-mono {
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
@@ -174,6 +178,204 @@ code, pre, .code-mono {
 }
 
 /* ================================================
+   DROPDOWN & PERSONA SELECTOR SYSTEM
+   ================================================ */
+
+.tracex-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--dropdown-shadow);
+  z-index: 100;
+  display: none;
+  overflow: hidden;
+  animation: fadeIn 0.15s ease-out both;
+}
+
+.tracex-dropdown-open {
+  display: block !important;
+}
+
+.tracex-persona-dropdown {
+  width: 320px;
+  padding: 8px;
+}
+
+.tracex-dropdown-header {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  padding: 8px 10px 6px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 6px;
+}
+
+.tracex-persona-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-bottom: 4px;
+}
+
+.tracex-persona-item:last-child {
+  margin-bottom: 0;
+}
+
+.tracex-persona-item:hover {
+  background: var(--surface-2);
+  border-color: var(--border);
+}
+
+.tracex-persona-item-active {
+  background: var(--surface-2) !important;
+  border-color: var(--blue-primary) !important;
+}
+
+.tracex-persona-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.tracex-persona-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-top: 2px;
+  padding-left: 16px;
+}
+
+.tracex-active-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--status-success);
+  margin-left: auto;
+}
+
+/* ================================================
+   MEGA MENU SYSTEM
+   ================================================ */
+
+.tracex-megamenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
+  z-index: 45;
+  animation: fadeIn 0.15s ease-out both;
+}
+
+.tracex-megamenu-inner {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 24px 32px;
+}
+
+.tracex-megamenu-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tracex-megamenu-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tracex-megamenu-close:hover {
+  color: var(--text-primary);
+  border-color: var(--border-hi);
+  background: var(--surface-light);
+}
+
+.tracex-megamenu-group-heading {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tracex-megamenu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.tracex-megamenu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tracex-megamenu-item:hover {
+  border-color: var(--blue-primary);
+  background: var(--surface);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.tracex-megamenu-item-active {
+  border-color: var(--blue-primary) !important;
+  background: var(--surface) !important;
+  box-shadow: 0 0 0 1px var(--blue-primary);
+}
+
+.tracex-megamenu-item-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.tracex-megamenu-item-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* ================================================
    INSTITUTIONAL CARDS & CONTAINERS
    ================================================ */
 
@@ -211,7 +413,7 @@ code, pre, .code-mono {
   gap: 6px;
 }
 .btn-primary:hover {
-  background: #1B5E8E;
+  filter: brightness(1.1);
 }
 
 .btn-secondary {

@@ -16,15 +16,15 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   actions,
 }) => {
   return (
-    <div className="tracex-card p-5 mb-5 border-l-4 border-l-[#164E78] dark:border-l-[#38BDF8]">
+    <div className="tracex-card p-5 mb-5 border-l-4 border-l-[var(--blue-primary)]">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
           {/* Breadcrumbs */}
-          <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-medium">
+          <div className="flex items-center gap-1.5 text-xs text-[var(--text-muted)] font-medium">
             {breadcrumbs.map((b, i) => (
               <React.Fragment key={i}>
-                {i > 0 && <span className="text-slate-400 dark:text-slate-600">/</span>}
-                <span className={i === breadcrumbs.length - 1 ? 'text-slate-800 dark:text-slate-200 font-semibold' : ''}>
+                {i > 0 && <span className="text-[var(--border-hi)]">/</span>}
+                <span className={i === breadcrumbs.length - 1 ? 'text-[var(--text-primary)] font-semibold' : ''}>
                   {b}
                 </span>
               </React.Fragment>
@@ -32,13 +32,13 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           </div>
 
           {/* Title */}
-          <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+          <h1 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
             {title}
           </h1>
 
           {/* Description */}
           {description && (
-            <p className="text-xs text-slate-600 dark:text-slate-400 max-w-3xl leading-relaxed">
+            <p className="text-xs text-[var(--text-secondary)] max-w-3xl leading-relaxed">
               {description}
             </p>
           )}
