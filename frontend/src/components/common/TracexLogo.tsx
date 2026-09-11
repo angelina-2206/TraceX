@@ -61,11 +61,8 @@ export const TracexLogo: React.FC<TracexLogoProps> = ({
       {/* Typography */}
       {!onlyIcon && (
         <div className="flex flex-col justify-center leading-tight">
-          <div className={`font-bold tracking-wider ${textColorClass} flex items-center gap-1.5 ${textSize}`}>
+          <div className={`font-bold tracking-wider ${textColorClass} flex items-center ${textSize}`}>
             <span>ANVESHAK</span>
-            <span className="bg-teal-500/15 text-teal-600 dark:text-teal-400 border border-teal-500/30 rounded px-1 text-[0.72em] font-extrabold tracking-normal">
-              SEC
-            </span>
           </div>
           {showSubtitle && (
             <span className={`font-mono tracking-widest uppercase ${subtitleColorClass} ${subtitleSize}`}>

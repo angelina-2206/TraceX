@@ -12,17 +12,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterWorkspace }) =>
   return (
     <div className="min-h-screen flex flex-col justify-between font-sans antialiased relative overflow-hidden bg-[var(--canvas-bg)] text-[var(--text-primary)]">
 
-      {/* Background dynamic rising lines with high visibility */}
+      {/* Subtle, ambient background rising lines */}
       <RisingLines
         color="#00D2BE"
         horizonColor="#0E7063"
         haloColor="#0F2040"
-        riseSpeed={0.65}
-        flowSpeed={0.22}
-        flowDensity={70}
-        horizonHeight={0.92}
-        horizonIntensity={0.45}
-        haloIntensity={0.2}
+        riseSpeed={0.45}
+        flowSpeed={0.15}
+        flowDensity={28}
+        horizonHeight={0.95}
+        horizonIntensity={0.15}
+        haloIntensity={0.08}
         circleScale={1.0}
       />
 
@@ -41,7 +41,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterWorkspace }) =>
         </button>
       </header>
 
-      {/* ── Clean, Enlarged Hero Section ── */}
+      {/* ── Clean, Enlarged Hero Section with Centered 40% Opacity Logo ── */}
       <main className="relative flex-1 flex flex-col items-center justify-center text-center px-6 sm:px-12 py-16 max-w-5xl mx-auto z-10 w-full">
         {/* Academic Platform Badge */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 rounded-full text-xs font-medium tracking-wide bg-[var(--surface-2)] border border-[var(--border)] text-[var(--teal-primary)] shadow-sm">
@@ -49,12 +49,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterWorkspace }) =>
           <span>Institutional Cyber-Forensics Workstation</span>
         </div>
 
-        {/* Central Emblem Showcase */}
-        <div className="mb-4 flex items-center justify-center">
+        {/* Central Logo Showcase with ~40% Opacity */}
+        <div className="mb-6 flex items-center justify-center relative">
           <img
             src="/anveshak-logo.png"
             alt="ANVESHAK Logo"
-            className="w-24 h-24 sm:w-28 sm:h-28 object-contain filter drop-shadow-md select-none transition-transform hover:scale-105 duration-300"
+            className="w-36 h-36 sm:w-48 sm:h-48 object-contain opacity-40 select-none transition-transform hover:scale-105 duration-300 pointer-events-none"
           />
         </div>
 

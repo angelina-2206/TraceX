@@ -15,15 +15,15 @@ interface RisingLinesProps {
 }
 
 export const RisingLines: React.FC<RisingLinesProps> = ({
-  color = '#00D2BE', // Vibrant Cyan/Teal
-  horizonColor = '#14B8A6',
+  color = '#00D2BE',
+  horizonColor = '#0E7063',
   haloColor = '#0F2040',
-  riseSpeed = 0.7,
-  flowSpeed = 0.25,
-  flowDensity = 65,
-  horizonHeight = 0.92,
-  horizonIntensity = 0.4,
-  haloIntensity = 0.2,
+  riseSpeed = 0.5,
+  flowSpeed = 0.15,
+  flowDensity = 28,
+  horizonHeight = 0.95,
+  horizonIntensity = 0.15,
+  haloIntensity = 0.08,
   circleScale = 1.0,
   className = '',
 }) => {
@@ -64,22 +64,22 @@ export const RisingLines: React.FC<RisingLinesProps> = ({
     const createParticle = (startY = height * horizonHeight): Particle => {
       return {
         x: Math.random() * width,
-        y: startY + (Math.random() - 0.5) * 30,
-        size: Math.random() * 1.8 + 0.8,
-        speedY: (Math.random() * 0.6 + 0.35) * riseSpeed,
-        speedX: (Math.random() - 0.5) * 0.3 * flowSpeed,
-        opacity: Math.random() * 0.45 + 0.35,
+        y: startY + (Math.random() - 0.5) * 20,
+        size: Math.random() * 1.2 + 0.5,
+        speedY: (Math.random() * 0.4 + 0.25) * riseSpeed,
+        speedX: (Math.random() - 0.5) * 0.15 * flowSpeed,
+        opacity: Math.random() * 0.18 + 0.06,
       };
     };
 
     const createLine = (startY = height * horizonHeight): Line => {
       return {
         x: Math.random() * width,
-        y: startY + Math.random() * 20,
-        length: Math.random() * 90 + 40,
-        speedY: (Math.random() * 1.0 + 0.6) * riseSpeed,
-        thickness: Math.random() * 1.4 + 1.0,
-        opacity: Math.random() * 0.5 + 0.35,
+        y: startY + Math.random() * 10,
+        length: Math.random() * 60 + 25,
+        speedY: (Math.random() * 0.6 + 0.35) * riseSpeed,
+        thickness: Math.random() * 0.8 + 0.5,
+        opacity: Math.random() * 0.18 + 0.06,
       };
     };
 
@@ -87,7 +87,7 @@ export const RisingLines: React.FC<RisingLinesProps> = ({
       const initialY = Math.random() * height * horizonHeight;
       particles.push(createParticle(initialY));
     }
-    for (let i = 0; i < 42; i++) {
+    for (let i = 0; i < 20; i++) {
       const initialY = Math.random() * height * horizonHeight;
       lines.push(createLine(initialY));
     }
@@ -125,39 +125,36 @@ export const RisingLines: React.FC<RisingLinesProps> = ({
 
       const horizonY = height * horizonHeight;
 
-      // 1. Horizon glow & line
+      // 1. Subtle Horizon line
       if (horizonIntensity > 0) {
-        const grad = ctx.createLinearGradient(0, horizonY - 40, 0, horizonY + 40);
+        const grad = ctx.createLinearGradient(0, horizonY - 30, 0, horizonY + 30);
         grad.addColorStop(0, `rgba(${horizonRgb}, 0)`);
-        grad.addColorStop(0.5, `rgba(${horizonRgb}, ${horizonIntensity * 0.25})`);
+        grad.addColorStop(0.5, `rgba(${horizonRgb}, ${horizonIntensity * 0.15})`);
         grad.addColorStop(1, `rgba(${horizonRgb}, 0)`);
         ctx.fillStyle = grad;
-        ctx.fillRect(0, horizonY - 40, width, 80);
+        ctx.fillRect(0, horizonY - 30, width, 60);
 
         ctx.beginPath();
         ctx.moveTo(0, horizonY);
         ctx.lineTo(width, horizonY);
-        ctx.strokeStyle = `rgba(${rgbColor}, ${horizonIntensity * 0.65})`;
-        ctx.lineWidth = 1.2;
+        ctx.strokeStyle = `rgba(${rgbColor}, ${horizonIntensity * 0.3})`;
+        ctx.lineWidth = 0.8;
         ctx.stroke();
       }
 
-      // 2. Render visible ascending glowing data lines
+      // 2. Soft, subtle ascending lines
       lines.forEach((l, idx) => {
         l.y -= l.speedY;
         const progress = Math.max(0, Math.min(1, 1 - l.y / horizonY));
         const currentOpacity = l.opacity * Math.sin(progress * Math.PI);
 
-        if (currentOpacity > 0.05) {
+        if (currentOpacity > 0.01) {
           ctx.beginPath();
           ctx.moveTo(l.x, l.y);
           ctx.lineTo(l.x, l.y + l.length);
           ctx.strokeStyle = `rgba(${rgbColor}, ${currentOpacity})`;
           ctx.lineWidth = l.thickness;
-          ctx.shadowBlur = 6;
-          ctx.shadowColor = `rgba(${rgbColor}, ${currentOpacity * 0.6})`;
           ctx.stroke();
-          ctx.shadowBlur = 0; // reset
         }
 
         if (l.y + l.length < 0) {
@@ -165,21 +162,18 @@ export const RisingLines: React.FC<RisingLinesProps> = ({
         }
       });
 
-      // 3. Render visible data ticks / nodes
+      // 3. Soft particle ticks
       particles.forEach((p, idx) => {
         p.y -= p.speedY;
         p.x += p.speedX;
         const progress = Math.max(0, Math.min(1, 1 - p.y / horizonY));
         const currentOpacity = Math.max(0, p.opacity * Math.sin(progress * Math.PI));
 
-        if (currentOpacity > 0.05) {
+        if (currentOpacity > 0.01) {
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(${rgbColor}, ${currentOpacity})`;
-          ctx.shadowBlur = 4;
-          ctx.shadowColor = `rgba(${rgbColor}, ${currentOpacity * 0.5})`;
           ctx.fill();
-          ctx.shadowBlur = 0; // reset
         }
 
         if (p.y < 0) {
