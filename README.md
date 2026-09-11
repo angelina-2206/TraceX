@@ -1,4 +1,4 @@
-# TRACE-X: Advanced Cyber-Forensic Workstation & Threat Intelligence Aggregator
+# ANVESHAK: Advanced Cyber-Forensic Workstation & Threat Intelligence Aggregator
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=FastAPI&logoColor=white)
@@ -10,13 +10,13 @@
 ![Qdrant](https://img.shields.io/badge/Qdrant-e52230?style=for-the-badge&logo=qdrant&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
-TRACE-X is a specialized cyber-forensic investigation workstation designed for SOC analysts and incident response teams. The system automates email artifact ingestion, parses metadata and header routing paths, queries external reputation intelligence providers, correlates indicators with dynamic threat campaigns, anchors evidence to the Polygon PoS blockchain, and synthesizes findings using Google Gemini and a local security knowledge base.
+ANVESHAK is a specialized cyber-forensic investigation workstation designed for SOC analysts and incident response teams. The system automates email artifact ingestion, parses metadata and header routing paths, queries external reputation intelligence providers, correlates indicators with dynamic threat campaigns, anchors evidence to the Polygon PoS blockchain, and synthesizes findings using Google Gemini and a local security knowledge base.
 
 ---
 
 ## Technical Architecture Overview
 
-TRACE-X divides its core operations into five decoupled layers to ensure isolation, sub-second latency, and fault tolerance:
+ANVESHAK divides its core operations into five decoupled layers to ensure isolation, sub-second latency, and fault tolerance:
 
 ```text
   [ Ingested Email Artifact (.eml) ]
@@ -78,7 +78,7 @@ To guarantee legal admissibility and tamper-proof chain of custody:
 
 ## User Role Personas
 
-TRACE-X implements three distinct workspaces tailored to the operational requirements of different cybersecurity stakeholders:
+ANVESHAK implements three distinct workspaces tailored to the operational requirements of different cybersecurity stakeholders:
 
 1.  **SOC Analyst (`SOC_ANALYST`)**:
     *   **Focus**: Rapid intake triage, initial evidence parsing, and threat assessment.
@@ -184,7 +184,7 @@ npm run dev
 ```
 Open `http://localhost:5173/` in your browser.
 
-### 7. Run TRACE-X Sentinel Chrome Extension
+### 7. Run ANVESHAK Sentinel Chrome Extension
 Build the extension bundle and load it into Google Chrome:
 ```bash
 cd ../extension
@@ -194,7 +194,7 @@ npm run build
 1. Open Google Chrome and go to `chrome://extensions/`.
 2. Enable **Developer mode** (top right).
 3. Click **Load unpacked** and select the `extension/` directory (or `extension/dist/`).
-4. Pin **TRACE-X Sentinel** to your Chrome toolbar.
+4. Pin **ANVESHAK Sentinel** to your Chrome toolbar.
 5. Open any email in **Gmail** or **Outlook Web** to evaluate instant forensic verdicts or inspect destination link safety.
 
 ---
